@@ -1,0 +1,85 @@
+.Token {
+  position: absolute;
+  background: rgba(175, 173, 173, 0.2); /* White with 20% opacity */
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Apply the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  margin: 20px;
+  width: 28rem;
+  height: 25rem;
+}
+
+.Token_box_heading {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.currency {
+  margin-bottom: 2rem;
+}
+
+.currency h4 {
+  cursor: pointer;
+}
+
+.box_heading_img {
+  cursor: pointer;
+}
+
+.Token_box_heading h2 {
+  font-size: 1.2rem;
+  line-height: 0;
+}
+
+.Token_box_para {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.Token_box_input {
+  display: flex;
+  margin-top: 0.5rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.Token_box_input button {
+  background-color: #e44bca;
+  border: 0;
+  outline: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 900;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.Token_box_input input {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  width: 80%;
+  border: 1px solid #e44bca;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-align: end;
+  color: #e44bca;
+}
+
+.Token_box_toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 35em) {
+  .Token {
+    width: 100%;
+  }
+}

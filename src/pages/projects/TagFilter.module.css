@@ -1,0 +1,63 @@
+/* TagFilter.module.css */
+
+.tagFilter {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #e44bca;
+}
+
+/* styles from CreateForm.module.css */
+
+.dropdownWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdownIcon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.select {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #302f2f;
+}
+
+.selectedTags {
+    padding-left: 0.65rem; /* space between All button and filter icon */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    /* transition: transform 1.5s ease; */
+}
+
+.selectedTag {
+    background-color: #da0db7; /* #000000 looks good too */
+    padding: 0.25rem 0.7rem;
+    border-radius: 0.5rem;
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: transform 1.5s ease;
+}
+
+.removeTag {
+    cursor: pointer;
+    margin-left: 0.25rem;
+}

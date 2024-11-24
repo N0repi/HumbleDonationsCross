@@ -1,0 +1,27 @@
+/* Home.module.css */
+
+.App {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    /* width: 100vw; */
+    /* min-height: 100vh; */
+
+    /* setting this to min-height resolves gradient height issue. However, proper dimensions of projectList4 are not used */
+}
+
+.centeredContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 78vh; /* This will make the container take up the full viewport height */
+    /* padding: 20px 0; /* Adjust the value as needed */
+}
+
+/* @media only screen and (max-width: 576px) {
+    .App {
+        align-items: center;
+        /* width: 120vw;
+        height: 150vh; */

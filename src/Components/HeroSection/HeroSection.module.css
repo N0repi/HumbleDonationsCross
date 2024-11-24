@@ -1,0 +1,222 @@
+/* HeroSection.module.css */
+
+/* TAGS */
+
+.tagContainer {
+    display: flex;
+    margin-left: 0%; /*was 145% */
+    margin-top: 0.75rem;
+    position: relative;
+    bottom: 0;
+    right: 0;
+    box-shadow: 6px 6px 30px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
+}
+
+.tag {
+    padding: 0.25rem 0.5rem;
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    margin: 1rem; /* controls 3d effect */
+    white-space: nowrap;
+
+    border-radius: 0.25rem; /* rounded */
+
+    /* opacity: 60%;
+    transition: opacity 0.8s ease; */
+    border-top-left-radius: 0.375rem;
+}
+
+.HeroSection {
+    width: 90%;
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* Change to absolute */
+    margin-left: 0%;
+    margin-bottom: 10;
+}
+
+/* EDITED, altered, changed */
+/* entire component -> black box behind buttons  */
+.HeroSection_box {
+    margin-top: -1rem; /* height of prop */
+    /* background-color: #1e1e1e; */
+    background-color: #1e1e1e;
+    padding: 1rem;
+    /* border: 2px solid #313131; */
+    border-radius: 1.25rem;
+    width: 30rem;
+    height: 18rem;
+    box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
+}
+
+.Expanded {
+    height: 20rem; /* Set your desired height here */
+    /* You can customize other styles for the expanded state */
+}
+
+.ShowOnExpand {
+    display: none; /* Initially hide the buttons */
+}
+
+.Expanded .ShowOnExpand {
+    display: inline-block; /* Display the buttons when the height is expanded */
+}
+
+.HeroSection_box_heading {
+    margin-top: -1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* input amount of token, parent of maxButton, & pink border around input section */
+.HeroSection_box_input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e44bca9a;
+    padding-left: 2rem;
+    border-radius: 2rem;
+    margin-top: 1rem;
+}
+
+/* textbox for user to enter token */
+.HeroSection_box_input input {
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    color: #e44bca;
+    font-size: 1.2rem;
+}
+
+/* right-hand button that displays the chosen token, default ETH */
+.HeroSection_box_input button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.1rem;
+    line-height: 0;
+    width: 6.5rem;
+    background-color: #1e1e1e;
+    padding: 1rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    /* border: 1.25px solid #860771; */ /*border around token */
+    border-radius: 2rem;
+}
+
+/* Parent of .HeroSection_box_balance */
+.balanceBar {
+    margin-top: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 1.5rem;
+}
+
+/* Parent of .maxButton */
+.buttonBar {
+    margin-top: 0.1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four equal-width columns */
+    grid-template-rows: repeat(2, auto); /* Two rows with automatic height */
+    margin-right: 1.5rem;
+    /* gap between rows */
+    /* row-gap: 0.6rem;  */
+    align-items: center;
+    justify-content: center;
+}
+
+/* input max balance button */
+.maxButton {
+    margin-top: 0.2rem;
+    margin-left: 2rem;
+    outline: 0;
+    background-color: #1e1e1e;
+    border: 1.25px solid #860771;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 2rem;
+    padding: 0.25rem;
+    width: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ellipses {
+    font-size: 1rem;
+}
+
+/* token balance */
+.HeroSection_box_balance {
+    margin-top: 0.5rem;
+    margin-left: 2rem;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    color: #e44bca;
+    font-size: 1rem;
+}
+
+/* Donate button */
+.HeroSection_box_btn {
+    display: flex;
+    justify-content: center;
+    background-color: #1e1e1e;
+    border: 0;
+    outline: 0;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 2px solid #860771;
+    border-radius: 2rem;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    bottom: 0;
+}
+
+.MoveBtn {
+    margin-top: 0.6rem;
+}
+
+.HeroSection_box_heading_img {
+    cursor: pointer;
+}
+
+.hideOnMobile {
+    display: none;
+}
+
+.buttonContainer {
+    display: inline-flex;
+    align-items: center; /* Align items vertically in the center */
+    justify-content: space-between; /* Align items horizontally to the end */
+    width: 100%; /* Take up full width */
+    font-weight: 700;
+}
+
+.expandContract {
+    width: 50px;
+    height: 50px;
+}
+
+@media only screen and (max-width: 35em) {
+    .HeroSection {
+        width: 95%;
+    }
+    .HeroSection_box {
+        width: 95%;
+    }
+    .HeroSection_box_input input {
+        width: 50%;
+    }
+    .buttonBar {
+        margin-right: 1.5rem;
+        align-items: center;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,29 @@
+/* Web2.module.css */
+
+.Web2container {
+    width: 100%;
+    max-width: 90vw;
+    height: auto;
+}
+.embed {
+    width: 100%;
+    height: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .embed {
+        width: 90vw; /* Adjust the size for smaller screens */
+        height: auto; /* Adjust height accordingly */
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .embed {
+        width: 95vw; /* Even smaller for very small screens */
+        height: auto;
+    }
+    .Web2container {
+        width: 95vw;
+        height: auto;
+    }
+}

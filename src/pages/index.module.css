@@ -1,0 +1,247 @@
+/* index.module.css */
+
+.title {
+  font-weight: 700;
+  margin-top: 0.65rem /* 4px */;
+  font-size: 1.8rem /* 24px */;
+  line-height: 2rem /* 32px */;
+}
+
+.main {
+  position: relative; /* Ensures the image can be absolutely positioned relative to this container */
+}
+
+.Parent {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  grid-template-rows: auto; /* One row */
+  gap: 10px; /* Add spacing between items */
+  position: relative; /* Needed for any absolutely positioned elements */
+  justify-items: center; /* Center grid items horizontally */
+  align-items: start; /* Align items at the start vertically */
+  width: 100%;
+  min-height: auto;
+}
+
+.Parent > div:first-child {
+  display: flex; /* Use flex to control paragraph layout */
+  flex-direction: column; /* Stack paragraphs vertically */
+  align-items: flex-start; /* Align items to start */
+  width: 100%; /* Full width of the parent grid column */
+  max-width: 100%; /* Make sure it doesn't exceed grid column width */
+}
+
+.description {
+  display: inline-block;
+  margin-left: 3rem;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  border-radius: 2rem;
+  border: 0.25px solid #444244;
+  background-color: #302f2f;
+  box-shadow: 20px 20px 20px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.descriptionLink {
+  display: inline-block;
+  margin-left: 3rem;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border: 0.25px solid #e44bca8a;
+  border-radius: 2rem;
+
+  background-color: #302f2f;
+}
+
+.imageContainer {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+  align-items: center; /* Center the image vertically */
+}
+
+.HDTsplat {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.imageGrid p {
+  text-align: center;
+}
+
+.pParent {
+  margin-top: 0rem;
+}
+
+.pParent p {
+  margin-top: 0.8rem;
+}
+
+.right {
+  display: flex;
+  flex-direction: column; /* Stack items vertically initially */
+  align-items: center; /* Center items horizontally */
+  gap: 1rem; /* Space between items */
+}
+
+.lowerHalfParent {
+  display: flex;
+  flex-direction: row; /* Arrange children in a row */
+  align-items: right; /* Align children vertically centered */
+  justify-content: flex-end; /* Align children to the right */
+  margin-top: 0rem; /* Add margin to separate from other elements */
+  width: 100%;
+  padding: 1rem; /* Optional: Add padding for spacing */
+  /* Include padding and border in element's total width */
+}
+
+.lowerHalf {
+  display: flex;
+  flex-direction: column; /* Align items in a row */
+  align-items: center; /* Vertically center items */
+  justify-content: center;
+  gap: 1rem; /* Add space between connectButton and addToWallet */
+  margin-top: 1rem;
+  position: relative; /* Positioning at the bottom right corner */
+  /* bottom: 20px;
+    right: 20px; */
+  width: auto;
+  /* white-space: nowrap; */
+}
+
+.connectButton {
+  text-align: center;
+  width: 15rem;
+  background-color: #1e1e1e;
+  border: 0.25px solid #444244;
+  border-radius: 0.5rem;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  margin: 0; /* Reset any unwanted margin */
+  /* Adjust width or other styles if needed for responsive design */
+}
+
+.addToWallet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #3dbb16;
+  gap: 0.5rem;
+  margin: 0; /* Ensure no unwanted margin */
+}
+
+.scrollParent {
+  flex: 1; /* Allow it to grow and fill available space */
+  margin-top: 1rem;
+  margin-right: 1rem; /* Space between it and the next element */
+  overflow: hidden;
+  display: flex;
+  justify-content: center; /* Center content inside */
+  position: relative;
+  box-sizing: border-box; /* Include padding and border in element's total width */
+}
+
+.recentlyActive {
+  font-size: 1.4rem;
+  margin-top: 6rem;
+  margin-left: 3rem;
+  position: relative;
+}
+
+@media only screen and (max-width: 36rem) {
+  .connectButton {
+    width: 5rem;
+    padding: 8px;
+  }
+  .lowerHalfParent {
+    margin-top: 0rem;
+    flex-direction: column; /* Stack elements vertically on small screens */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+  }
+  .scrollParent,
+  .lowerHalf {
+    margin: 0; /* Remove margins for smaller screens */
+    width: 100%; /* Ensure full width */
+  }
+  .description {
+    display: inline-block;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 0.8rem;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 2rem;
+    border: 0.25px solid #444244;
+    background-color: #302f2f;
+    box-shadow: 20px 20px 20px rgba(0.1, 0.1, 0.1, 0.1);
+  }
+  .Parent {
+    display: flex;
+
+    flex-direction: column; /* Stack items vertically on smaller screens */
+  }
+  .imageContainer {
+    /* width: 20rem;
+        height: 20rem; */
+    margin-bottom: -2rem;
+    flex: 1; /* Allow imageContainer to take available space */
+    order: -1; /* Place imageContainer to the left */
+    padding-left: 1rem; /* Add padding for spacing */
+  }
+  .descriptionLink {
+    font-size: 0.8rem;
+    display: relative;
+    margin-left: 1rem;
+    margin-top: 0rem;
+    padding: 0.8rem;
+    border: 0.25px solid #e44bca8a;
+    border-radius: 2rem;
+
+    background-color: #302f2f;
+  }
+  .recentlyActive {
+    font-size: 1.4rem;
+    margin-left: 1rem;
+    position: relative;
+  }
+  .addToWallet {
+    margin-bottom: 5rem;
+  }
+}
+@media only screen and (max-height: 900px) {
+  .lowerHalfParent {
+    margin-top: 0rem;
+  }
+
+  .Parent {
+    margin-bottom: 4rem;
+  }
+  .scrollParent {
+    width: 100%;
+    max-width: 50rem;
+    transform: translateX(0%); /* Shift it back to center alignment */
+  }
+}
+@media only screen and (min-width: 900px) {
+  .lowerHalfParent {
+    margin-top: 10rem;
+  }
+}
+@media only screen and (min-width: 1060px) {
+  .lowerHalfParent {
+    margin-top: 0rem;
+  }
+}

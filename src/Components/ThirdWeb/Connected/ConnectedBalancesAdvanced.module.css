@@ -1,0 +1,60 @@
+/* ConnectedBalancesAdvanced.module.css */
+
+/* ConnectedBalancesAdvanced.module.css */
+
+.tokenListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tokenItem {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.tokenItem:hover {
+    background-color: rgba(138, 136, 136, 0.3);
+}
+
+.tokenImage {
+    margin-right: 15px;
+    border-radius: 50%;
+}
+
+.tokenInfoBalance {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tokenInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.tokenName {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.balanceAndSymbolContainer {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adjust the gap to your liking */
+}
+
+.tokenSymbol {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.Balances {
+    font-size: 0.9rem;
+    color: #888;
+}

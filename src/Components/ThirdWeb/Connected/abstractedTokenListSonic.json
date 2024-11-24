@@ -1,0 +1,36 @@
+{
+  "abstractedTokenList": [
+    {
+      "chainId": 64165,
+      "address": "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75",
+      "name": "Humble Donations Token",
+      "symbol": "HDT",
+      "decimals": 18,
+      "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmYGjZoQAHzhqwJhFhxvpZ3ijEFZAgqWKNtg4RiyK7GBue"
+    },
+    {
+      "chainId": 64165,
+      "decimals": 18,
+      "name": "Sonic",
+      "address": "",
+      "symbol": "S",
+      "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/Qmasy6mWYuHkWd3icjicqWQshgFh2owwoCSMVK9oFvHJTZ"
+    },
+    {
+      "chainId": 64165,
+      "address": "0x625A959a716EF2fA19EE1A73052603E2D3711a82",
+      "name": "Wrapped Sonic",
+      "symbol": "WS",
+      "decimals": 18,
+      "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmVMAgmb3mxvruMPBKtkVMQMWtscR74bFgAe3kohoQTUF7"
+    },
+    {
+      "chainId": 64165,
+      "address": "0x83582dcBE9A2897504C777E3E56344bdFAe610bf",
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 18,
+      "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+    }
+  ]
+}

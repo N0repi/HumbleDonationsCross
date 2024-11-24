@@ -1,0 +1,25 @@
+{
+  "supportedTokens": {
+    "11155111": [
+      {
+        "address": "0x9707Be4129F68B767aF550fe1c631BF1779623Cb",
+        "name": "Humble Donations Token",
+        "symbol": "HDT",
+        "icon": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmYKTudDM3chor2KUUQVrRQgyaYvc1XQ6EggVkutpr1zJf"
+      },
+
+      {
+        "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "name": "Ethereum",
+        "symbol": "ETH",
+        "icon": "/etherlogo.png"
+      },
+      {
+        "address": "0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0",
+        "name": "Tether USD",
+        "symbol": "USDT",
+        "icon": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+      }
+    ]
+  }
+}

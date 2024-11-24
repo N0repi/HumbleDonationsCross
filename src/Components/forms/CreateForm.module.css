@@ -1,0 +1,404 @@
+/* CreateForm.module.css */
+
+.Parent {
+  position: relative;
+}
+.addProjectContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center-align the items */
+  /* Add spacing between button and mintRateContainer */
+}
+
+.AddProject {
+  text-align: center;
+  height: 4rem;
+  width: 7rem;
+  background-color: #e44bca;
+  border-radius: 0.5rem;
+  border: 1px solid #e44bca9a;
+  padding: 10px;
+  color: white;
+  font-weight: bold;
+  transition: transform 1.2s ease;
+}
+
+.AddProject:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+  color: white;
+}
+
+.wrapper {
+  width: 50rem;
+  background-color: #302f2f;
+  border-radius: 5px;
+  padding: 25px 25px 30px;
+  margin-bottom: 1.5rem;
+}
+
+.wrapper span {
+  /* color: #4671ea; */
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.wrapper textarea {
+  width: 100%;
+  height: 59px;
+  padding: 15px;
+  outline: none;
+  resize: none;
+  font-size: 16px;
+  margin-top: 20px;
+  border-radius: 5px;
+  border-color: #bfbfbf;
+  background-color: #302f2f;
+}
+
+.wrapper input {
+  width: 100%;
+  height: 19.5px;
+  padding: 5px;
+  outline: none;
+  resize: none;
+  font-size: 16px;
+  margin-top: 20px;
+  border-radius: 5px;
+  border-color: #bfbfbf;
+  background-color: #302f2f;
+  text-align: center;
+}
+
+.optionalMediaContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.websiteWrapper {
+  width: 300px;
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem; /* Adjust margin as needed */
+}
+
+.websiteWrapper span {
+  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  margin-right: 1rem; /* Add margin to separate the label */
+}
+
+.websiteWrapper input {
+  flex: 1; /* Allow the input to grow to fill available space */
+  height: 19.5px;
+  padding: 5px;
+  outline: none;
+  resize: none;
+  font-size: 16px;
+  border-radius: 5px;
+  border-color: #bfbfbf;
+  background-color: #302f2f;
+  text-align: center;
+}
+
+/* not working past this point */
+.textarea:is(:focus, :valid) {
+  border-width: 2px;
+  padding: 14px;
+  border-color: #4671ea;
+}
+
+.textarea::-webkit-scrollbar {
+  width: 0px;
+}
+
+.textarea::-webkit-scrollbar-track {
+  background-color: #1e1e1e;
+}
+
+.textarea::-webkit-scrollbar-thumb {
+  background-color: #e44bca;
+  border-radius: 4px;
+}
+
+/* ... previous styles ... */
+
+.dropdownWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownIcon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.select {
+  scrollbar-color: #e44bca;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e44bca;
+    border-radius: 22px;
+  }
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #c741b1;
+  }
+  /* Apply styles to the selected option in the dropdown */
+  option:checked {
+    background-color: #c741b1; /* Change the background color */
+    color: white; /* Change the text color */
+  }
+
+  /* Apply styles to the highlight color */
+  option:checked::selection {
+    background-color: #c741b1; /* Change the highlight color */
+    color: white; /* Change the text color */
+  }
+  height: 10rem;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #302f2f;
+  border-radius: 1rem;
+}
+
+.selectedTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.selectedTag {
+  background-color: #1e1e1e;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.removeTag {
+  cursor: pointer;
+  margin-left: 0.25rem;
+}
+.dropdownWrapper,
+.AddProject {
+  margin-top: 20px; /* Add margin to push them below .mediaWrapper */
+}
+
+.mintRate {
+  margin-top: 1.25rem;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  background: rgba(80, 78, 78, 0.2); /* White with 20% opacity */
+
+  border: 1px solid;
+  border-color: rgba(80, 78, 78, 0.15);
+  margin-bottom: 3rem;
+}
+
+.mintRateContainer {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Tooltip text hidden by default */
+.tooltipText {
+  visibility: hidden;
+  width: 12.5rem;
+  background: rgba(80, 78, 78, 0.8);
+
+  border: 1px solid;
+  border-color: rgba(105, 104, 104, 0.7);
+
+  text-align: center;
+  padding: 0.3rem;
+  border-radius: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the mint rate text */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Show tooltip text on hover */
+.mintRateContainer:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}
+
+.fileUploadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.fileLabel {
+  cursor: pointer;
+}
+
+.hiddenFileInput {
+  display: none; /* Hide the file input completely */
+}
+
+.imageUploadPreview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.imageUploadPreview:hover {
+  border-color: #e44bca; /* Highlight on hover */
+}
+
+.uploadButton {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #e44bca;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.uploadButton:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+@media only screen and (max-width: 36rem) {
+  .AddProject {
+    font-size: 15px;
+    text-align: center;
+    height: 3rem;
+    width: 7rem;
+    background-color: #e44bca;
+    border-radius: 0.5rem;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    transition: transform 1.2s ease;
+    /* Center the button horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .wrapper {
+    width: 20rem;
+    background-color: #302f2f;
+    border-radius: 5px;
+    padding: 25px 25px 30px;
+    margin-bottom: 1.5rem;
+  }
+
+  .wrapper span {
+    /* color: #4671ea; */
+    color: #fff;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .wrapper textarea {
+    width: 100%;
+    height: 59px;
+    padding: 15px;
+    outline: none;
+    resize: none;
+    font-size: 16px;
+    margin-top: 20px;
+    border-radius: 5px;
+    border-color: #bfbfbf;
+    background-color: #302f2f;
+  }
+
+  .wrapper input {
+    width: 100%;
+    height: 19.5px;
+    padding: 5px;
+    outline: none;
+    resize: none;
+    font-size: 16px;
+    margin-top: 20px;
+    border-radius: 5px;
+    border-color: #bfbfbf;
+    background-color: #302f2f;
+    text-align: center;
+  }
+
+  .optionalMediaContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adjust the gap between items as needed */
+  }
+
+  .websiteWrapper {
+    width: 300px;
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem; /* Adjust margin as needed */
+  }
+
+  .websiteWrapper span {
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    margin-right: 1rem; /* Add margin to separate the label */
+  }
+
+  .websiteWrapper input {
+    flex: 1; /* Allow the input to grow to fill available space */
+    height: 19.5px;
+    padding: 5px;
+    outline: none;
+    resize: none;
+    font-size: 16px;
+    border-radius: 5px;
+    border-color: #bfbfbf;
+    background-color: #302f2f;
+    text-align: center;
+  }
+  .select {
+    scrollbar-color: #e44bca;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e44bca;
+      border-radius: 22px;
+    }
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #c741b1;
+    }
+    height: 100%;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 20px;
+    background-color: #302f2f;
+  }
+  .mintRate {
+    font-size: 20px;
+  }
+}

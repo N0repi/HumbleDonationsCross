@@ -1,0 +1,47 @@
+/* SortDropdown.module.css */
+
+.dropdownMenu {
+  position: fixed; /* Change to fixed positioning to overlay on the page */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Offset by 50% to center */
+  background-color: #1e1e1e;
+  border: 1.25px solid #444244;
+  border-radius: 0.5rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  width: 200px; /* Adjust width as needed */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  max-height: 300px; /* Optional max-height with overflow */
+  overflow-y: auto; /* Allows scrolling within the dropdown if it overflows */
+}
+
+.dropdownItem {
+  padding: 0.75rem 1.25rem;
+  color: white;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #444244;
+}
+
+.closeButton {
+  padding: 0.75rem 1.25rem;
+  color: red;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.closeButton:hover {
+  background-color: #444244;
+}

@@ -1,0 +1,36 @@
+{
+  "myTokenList": [
+    {
+      "chainId": 42161,
+      "address": "0xBabe338052d822233Df0CD27Be40d6209B86Bae7",
+      "name": "Humble Donations Token",
+      "symbol": "HDT",
+      "decimals": 18,
+      "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmYGjZoQAHzhqwJhFhxvpZ3ijEFZAgqWKNtg4RiyK7GBue"
+    },
+    {
+      "chainId": 42161,
+      "decimals": 18,
+      "name": "Ethereum",
+      "address": "",
+      "symbol": "ETH",
+      "img": "/etherlogo.png"
+    },
+    {
+      "name": "Wrapped Ether",
+      "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+      "symbol": "WETH",
+      "decimals": 18,
+      "chainId": 42161,
+      "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    },
+    {
+      "name": "Tether USD",
+      "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 42161,
+      "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+    }
+  ]
+}

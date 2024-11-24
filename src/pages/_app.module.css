@@ -1,0 +1,49 @@
+.backgroundStyle {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.App {
+  position: relative;
+  z-index: 2; /* Ensure this content is above the background */
+}
+
+@media only screen and (max-width: 400px) {
+  .backgroundStyle {
+    width: 400%;
+    left: -100%;
+  }
+}
+@media only screen and (max-width: 650px) {
+  .backgroundStyle {
+    width: 400%;
+    left: -100%;
+  }
+}
+@media only screen and (max-width: 900px) {
+  .backgroundStyle {
+    width: 400%;
+    left: -100%;
+  }
+}
+@media only screen and (max-width: 940px) {
+  .backgroundStyle {
+    width: 300%;
+    left: -100%;
+  }
+}
+@media only screen and (min-width: 1010px) {
+  .backgroundStyle {
+    width: 220%;
+  }
+}
+@media only screen and (min-width: 1050px) {
+  .backgroundStyle {
+    width: 100%;
+  }
+}

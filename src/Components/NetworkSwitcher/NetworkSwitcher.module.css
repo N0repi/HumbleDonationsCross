@@ -1,0 +1,67 @@
+.networkSwitcherContainer {
+  position: relative;
+  display: flex; /* Change from inline-block to flex */
+  justify-content: center; /* Center the current network horizontally */
+  align-items: center;
+  text-align: center;
+}
+
+.currentNetwork {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
+}
+
+.networkImage {
+  border-radius: 50%;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 11rem; /* Ensure consistent width */
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px 0;
+  z-index: 1000;
+  min-width: 150px; /* Minimum width for consistent sizing */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.dropDownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.dropDownItem:hover {
+  background-color: #f5f5f5;
+}
+
+.dropDownItemActive {
+  color: #28a745; /* Active item color */
+  font-weight: bold;
+}
+
+.dropDownItemDisabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

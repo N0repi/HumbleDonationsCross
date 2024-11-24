@@ -1,0 +1,138 @@
+/* Model.module.css */
+
+.Model {
+    position: fixed;
+    inset: 0% 0% 0% 0%;
+    background-color: #1e1e1e5a;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    z-index: 1111111111;
+    backdrop-filter: blur(2px);
+}
+
+.Model_box {
+    position: relative;
+    background-color: #1e1e1e;
+    opacity: 92%;
+    padding: 2rem;
+    border-radius: 1rem;
+    -webkit-box-shadow: 0px 0px 36px 10px rgba(228, 75, 203, 0.86);
+    -moz-box-shadow: 0px 0px 36px 10px rgba(228, 75, 203, 0.86);
+    box-shadow: 0px 0px 36px 10px rgba(228, 75, 203, 0.86);
+}
+
+/* fade attempt */
+
+.Model_box_heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Model_box_heading p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 0 auto;
+}
+
+.Model_box_heading_img {
+    opacity: 80%;
+}
+
+/* pink wallet buttons */
+.Model_box_wallet p {
+    margin-bottom: 0.5rem;
+    background-color: #e44bca;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: #1e1e1e;
+    font-weight: 700;
+    cursor: pointer;
+    width: 10rem;
+}
+
+.Model_box_wallet p:last-child {
+    margin-bottom: 1.5rem;
+}
+
+/* wallet images */
+.Model_box_item {
+    display: flex;
+    align-items: center;
+    /* Added from p tag style */
+    margin-bottom: 0.5rem;
+    background-color: #1e1e1e;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    /* border: 2px solid #e44bca; */
+    color: #1e1e1e;
+    font-weight: 700;
+    cursor: pointer;
+
+    /* Added from p tag style */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.Model_box_item:hover {
+    background-color: #e44bca;
+}
+
+.Model_box_para {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 1rem;
+    line-height: 1.2;
+    border: 1px solid #e65dd1;
+    border-radius: 0.5rem;
+}
+
+.Modal_box_item_name {
+    margin-left: 0.8rem;
+}
+
+.images {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+/* 39:26 */
+
+@media only screen and (max-width: 35em) {
+    .Model_box {
+        -webkit-box-shadow: 0px 0px 30px 7px rgba(228, 75, 203, 0.86);
+        -moz-box-shadow: 0px 0px 30px 7px rgba(228, 75, 203, 0.86);
+        box-shadow: 0px 0px 30px 7px rgba(228, 75, 203, 0.86);
+    }
+    .Model_box_item {
+        background-color: #1e1e1e;
+        color: white;
+        opacity: 98%;
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+    .Modal_box_item_name {
+        margin-left: 0.8rem;
+    }
+    .Model_box_item:hover {
+        background-color: #860771;
+    }
+    .Model_box_wallet p:last-child {
+        margin-bottom: 1rem;
+    }
+    .Model_box_para {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+    }
+    .images {
+        width: 30px;
+        height: 30px;
+    }
+
+    .Web2Box {
+        width: 80%;
+        height: 80%;
+    }
+}

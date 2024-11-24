@@ -1,0 +1,129 @@
+/* Airdrop.module.css */
+
+.Model {
+    position: fixed;
+    inset: 0% 0% 0% 0%;
+
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    z-index: 1111111111;
+}
+
+.Model_box {
+    background: rgba(175, 173, 173, 0.2); /* White with 20% opacity */
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px); /* Apply the blur effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    margin: 20px;
+}
+
+/* fade attempt */
+
+.Model_box_heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Model_box_heading p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 0 auto;
+}
+
+.AirdropHeader {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    margin-bottom: 1rem;
+}
+
+.AirdropHeader p {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    background-color: #e44bca;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: #1e1e1e;
+    font-weight: 700;
+    font-size: 1.3rem;
+    width: 10rem;
+}
+
+.QualHeader {
+    text-align: center;
+    margin-top: 1rem;
+    font-weight: 550;
+    font-size: 1.2rem;
+    color: #1e1e1e;
+}
+.Model_box_item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    /* Added from p tag style */
+
+    background-color: #1e1e1e5a;
+    padding: 0.8rem;
+    border-radius: 0.5rem;
+    /* border: 2px solid #e44bca; */
+
+    font-weight: 500;
+
+    /* Added from p tag style */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.Model_box_item ul {
+    margin: 0.46em;
+}
+
+.Amounts {
+    text-align: left;
+}
+
+.claimButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    background-color: #e44bca;
+    border-radius: 0.5rem;
+    padding: 0.9rem;
+    color: #1e1e1e;
+    font-weight: bold;
+}
+
+.EligibleHeader {
+    color: #1e1e1e;
+    text-align: center;
+}
+.link {
+    margin-left: 0.5rem;
+    font-weight: 700;
+}
+
+/* Media Query for mobile devices */
+@media only screen and (max-width: 650px) {
+    .Model_box {
+        width: 100%;
+    }
+    .QualHeader {
+        text-align: center;
+        margin-top: 1rem;
+        font-weight: 525;
+        font-size: 1.1rem;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+}
+
+@media only screen and (max-width: 1030px) {
+}

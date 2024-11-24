@@ -1,0 +1,132 @@
+/* globals.css */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles/globals.css */
+
+:root {
+  --primary-color: #1d1d1d; /* Set your primary color here */
+  --secondary-color: #e44bca; /* Set your secondary color here */
+  --tertiary-color: white;
+  --background: radial-gradient(
+      closest-corner circle at 40% 70%,
+      #ffffff 0%,
+      #34c3e75a 0%,
+      transparent
+    ),
+    radial-gradient(
+      closest-corner circle at 80% 20%,
+      #ffffff 0%,
+      #e734345a 0%,
+      transparent
+    ),
+    radial-gradient(
+      closest-corner circle at 10% 10%,
+      #ffffff 0%,
+      #16a7574a 0%,
+      transparent
+    ),
+    linear-gradient(#ac34e7, #030713);
+  background: var(--background);
+
+  /*
+    --background: linear-gradient(
+         rgba(228, 75, 202, 1) 0%,  rgba(172, 52, 231, 1) 3%,
+        rgba(172, 52, 231, 1) 48%,
+        rgba(3, 7, 19, 1) 100%
+    );
+    */
+}
+::selection {
+  background-color: #e44bca;
+}
+/* #background {
+    height: 100%;
+} */
+
+/* html, */
+.backgroundContainer {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  min-height: 100vh; /* Ensure container stretches to at least the viewport height */
+  /* height: 120vh;  */
+  background: var(--background) no-repeat center center; /* Set background */
+  background-size: cover; /* Ensure background covers the entire container */
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden; /* Hide horizontal overflow */
+
+  background-size: cover; /* Ensure the entire container is filled */
+  background-repeat: no-repeat; /* Prevent repetition */
+  background-position: center; /* Center the image */
+  background-image: url("../assets/indexBackground/a00001SwinIR.jpg");
+}
+
+/* Adjust the body styles */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  color: var(--tertiary-color);
+  overflow-x: hidden; /* Hide horizontal overflow */
+
+  /* Add the following styles for Firefox */
+  /* scrollbar-width: thin; */
+  scrollbar-color: #e44bca;
+
+  &::-webkit-scrollbar {
+    width: 13px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e44bca;
+    border-radius: 12px;
+  }
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #c741b1;
+  }
+}
+.custom-textarea {
+  color: #1e1e1e; /* Set the color to your desired value */
+  text-align: top;
+}
+
+/* feedback styles */
+
+.error {
+  @apply border-2
+        border-red-500
+        bg-red-300
+        text-red-800
+        py-1 px-2
+        rounded-sm
+        block
+        max-w-fit
+        my-4 mx-auto;
+}
+
+@media only screen and (max-width: 65rem) {
+  .backgroundContainer {
+    background-image: url("../assets/indexBackground/mobileSizes/a00148.jpg");
+  }
+}
+@media only screen and (max-width: 36rem) {
+  .backgroundContainer {
+    background-image: url("../assets/indexBackground/mobileSizes/a00147.jpg");
+  }
+  body {
+    font-size: 0.7rem;
+  }
+}

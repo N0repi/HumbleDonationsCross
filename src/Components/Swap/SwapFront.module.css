@@ -1,0 +1,247 @@
+/* SwapFront.module.css */
+
+/* TAGS */
+
+.swapWrapper {
+  position: relative;
+  z-index: 10; /* Ensure it's above the background */
+}
+
+.tagContainer {
+  display: flex;
+  margin-left: 0%; /*was 145% */
+  margin-top: 0.75rem;
+  position: relative;
+  bottom: 0;
+  right: 0;
+  box-shadow: 6px 6px 30px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
+}
+
+.tag {
+  padding: 0.25rem 0.5rem;
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  margin: 1rem; /* controls 3d effect */
+  white-space: nowrap;
+
+  border-radius: 0.25rem; /* rounded */
+
+  /* opacity: 60%;
+    transition: opacity 0.8s ease; */
+  border-top-left-radius: 0.375rem;
+}
+
+.SwapFront {
+  width: 100%;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Change to absolute */
+  margin-left: 0%;
+  margin-bottom: 10;
+}
+
+/* EDITED, altered, changed */
+/* entire component -> black box behind buttons  */
+.SwapFront_box {
+  background: rgba(175, 173, 173, 0.2); /* White with 20% opacity */
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Apply the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  margin: 20px;
+}
+
+.Expanded {
+  height: 20rem; /* Set your desired height here */
+  /* You can customize other styles for the expanded state */
+}
+
+.ShowOnExpand {
+  display: none; /* Initially hide the buttons */
+}
+
+.Expanded .ShowOnExpand {
+  display: inline-block; /* Display the buttons when the height is expanded */
+}
+
+.SwapFront_box_heading {
+  margin-top: -1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* input amount of token, parent of maxButton, & pink border around input section */
+.SwapFront_box_input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e44bca9a;
+  padding-left: 2rem;
+  border-radius: 2rem;
+  margin-top: 1rem;
+}
+
+/* textbox for user to enter token */
+.SwapFront_box_input input {
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  color: #e44bca;
+  font-size: 1.2rem;
+}
+
+/* right-hand button that displays the chosen token, default ETH */
+.SwapFront_box_input button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.1rem;
+  line-height: 0;
+  width: 6.5rem;
+  background-color: #1e1e1e;
+  padding: 1rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  /* border: 1.25px solid #860771; */ /*border around token */
+  border-radius: 2rem;
+}
+
+/* Parent of .SwapFront_box_balance */
+.balanceBar {
+  margin-top: 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 1.5rem;
+}
+
+/* Parent of .maxButton */
+.buttonBar {
+  display: flex; /* Changed from grid to flex */
+  align-items: center;
+  justify-content: center; /* Center horizontally */
+  margin-top: 1rem;
+}
+
+/* input max balance button */
+.maxButton {
+  margin-top: 0.2rem;
+  margin-left: 2rem;
+  outline: 0;
+  background-color: #1e1e1e;
+  border: 1.25px solid #860771;
+  color: #fff;
+  font-size: 1rem;
+  border-radius: 2rem;
+  padding: 0.25rem;
+  width: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ellipses {
+  font-size: 1rem;
+}
+
+/* token balance */
+.SwapFront_box_balance {
+  margin-top: 0.5rem;
+  margin-left: 2rem;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  color: #e44bca;
+  font-size: 1rem;
+}
+
+/* Donate button */
+.SwapFront_box_btn {
+  width: 90%;
+  flex-wrap: nowrap;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-color: #1e1e1e;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1.5px solid #e44bca;
+  border-radius: 2rem;
+  font-size: 1.2rem;
+  bottom: 0;
+}
+
+.MoveBtn {
+  margin-top: 0.6rem;
+}
+
+.SwapFront_box_heading_img {
+  cursor: pointer;
+}
+
+.hideOnMobile {
+  display: none;
+}
+
+.buttonContainer {
+  display: inline-flex;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: space-between; /* Align items horizontally to the end */
+  width: 100%; /* Take up full width */
+  font-weight: 700;
+}
+
+.expandContract {
+  width: 50px;
+  height: 50px;
+}
+
+.lp {
+  width: 10rem;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Change to absolute */
+  text-align: center;
+
+  cursor: pointer;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: space-between;
+
+  background: rgba(150, 149, 149, 0.2); /* White with 20% opacity */
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Apply the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.625rem 1.25rem;
+  font-size: 16px;
+  text-decoration: none;
+  border-radius: 5px;
+
+  /* margin: 10px; */
+}
+
+@media only screen and (max-width: 35em) {
+  .SwapFront {
+    width: 95%;
+  }
+  .SwapFront_box {
+    width: 95%;
+  }
+  .SwapFront_box_input input {
+    width: 50%;
+  }
+  .buttonBar {
+    margin-right: 1.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+}
