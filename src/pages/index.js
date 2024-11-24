@@ -26,8 +26,8 @@ export default function Home({ Component, pageProps }) {
             <strong> no revenue taken</strong>.
           </p>
           <p className={Style.description}>
-            Users can stake HDT-WS to <strong>earn WS</strong> and support the
-            protocol. <br />
+            Users can stake HDT-WETH to <strong>earn WETH</strong> and support
+            the protocol. <br />
           </p>
           <p className={Style.description}>
             Donations made in other tokens are subject to a 1.5% tax which funds{" "}
