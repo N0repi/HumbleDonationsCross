@@ -10,6 +10,8 @@ import {
   fromReadableAmount,
   WETH_TOKEN,
 } from "./libs/conversion.mjs";
+
+import { useWallet } from "../../Wallet/WalletContext";
 import { getConfig } from "../../../utils/constants";
 
 const slippageTolerance = 0.01; // 0.004 == 0.4%   | increased tolerance for Sonic due to varying liquidity
@@ -22,9 +24,11 @@ export default async function getAmountOutMinimum(
   tokenIn,
   tokenOut,
   amountIn,
-  provider,
-  chainId
+  provider
 ) {
+  const { chain } = useWallet();
+  const chainId = chain?.id;
+  console.log("slippage chainId:", chainId);
   if (!provider) {
     throw new Error("Provider not connected");
   }

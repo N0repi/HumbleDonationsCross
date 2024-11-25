@@ -7,6 +7,16 @@
   line-height: 2rem /* 32px */;
 }
 
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh; /* Full viewport height */
+  box-sizing: border-box; /* Ensure padding doesn't affect size */
+}
+
 .main {
   position: relative; /* Ensures the image can be absolutely positioned relative to this container */
 }
@@ -190,8 +200,7 @@
   }
   .Parent {
     display: flex;
-
-    flex-direction: column; /* Stack items vertically on smaller screens */
+    flex-direction: column;
   }
   .imageContainer {
     /* width: 20rem;

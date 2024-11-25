@@ -82,12 +82,12 @@ async function calculateSlippage(
       console.log("taxAmountHDT:", taxAmountHDT);
       console.log("WETH:", WETH_TOKEN);
       console.log("HDT:", HDT_TOKEN);
+      console.log("payProcessTokenId calc slippage chainId:", chainId);
       amountOutMinimumHDT = await getAmountOutMinimum(
         WETH_TOKEN, // Intermediate swap from WETH to HDT
         HDT_TOKEN,
         taxAmountHDT,
-        connectedSigner,
-        chainId
+        connectedSigner
       );
       console.log("amountOutMinimumHDT", amountOutMinimumHDT);
     } else {
@@ -95,8 +95,7 @@ async function calculateSlippage(
         tokenInput,
         WETH_TOKEN,
         taxAmount,
-        connectedSigner,
-        chainId
+        connectedSigner
       );
       console.log("amountOutMinimumETH", amountOutMinimumETH);
       splitWETH = amountOutMinimumETH * 0.75;
@@ -203,6 +202,7 @@ async function donateToken(
   connectedSigner,
   chainId
 ) {
+  console.log("payProcessTokenId donateToken chainId:", chainId);
   const { contractAddress, ABI, explorer } = await getNetworkConfig(chainId);
 
   // Check merkle tree to see if ERC20 token is whitelisted.
@@ -255,6 +255,7 @@ async function Payable(
   connectedSigner,
   chainId
 ) {
+  console.log("payProcessTokenId Payable chainId:", chainId);
   const { contractAddress, ABI, NATIVE } = await getNetworkConfig(chainId);
   const ETH = {
     name: NATIVE.name,
@@ -311,13 +312,15 @@ async function Payable(
         tokenId,
         tokenQuantity,
         tokenInput,
-        connectedSigner
+        connectedSigner,
+        chainId
       );
       const transactionHashConfirmation = await donateToken(
         tokenId,
         tokenQuantity,
         tokenInput,
-        connectedSigner
+        connectedSigner,
+        chainId
       );
       return {
         transactionHashApproval,
