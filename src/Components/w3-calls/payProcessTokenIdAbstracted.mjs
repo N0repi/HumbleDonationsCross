@@ -45,8 +45,25 @@ async function getContractERC20(tokenInput, chain) {
   });
 }
 
-async function validateToken(tokenInput) {
-  const checkWhiteListProof = await computeMerkleProof(tokenInput);
+async function validateToken(tokenInput, chainId) {
+  console.log("validateToken tokenInput address:", tokenInput);
+
+  const lowerCaseAddress = tokenInput.toLowerCase();
+
+  const checkWhiteListProof = await computeMerkleProof(
+    lowerCaseAddress,
+    chainId
+  );
+  console.log("checkWhiteListProof log:", checkWhiteListProof);
+
+  if (checkWhiteListProof.length > 0) {
+    console.log(`Token at address ${tokenInput.address} is in the whitelist.`);
+  } else {
+    console.log(
+      `Token at address ${tokenInput.address} is NOT in the whitelist.`
+    );
+  }
+
   return checkWhiteListProof;
 }
 
@@ -54,7 +71,7 @@ async function calculateSlippage(
   tokenId,
   tokenQuantity,
   tokenInput,
-  dataRead,
+  taxPercentage,
   chain
 ) {
   const { WETH_TOKEN, HDT_TOKEN } = getTokensForChain(chain.id);
@@ -63,9 +80,17 @@ async function calculateSlippage(
     chain: chain,
   });
 
-  const taxPercentage = dataRead;
+  console.log("thirdweb chain:", chain);
+
+  // Calculate the tax amount
   const formattedTaxPercentage = (Number(taxPercentage) / 1000).toString();
   const taxAmount = (tokenQuantity * formattedTaxPercentage).toString();
+  console.log("Tax Amount:", taxAmount);
+
+  // Calculate splits
+  const splitWETH = taxAmount * 0.75;
+  const splitHDT = taxAmount * 0.25;
+  console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT);
 
   let amountOutMinimumETH = 0;
   let amountOutMinimumHDT = 0;
@@ -75,39 +100,65 @@ async function calculateSlippage(
       tokenInput.address === WETH_TOKEN.address ||
       tokenInput.name === "Ethereum"
     ) {
-      const taxAmountHDT = taxAmount * 0.25;
+      // Special case for WETH as input
       amountOutMinimumHDT = await getAmountOutMinimum(
         WETH_TOKEN,
         HDT_TOKEN,
-        taxAmountHDT,
-        provider,
-        chain.Id
-      );
-    } else {
-      amountOutMinimumETH = await getAmountOutMinimum(
-        tokenInput,
-        WETH_TOKEN,
-        taxAmount,
+        splitHDT, // Use splitHDT for the calculation
         provider,
         chain.id
       );
-      const splitHDT = amountOutMinimumETH * 0.25;
+    } else {
+      // Handle non-WETH token inputs
+      amountOutMinimumETH = await getAmountOutMinimum(
+        tokenInput,
+        WETH_TOKEN,
+        taxAmount, // Use splitWETH for the calculation
+        provider,
+        chain.id
+      );
+
       amountOutMinimumHDT = await getAmountOutMinimum(
         WETH_TOKEN,
         HDT_TOKEN,
         splitHDT,
         provider,
-        chain.Id
+        chain.id
       );
     }
   }
+
+  console.log("AmountOutMinimumETH:", amountOutMinimumETH);
+  console.log("AmountOutMinimumHDT:", amountOutMinimumHDT);
+
+  // Default to 0 if calculations fail
+  const amountOutMinimumETHParsed = amountOutMinimumETH
+    ? ethers
+        .parseUnits(
+          amountOutMinimumETH.toFixed(tokenInput.decimals),
+          tokenInput.decimals
+        )
+        .toString()
+    : "0";
+
+  const amountOutMinimumHDTParsed = amountOutMinimumHDT
+    ? ethers
+        .parseUnits(
+          amountOutMinimumHDT.toFixed(tokenInput.decimals),
+          tokenInput.decimals
+        )
+        .toString()
+    : "0";
+
+  console.log(
+    "Parsed Amounts:",
+    amountOutMinimumETHParsed,
+    amountOutMinimumHDTParsed
+  );
+
   return {
-    amountOutMinimumETHParsed: ethers
-      .parseUnits(amountOutMinimumETH.toString(), tokenInput.decimals)
-      .toString(),
-    amountOutMinimumHDTParsed: ethers
-      .parseUnits(amountOutMinimumHDT.toString(), tokenInput.decimals)
-      .toString(),
+    amountOutMinimumETHParsed,
+    amountOutMinimumHDTParsed,
   };
 }
 
@@ -199,8 +250,8 @@ export function useDonateTokenAbstracted() {
       );
 
       console.log(taxPercentage); // 15n
-
-      const proof = await validateToken(tokenInput.address);
+      console.log("payProcessTokenIdAbstracted donateToken chainId:", chainId);
+      const proof = await validateToken(tokenInput.address, chainId);
 
       const { amountOutMinimumETHParsed, amountOutMinimumHDTParsed } =
         await calculateSlippage(
@@ -230,10 +281,10 @@ export function useDonateTokenAbstracted() {
           tokenId,
           tokenInput.address,
           tokenQuantityInEthFormat,
-          amountOutMinimumETHParsed,
+          amountOutMinimumETHParsed, // amountOutMinimumETHParsed
           amountOutMinimumHDTParsed,
           proof,
-          3000,
+          // 3000,
         ],
       });
 

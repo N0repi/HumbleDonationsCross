@@ -128,7 +128,7 @@ export default function Head() {
       </div>
 
       <div className={`${Style.right}`}>
-        <div className={`${Style.airdrop}`}>
+        <div className={`${Style.airdrop} ${Style.hideOnMobile}`}>
           <button
             onClick={() => setOpenAirdropModal(true)}
             className={Style.airdropText}

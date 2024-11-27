@@ -14,26 +14,31 @@ import {
 import { useWallet } from "../../Wallet/WalletContext";
 import { getConfig } from "../../../utils/constants";
 
-const slippageTolerance = 0.01; // 0.004 == 0.4%   | increased tolerance for Sonic due to varying liquidity
+const slippageTolerance = 0.985; // 0.004 == 0.4%   | increased tolerance for Sonic due to varying liquidity
 
 function toFixedWithoutScientificNotation(num, decimals) {
   return Number(num).toFixed(decimals);
 }
-
+// const { chain } = useWallet();
+// const chainId = chain?.id;
 export default async function getAmountOutMinimum(
   tokenIn,
   tokenOut,
   amountIn,
-  provider
+  provider,
+  chainId
 ) {
-  const { chain } = useWallet();
-  const chainId = chain?.id;
   console.log("slippage chainId:", chainId);
   if (!provider) {
     throw new Error("Provider not connected");
   }
   if (!chainId) {
     throw new Error("Invalid chain");
+  }
+  // Validate amountIn
+  if (amountIn <= 0) {
+    console.warn("amountIn is zero or invalid, skipping quote.");
+    return 0;
   }
 
   // getConfig
@@ -88,7 +93,7 @@ export default async function getAmountOutMinimum(
     provider
   );
 
-  if (tokenIn.symbol === "WS") {
+  if (tokenIn.symbol === "WETH") {
     const [token0, token1, fee] = await Promise.all([
       poolContract.token1(),
       poolContract.token0(),

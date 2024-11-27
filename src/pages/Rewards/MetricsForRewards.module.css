@@ -1,42 +1,51 @@
 /* MetricsForRewards.module.css */
 
 .totalReceived {
-    margin-top: 3rem;
-    font-weight: 900;
-    font-size: 19px;
+  margin-top: 3rem;
+  font-weight: 900;
+  font-size: 19px;
 }
 
 .chartContainer {
-    height: 600px;
-    width: 1200px;
+  height: 600px;
+  width: 1200px;
 }
 
 .custom-labels {
-    color: white; /* Change this to the color you desire */
+  color: white; /* Change this to the color you desire */
 }
 
 /* ForTitle */
 .receivedBox {
-    margin-top: 0.05rem; /* height of prop */
-    /* background-color: #1e1e1e; */
-    background-color: #1e1e1e;
-    padding: 1rem;
-    /* border: 2px solid #313131; */
-    border-radius: 1.25rem;
-    box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
+  margin-top: 0.05rem; /* height of prop */
+  /* background-color: #1e1e1e; */
+  background-color: #1e1e1e;
+  padding: 1rem;
+  /* border: 2px solid #313131; */
+  border-radius: 1.25rem;
+  box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
 }
 
 .sizingBox {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    margin-right: 0.25rem;
-    margin-left: 0.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
 }
 .totalReceivedTitle {
-    font-weight: 900;
-    font-size: 19px;
+  margin-bottom: 0.44rem;
+  font-weight: 900;
+  font-size: 1.188rem;
+}
+
+.balances {
+  font-size: 1rem;
 }
 
 .balanceInUSD {
-    margin-top: 0.5rem;
+  font-size: 1.08rem;
+  margin-top: 0.34rem;
+}
+
+@media only screen and (max-width: 36rem) {
 }

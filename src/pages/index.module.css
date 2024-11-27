@@ -10,13 +10,13 @@
 .pageWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between; /* Distribute space evenly */
   align-items: center;
   width: 100%;
   min-height: 100vh; /* Full viewport height */
-  box-sizing: border-box; /* Ensure padding doesn't affect size */
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent content overflow */
 }
-
 .main {
   position: relative; /* Ensures the image can be absolutely positioned relative to this container */
 }
@@ -69,6 +69,10 @@
   display: flex;
   justify-content: center; /* Center the image horizontally */
   align-items: center; /* Center the image vertically */
+  /* max-width: 60%; 
+  max-height: 60%;  */
+  width: auto; /* Allow width to adjust proportionally */
+  height: auto; /* Allow height to adjust proportionally */
 }
 
 .HDTsplat {
@@ -203,12 +207,15 @@
     flex-direction: column;
   }
   .imageContainer {
-    /* width: 20rem;
-        height: 20rem; */
+    margin-top: -0.75rem;
     margin-bottom: -2rem;
-    flex: 1; /* Allow imageContainer to take available space */
-    order: -1; /* Place imageContainer to the left */
-    padding-left: 1rem; /* Add padding for spacing */
+    /* max-width: 80%;
+    max-height: 80%;
+    margin-left: 2rem;
+    height: auto; */
+
+    flex: 1;
+    order: -1;
   }
   .descriptionLink {
     font-size: 0.8rem;

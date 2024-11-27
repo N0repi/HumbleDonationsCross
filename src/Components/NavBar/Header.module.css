@@ -24,6 +24,7 @@
   font-size: 1.5rem;
   margin-left: 0.5rem;
   white-space: nowrap;
+  text-shadow: 1px 1px 0 #1e1e1e;
 }
 
 .left {
@@ -59,6 +60,7 @@
   font-weight: 525;
   font-size: 1.25rem;
   gap: 3rem;
+  text-shadow: 1px 1px 0 #1e1e1e;
 }
 
 .activeTab {
@@ -79,6 +81,7 @@
 
 .airdropText {
   font-size: 1.2rem; /* Only apply font-size here */
+  text-shadow: 1px 1px 0 #1e1e1e;
 }
 
 .WalletModal {
@@ -88,6 +91,7 @@
 /* Media Query for mobile devices */
 @media only screen and (max-width: 650px) {
   .parent {
+    margin-top: 0.75rem;
     display: flex; /* Use flexbox to rearrange layout */
 
     align-items: center;
@@ -95,12 +99,15 @@
     width: 100%; /* Take full width */
   }
   .HDTlogo {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 3rem;
   }
   .docLogo {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 3rem;
+    height: 3rem;
+  }
+  .WalletModal {
+    margin-left: 2.25rem;
   }
   .link {
     margin-right: 0rem;
@@ -111,12 +118,13 @@
     display: none;
   }
   .airdrop {
-    gap: 0.1rem;
+    gap: 0rem;
     padding-right: 0.25rem;
   }
   /* Ensure .left and .right sections stay horizontal */
   .left,
   .right {
+    gap: 0rem;
     padding-left: 1rem;
     flex-wrap: nowrap; /* Allow wrapping */
     justify-content: center; /* Center-align on small screens */
@@ -143,8 +151,8 @@
     width: 95%;
   }
   .HDTlogo {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.8rem;
+    height: 2.8rem;
   }
   .docLogo {
     width: 2rem;

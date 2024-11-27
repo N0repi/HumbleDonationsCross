@@ -20,9 +20,15 @@ async function getNetworkConfig(chainId) {
 //   address: "0x0000000000000000000000000000000000000000",
 // };
 
-async function validateToken(tokenInput) {
+async function validateToken(tokenInput, chainId) {
   console.log("validateToken tokenInput address:", tokenInput);
-  const checkWhiteListProof = await computeMerkleProof(tokenInput);
+
+  const lowerCaseAddress = tokenInput.toLowerCase();
+
+  const checkWhiteListProof = await computeMerkleProof(
+    lowerCaseAddress,
+    chainId
+  );
   console.log("checkWhiteListProof log:", checkWhiteListProof);
 
   if (checkWhiteListProof.length > 0) {
@@ -68,8 +74,13 @@ async function calculateSlippage(
   const taxAmount = (tokenQuantity * formattedTaxPercentage).toString(); // Total tax amount
   console.log("split taxAmount:", taxAmount);
 
+  // Split amounts
+  const splitWETH = taxAmount * 0.75;
+  const splitHDT = taxAmount * 0.25;
+  console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT);
+
   let amountOutMinimumETH = 0;
-  let splitWETH = 0;
+  // let splitWETH = 0;
   let amountOutMinimumHDT = 0;
 
   if (tokenInput.address !== HDT_TOKEN.address) {
@@ -87,30 +98,34 @@ async function calculateSlippage(
         WETH_TOKEN, // Intermediate swap from WETH to HDT
         HDT_TOKEN,
         taxAmountHDT,
-        connectedSigner
+        connectedSigner,
+        chainId
       );
       console.log("amountOutMinimumHDT", amountOutMinimumHDT);
     } else {
+      console.log("amountOutMinimumETH", amountOutMinimumETH);
+      // splitWETH = taxAmount * 0.75;
+      // console.log("splitWETH", splitWETH); // 0.000012446360878819499
+      // const splitHDT = amountOutMinimumETH * 0.25;
+      // console.log("splitHDT", splitHDT); // 0.0000041487869596065
+
+      const splitHDTStr = splitHDT.toString();
+      console.log("splitHDTStr", splitHDTStr);
+
       amountOutMinimumETH = await getAmountOutMinimum(
         tokenInput,
         WETH_TOKEN,
         taxAmount,
-        connectedSigner
+        connectedSigner,
+        chainId
       );
-      console.log("amountOutMinimumETH", amountOutMinimumETH);
-      splitWETH = amountOutMinimumETH * 0.75;
-      console.log("splitWETH", splitWETH); // 0.000012446360878819499
-      const splitHDT = amountOutMinimumETH * 0.25;
-      console.log("splitHDT", splitHDT); // 0.0000041487869596065
-
-      const splitHDTStr = splitHDT.toString();
-      console.log("splitHDTStr", splitHDTStr);
 
       amountOutMinimumHDT = await getAmountOutMinimum(
         WETH_TOKEN, // Intermediate swap from WETH to HDT
         HDT_TOKEN,
         splitHDT,
-        connectedSigner
+        connectedSigner,
+        chainId
       );
       console.log("amountOutMinimumHDT", amountOutMinimumHDT);
     }
@@ -174,16 +189,17 @@ async function approveToken(
     tokenInput.decimals
   );
 
-  const currentAllowance = await erc20Contract.allowance(
-    connectedSigner.address,
-    contractAddress
-  );
-  if (currentAllowance > 0) {
-    // tokenInput.symbol == "USDT" &&
-    const resetTx = await erc20Contract.approve(contractAddress, 0);
-    await resetTx.wait();
-    console.log("Reset approval successful");
-  }
+  // ------REVOKE ALLOWANCE IF IT IS ALREADY SET------
+  // const currentAllowance = await erc20Contract.allowance(
+  //   connectedSigner.address,
+  //   contractAddress
+  // );
+  // if (currentAllowance > 0) {
+  //   // tokenInput.symbol == "USDT" &&
+  //   const resetTx = await erc20Contract.approve(contractAddress, 0);
+  //   await resetTx.wait();
+  //   console.log("Reset approval successful");
+  // }
   const approvalTx = await erc20Contract.approve(
     contractAddress,
     tokenQuantityInEthFormat,
@@ -207,7 +223,8 @@ async function donateToken(
 
   // Check merkle tree to see if ERC20 token is whitelisted.
   console.log("donateTokeninput address:", tokenInput.address);
-  const proof = await validateToken(tokenInput.address);
+  const proof = await validateToken(tokenInput.address, chainId);
+  console.log("Proof being sent to the contract:", proof); // log proof
 
   // Calculate the slippage of the confirmation transaction in both WETH and HDR
   const { amountOutMinimumETHParsed, amountOutMinimumHDTParsed } =
@@ -229,17 +246,17 @@ async function donateToken(
     tokenInput.decimals
   );
 
-  const fee = 3000; // @# CAN AND SHOULD LIKELY BE REMOVED
+  // const fee = 3000; // @# CAN AND SHOULD LIKELY BE REMOVED
   console.log("tokenQuantityInEthFormat:", tokenQuantityInEthFormat);
   const donateTx = await HumbleDonations.donate(
     tokenId,
     tokenInput.address,
     tokenQuantityInEthFormat,
-    amountOutMinimumETHParsed,
+    0, // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
     amountOutMinimumHDTParsed,
-    proof,
+    proof
     // fee,
-    { gasLimit: 1000000 }
+    // { gasLimit: 5000000 }
   );
   await donateTx.wait();
   const transactionHashConfirmation = donateTx.hash;
@@ -255,7 +272,7 @@ async function Payable(
   connectedSigner,
   chainId
 ) {
-  console.log("payProcessTokenId Payable chainId:", chainId);
+  console.log("payProcessTokenId donateToken chainId:", chainId);
   const { contractAddress, ABI, NATIVE } = await getNetworkConfig(chainId);
   const ETH = {
     name: NATIVE.name,

@@ -116,7 +116,7 @@ function ProjectsList({ searchQuery, selectedTag, sortByNewest }) {
     <div className={Style.gridLayout}>
       {filteredProjects.map((project) => (
         <Link href={"/projects/" + project.title} key={project.title}>
-          <div className={Style.projectBox}>
+          <div className={`${Style.projectBox} ${Style.glassBackground}`}>
             <h3 className={Style.titleStyle}>{project.title}</h3>
             <p className={Style.bodyStyle}>{project.body.slice(0, 200)}...</p>
             <div className={Style.tagContainer}>

@@ -68,12 +68,6 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
                 token.extensions?.bridgeInfo?.[
                   chainId
                 ]?.tokenAddress?.toLowerCase();
-              console.log(`Checking token:`, {
-                tokenAddress,
-                bridgeInfo,
-                erc20Token,
-                chainId,
-              });
               // Check if the token address or its bridged address matches erc20Token
               return (
                 tokenAddress === erc20Token ||
@@ -86,17 +80,23 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
                 `No match found for erc20Token: ${erc20Token} on chainId: ${chainId}`
               );
             }
+
             if (tokenMetadata) {
+              // Resolve the correct address for the token based on bridgeInfo or fallback
+              const resolvedAddress =
+                tokenMetadata.extensions?.bridgeInfo?.[chainId]?.tokenAddress ||
+                tokenMetadata.address;
+
               const resolvedDecimals = tokenMetadata.decimals || 18;
               const balance = Number(totalAmount) / 10 ** resolvedDecimals; // Convert using decimals
 
               return {
                 name: tokenMetadata.name,
                 symbol: tokenMetadata.symbol,
-                address: tokenMetadata.address,
+                address: resolvedAddress,
                 balance,
                 decimals: resolvedDecimals,
-                chainId: tokenMetadata.chainId,
+                chainId: chainId,
               };
             }
 
@@ -120,6 +120,7 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
           const [balancesWithUSD, balancesWithJPY] = await Promise.all([
             Promise.all(
               nonZeroBalances.map(async (token) => {
+                console.log("Token passed to getINtoUSD:", token);
                 try {
                   const balanceInUSD = await getINtoUSD(
                     token,
@@ -127,11 +128,19 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
                     provider,
                     chainId
                   );
+                  console.log(
+                    `MetricsUSD - USD value for ${token.name}:`,
+                    balanceInUSD
+                  );
                   return { ...token, balanceInUSD };
                 } catch (error) {
                   console.error(
                     `Error converting balance to USD for ${token.name}:`,
                     error
+                  );
+                  console.log(
+                    `MetricsJPY - JPY value for ${token.name}:`,
+                    balanceInJPY
                   );
                   return { ...token, balanceInUSD: 0 };
                 }
@@ -197,7 +206,7 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
     <div className={Style.receivedBox}>
       <div className={Style.sizingBox}>
         <h2 className={Style.totalReceivedTitle}>Total Donations Received:</h2>
-        <ul>
+        <ul className={Style.balances}>
           {tokenBalances.map((token, index) => (
             <li key={index}>
               {token.name} ({token.symbol}): {token.balance}

@@ -43,6 +43,11 @@
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+  background: rgba(175, 173, 173, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Apply the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
   margin-bottom: 1rem;
 }
@@ -178,16 +183,36 @@
       minmax(0, 1fr)
     ); /* 1 column for extra small screens */
   }
+  .projectBox {
+    position: relative;
+    padding: 1rem; /* p-4 */
+    /* border: 1px solid #ccc; */
+    /* border border-gray-300 */
+    border-radius: 0.25rem; /* rounded */
+    padding-bottom: 2.5rem;
+    height: 200px;
+    /* white-space: wrap; */
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: rgba(175, 173, 173, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px); /* Apply the blur effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
+    margin-bottom: 1rem;
+  }
   .titleStyle {
-    font-size: 1.4rem /* 20px */;
+    font-size: 1.1rem /* 20px */;
     line-height: 1.3rem /* 28px */;
     font-weight: 720;
     margin-bottom: 0.5rem /* 8px */;
   }
   .bodyStyle {
-    margin-top: 1.8rem;
+    margin-top: 1rem;
     line-height: 1.3rem;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 408;
   }
 }

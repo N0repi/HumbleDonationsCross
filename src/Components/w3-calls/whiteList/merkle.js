@@ -5,23 +5,48 @@ import { MerkleTree } from "merkletreejs";
 import keccak256 from "keccak256";
 
 const myTokenList = tokenListJson.myTokenList;
-// console.log(myTokenList);
 
-async function computeMerkleProof(tokenInput) {
-  console.log("merkle computeMerkleProof tokenInput address:", tokenInput);
-  // console.log("merkle log tokenInput.address:", tokenInput.address)
-  // Hash the whitelist entries
-  const leaves = myTokenList.map((token) =>
-    keccak256(token.address.toLowerCase())
+function getTokenByAddress(address) {
+  return myTokenList.find(
+    (token) =>
+      token.address.toLowerCase() === address.toLowerCase() ||
+      Object.values(token.extensions?.bridgeInfo || {}).some(
+        (bridge) => bridge.tokenAddress.toLowerCase() === address.toLowerCase()
+      )
   );
-  const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
-  // const root = merkleTree.getHexRoot()
-  // console.log("Merkle Root:", root)
+}
 
-  // Generate a proof for a specific address
-  const leaf = keccak256(tokenInput);
+function getLeafAddress(token, chainId) {
+  return (
+    token.extensions?.bridgeInfo?.[chainId]?.tokenAddress || token.address
+  ).toLowerCase();
+}
+
+async function computeMerkleProof(tokenInput, chainId) {
+  console.log("merkle computeMerkleProof tokenInput address:", tokenInput);
+
+  // Find the token object
+  const token = getTokenByAddress(tokenInput, chainId);
+  if (!token) {
+    throw new Error(`Token with address ${tokenInput} not found in whitelist.`);
+  }
+
+  // Generate Merkle Tree leaves
+  const leaves = myTokenList.map((token) => {
+    const address = getLeafAddress(token, chainId);
+    return keccak256(address);
+  });
+
+  const merkleTree = new MerkleTree(leaves, keccak256, { sortPairs: true });
+  const root = merkleTree.getHexRoot();
+  console.log("Generated Merkle Root:", root);
+
+  // Generate the proof for the tokenInput
+  const leaf = keccak256(getLeafAddress(token, chainId));
+  // console.log("Generated Leaf for Token:", leaf.toString("hex"));
+
   const proof = merkleTree.getHexProof(leaf);
-  console.log("Proof of token address:", proof);
+  console.log("Generated Proof:", proof);
 
   return proof;
 }

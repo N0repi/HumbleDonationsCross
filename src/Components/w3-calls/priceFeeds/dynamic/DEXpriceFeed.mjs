@@ -200,7 +200,7 @@ export async function getINtoUSD(tokenIn, amountIn, provider, chainId) {
     console.log("tokenIn Price in USD:", tokenInUsd);
 
     // Round the value to 2 decimal places
-    const roundedTokenInUsd = tokenInUsd.toFixed(2);
+    const roundedTokenInUsd = tokenInUsd.toFixed(6);
 
     // add currency symbol
     const tokenInUsdSym = `$${roundedTokenInUsd}`;
