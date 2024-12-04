@@ -41,6 +41,9 @@ import { WalletProvider } from "../Components/Wallet/WalletContext";
 // Sloppy cahce solution because Sonic is on a hosted subgraph and not Subgraph Studio
 import { CacheProvider } from "../utils/Graph/NOC/CacheContext";
 
+// Analytics
+import { Analytics } from "@vercel/analytics/react";
+
 // text size prod fix
 import "../styles/globals.css";
 import { Roboto } from "next/font/google";
@@ -152,6 +155,7 @@ export default function App({ Component, pageProps }) {
                     <PaymentResult />
                     <CacheProvider>
                       <Component {...pageProps} />
+                      <Analytics />
                     </CacheProvider>
                   </div>
                 </CurrencyProvider>
