@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Head from "next/head";
 import images from "../../assets/index.js";
 import { useRouter } from "next/router";
 import { BASE_API_URL, getConfig } from "../../utils/constants.js";
@@ -217,6 +217,52 @@ const URIrender = () => {
 
   return (
     <main className={Style.mainContainer}>
+      {/* Dynamic Meta Tags */}
+      <Head>
+        <title>
+          {project ? `${project.title} - HumbleDonations` : "Loading..."}
+        </title>
+        <meta
+          name="description"
+          content={
+            project
+              ? `${project.title} - ${project.body.substring(0, 150)}`
+              : "Explore amazing projects on HumbleDonations"
+          }
+        />
+        <meta
+          property="og:title"
+          content={project ? project.title : "HumbleDonations Project"}
+        />
+        <meta
+          property="og:description"
+          content={
+            project
+              ? `${project.body.substring(0, 150)}`
+              : "Discover projects on HumbleDonations and make a difference."
+          }
+        />
+        {project && project.ipfsUri && (
+          <meta property="og:image" content={project.ipfsUri} />
+        )}
+        <meta
+          property="og:url"
+          content={`https://humbledonations.com/projects/${title}`}
+        />
+        <meta name="twitter:card" content="https://humbledonations/HDT.png" />
+        {project && (
+          <>
+            <meta name="twitter:title" content={project.title} />
+            <meta
+              name="twitter:description"
+              content={project.body.substring(0, 150)}
+            />
+            {project.ipfsUri && (
+              <meta name="twitter:image" content={project.ipfsUri} />
+            )}
+          </>
+        )}
+      </Head>
       <div className={Style.hideOnDesktop}>
         {project && (
           <div className={Style.optionalMediaContainer}>

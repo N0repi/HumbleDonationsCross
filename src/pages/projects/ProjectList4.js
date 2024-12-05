@@ -8,7 +8,7 @@ import Style from "./ProjectList4.module.css";
 import { useWallet } from "../../Components/Wallet/WalletContext.jsx";
 import { getConfig } from "../../utils/constants";
 
-function ProjectsList({ searchQuery, selectedTag, sortByNewest }) {
+function ProjectsList({ searchQuery, selectedTags, sortByNewest }) {
   const [projects, setProjects] = useState([]);
   const urqlClient = useClient(); // Get the urql client to execute a manual re-fetch
 
@@ -100,16 +100,20 @@ function ProjectsList({ searchQuery, selectedTag, sortByNewest }) {
   if (fetching) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
 
+  // Filtering logic to filter Projects by multiple selected tags
   const filteredProjects = projects
     .filter((project) =>
       project.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .filter(
-      (project) =>
-        !selectedTag ||
-        (Array.isArray(project.tag) && project.tag.includes(selectedTag))
-    );
-
+    // If no tags are selected, show all projects
+    .filter((project) => {
+      if (selectedTags.length === 0) return true;
+      // Check if the project has at least one of the selected tags
+      return (
+        Array.isArray(project.tag) &&
+        selectedTags.some((tag) => project.tag.includes(tag))
+      );
+    });
   let totalTagWidth = 0;
 
   return (

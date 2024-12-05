@@ -128,8 +128,10 @@
 /* ... previous styles ... */
 
 .dropdownWrapper {
-  position: relative;
-  display: inline-block;
+  flex-grow: 1; /* Allow this element to grow and take available space */
+  margin-left: 3rem;
+
+  max-width: 20rem;
 }
 
 .dropdownIcon {
@@ -141,15 +143,22 @@
 }
 
 .select {
+  height: 100%;
+  margin-bottom: 1.2rem;
+  scrollbar-color: #e44bca;
+  overflow: auto;
+
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
   scrollbar-color: #e44bca;
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
     background: #e44bca;
-    border-radius: 22px;
+    border-radius: 1rem;
   }
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
@@ -176,6 +185,7 @@
 .selectedTags {
   display: flex;
   flex-wrap: wrap;
+  margin: 1rem;
   gap: 0.5rem;
 }
 
@@ -192,7 +202,7 @@
   cursor: pointer;
   margin-left: 0.25rem;
 }
-.dropdownWrapper,
+
 .AddProject {
   margin-top: 20px; /* Add margin to push them below .mediaWrapper */
 }
@@ -400,5 +410,13 @@
   }
   .mintRate {
     font-size: 20px;
+  }
+
+  .dropdownWrapper {
+    flex-grow: 1; /* Allow this element to grow and take available space */
+    margin-left: 3rem;
+    height: 15rem;
+    margin-bottom: 1.75rem;
+    max-width: 15rem;
   }
 }

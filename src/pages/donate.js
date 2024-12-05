@@ -1,6 +1,6 @@
 // donate.js
 
-import { Inter } from "next/font/google";
+// import { Parkinsans } from "next/font/google";
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,18 +10,33 @@ import SortDropdown from "./projects/SortDropdown";
 import Style from "./donate.module.css";
 import images from "../assets";
 
-const inter = Inter({ subsets: ["latin"] });
+// const parkinsans = Parkinsans({ subsets: ["latin"] });
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTag, setSelectedTag] = useState(""); // State to track the selected tag
+  const [selectedTags, setSelectedTags] = useState([]); // State to track selected tags
   const [showTagFilter, setShowTagFilter] = useState(false); // State to track the visibility of TagFilter
-  const [tags, setTags] = useState([
-    "Artistic",
+  const [tags] = useState([
+    "AI",
+    "Art",
     "Content Creator",
     "DeFi",
+    "Developer",
+    "E-commerce",
     "Educational",
+    "Fashion & Beauty",
+    "Health & Wellness",
+    "Medical",
     "Non-Profit",
+    "Protocol",
+    "Research",
+    "Science",
+    "Simply Struggling",
+    "Small Business",
+    "Start-up",
+    "Technology",
+    "Video Game",
+    "Web3",
   ]);
   const [sortByNewest, setSortByNewest] = useState(false);
   const [sortBySepolia, setSortBySepolia] = useState(false);
@@ -59,10 +74,22 @@ export default function Home() {
     setShowTagFilter(true);
   };
 
-  const handleMouseLeave = () => {
-    timeoutId = setTimeout(() => {
-      setShowTagFilter(false);
-    }, 900);
+  // const handleMouseLeave = () => {
+  //   timeoutId = setTimeout(() => {
+  //     setShowTagFilter(false);
+  //   }, 900);
+  // };
+
+  const handleTagSelect = (tag) => {
+    if (tag === "All") {
+      setSelectedTags([]);
+    } else {
+      setSelectedTags((prevTags) =>
+        prevTags.includes(tag)
+          ? prevTags.filter((t) => t !== tag)
+          : [...prevTags, tag]
+      );
+    }
   };
 
   return (
@@ -85,21 +112,17 @@ export default function Home() {
             <div className={Style.hideOnMobile}>
               <div
                 className={Style.filter}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onClick={handleMouseEnter}
+                // onMouseLeave={handleMouseLeave}
               >
                 <Image
                   src={images.filter}
                   alt="filter"
                   width={30}
                   height={30}
-                  tags={tags}
                   onClick={() => setShowTagFilter(!showTagFilter)}
                   className={showTagFilter ? Style.filteredImage : ""}
                 />
-                {showTagFilter && (
-                  <TagFilter tags={tags} onSelectTag={setSelectedTag} />
-                )}
               </div>
             </div>
             {/* Sort Options */}
@@ -151,36 +174,42 @@ export default function Home() {
             <div
               className={Style.filter}
               onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+              // onMouseLeave={handleMouseLeave}
             >
               <div className={Style.filterImage}>
                 <Image
                   src={images.filter}
                   alt="filter"
-                  tags={tags}
+                  width={30}
+                  height={30}
                   onClick={() => setShowTagFilter(!showTagFilter)}
                   className={showTagFilter ? Style.filteredImage : ""}
                 />
               </div>
-              {showTagFilter && (
-                <TagFilter tags={tags} onSelectTag={setSelectedTag} />
-              )}
             </div>
           </div>
         </div>
 
-        <h1 className={Style.fundable}>Projects</h1>
-      </main>
+        {/* Render the Tag Filter before the heading and project list */}
+        {showTagFilter && (
+          <TagFilter
+            tags={tags}
+            selectedTags={selectedTags}
+            onSelectTag={handleTagSelect}
+          />
+        )}
 
-      <div>
-        <WrappedProjectsList
-          searchQuery={searchQuery}
-          selectedTag={selectedTag}
-          sortByNewest={sortByNewest}
-          sortBySepolia={sortBySepolia}
-          sortBySonic={sortBySonic}
-        />
-      </div>
+        <h1 className={Style.fundable}>Projects</h1>
+        <div>
+          <WrappedProjectsList
+            searchQuery={searchQuery}
+            selectedTags={selectedTags}
+            sortByNewest={sortByNewest}
+            sortBySepolia={sortBySepolia}
+            sortBySonic={sortBySonic}
+          />
+        </div>
+      </main>
     </>
   );
 }

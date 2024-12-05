@@ -10,7 +10,7 @@
   font-size: 1.875rem /* 30px */;
   line-height: 2.25rem /* 36px */;
   margin-bottom: 1.5rem /* 24px */;
-  text-shadow: 2px 2px 0 #1e1e1e;
+  text-shadow: 2px 2px 5px #1e1e1e;
 }
 
 .main {
@@ -30,6 +30,7 @@
 .buttonContainer {
   display: flex;
   gap: 20px; /* Adjust the horizontal gap between buttons as needed */
+  margin-bottom: 0.25rem;
 }
 
 .createButton {
@@ -67,25 +68,18 @@
   max-width: 90px; /* Set the initial or collapsed width */
   max-height: 45px;
   overflow: hidden; /* Hide the overflow content */
-  transition: transform 1.2s ease, max-width 1.2s ease; /* Add transition on max-width property */
+  /* transition: transform 1.2s ease, max-width 1.2s ease; */
 
+  margin-top: 1.5rem;
   margin: auto;
 }
 
 .filterImage {
   width: 30px;
   height: 30px;
+  max-width: 30px;
+  max-height: 30px;
 }
-
-/* transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); */
-
-.filter:hover {
-  /* transform: scale(1.05);  */
-  max-width: 46.875rem; /* Set the expanded width on hover */
-  transition: transform 1.2s ease, max-width 2.5s ease; /* Adjust the transition duration for max-width on hover */
-}
-
-/* FML this is frustrating. the collapse looks very sudden and changing the max-width ease value is becoming confusing */
 
 .searchBar {
   border: 1.25px solid #444244;
@@ -203,7 +197,11 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-
+.mobileFilterSort {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
 .selectedTag {
   background-color: #1e1e1e;
   padding: 0.25rem 0.5rem;
@@ -225,7 +223,7 @@
     line-height: 1.25rem /* 36px */;
     font-weight: 600;
     font-size: 1.675rem /* 30px */;
-    text-shadow: 2px 2px 0 #1e1e1e;
+    text-shadow: 2px 2px 4px #1e1e1e;
     /* color: #1e1e1e; */
   }
   .searchBar {
@@ -243,11 +241,6 @@
     margin-left: 0;
   }
 
-  .filter:hover {
-    /* transform: scale(1.05);  */
-    max-width: 30rem; /* Set the expanded width on hover */
-    transition: transform 1.2s ease, max-width 2.5s ease; /* Adjust the transition duration for max-width on hover */
-  }
   .filterImage {
     width: 28px;
     height: 28px;
@@ -342,6 +335,9 @@
     /* margin-left: 62px; */
     transition: transform 1.2s ease;
     margin: auto;
+  }
+  .buttonContainer {
+    margin-bottom: 0.5rem;
   }
 }
 

@@ -610,11 +610,26 @@ export default function CreateForm() {
                   ? "Maximum tags selected"
                   : "Select up to 3 tags"}
               </option>
-              <option value="Artistic">Artistic</option>
+              <option value="AI">AI</option>
+              <option value="Art">Art</option>
               <option value="Content Creator">Content Creator</option>
               <option value="DeFi">DeFi</option>
+              <option value="Developer">Developer</option>
+              <option value="E-commerce">E-commerce</option>
               <option value="Educational">Educational</option>
+              <option value="Fashion & Beauty">Fashion & Beauty</option>
+              <option value="Health & Wellness">Health & Wellness</option>
+              <option value="Medical">Medical</option>
               <option value="Non-Profit">Non-Profit</option>
+              <option value="Protocol">Protocol</option>
+              <option value="Research">Research</option>
+              <option value="Science">Science</option>
+              <option value="Simply Struggling">Simply Struggling</option>
+              <option value="Small Business">Small Business</option>
+              <option value="Start-up">Startup</option>
+              <option value="Technology">Technology</option>
+              <option value="Video Game">Video Game</option>
+              <option value="Web3">Web3</option>
             </select>
           </div>
           <div onSubmit={(e) => e.preventDefault()} className="form">
@@ -647,7 +662,7 @@ export default function CreateForm() {
                 disabled={uploading}
                 className={Style.uploadButton}
               >
-                {uploading ? "Uploading..." : "Save"}
+                {uploading ? "Uploading..." : "Save image"}
               </button>
             </div>
           </div>

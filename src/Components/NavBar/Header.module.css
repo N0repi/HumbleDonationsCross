@@ -60,14 +60,13 @@
   font-weight: 525;
   font-size: 1.25rem;
   gap: 3rem;
-  text-shadow: 1px 1px 0 #1e1e1e;
+  text-shadow: 1px 1px 3px #1e1e1e;
 }
 
 .activeTab {
   color: #e44bca;
   font-weight: 800;
-  text-shadow: -0.2px -0.2px 0 #860771, 0.2px -0.2px 0 #860771,
-    -0.2px 0.2px 0 #860771, 0.2px 0.2px 0 #860771;
+  text-shadow: 1px 1px 3px #1e1e1e;
 }
 
 .airdrop {
@@ -81,7 +80,7 @@
 
 .airdropText {
   font-size: 1.2rem; /* Only apply font-size here */
-  text-shadow: 1px 1px 0 #1e1e1e;
+  text-shadow: 1px 1px 3px #1e1e1e;
 }
 
 .WalletModal {

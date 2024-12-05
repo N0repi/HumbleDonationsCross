@@ -23,7 +23,7 @@ export default function Home({ Component, pageProps }) {
             <p className={Style.description}>
               With the Humble Donations Token, 100% of your contribution
               directly benefits <br />
-              your chosen start-ups, creators, and causes—no fees,
+              your chosen start-ups, creators, and causes— no fees,
               <strong> no revenue taken</strong>.
             </p>
             <p className={Style.description}>
