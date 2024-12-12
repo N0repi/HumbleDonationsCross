@@ -13,7 +13,7 @@ import Style from "./PadTrad.module.css";
 * ADD TO SUPPORTED CHAINS WHEN SONIC IS SUPPORTED *
     "11155111": [
       {
-        "address": "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75",
+        "address": "0x033b82aB3ba626cCCad412a2532897Af82890C72",
         "name": "Humble Donations Token",
         "symbol": "HDT",
         "icon": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmYKTudDM3chor2KUUQVrRQgyaYvc1XQ6EggVkutpr1zJf"
@@ -65,7 +65,7 @@ export default function Buy({ client, isOpen, onClose, chain, HDT }) {
           payOptions={{
             prefillBuy: {
               token: {
-                address: "0xBabe338052d822233Df0CD27Be40d6209B86Bae7",
+                address: "0xBabe35F94fE6076474F65771Df60d99cb097323A",
                 name: "Humble Donations Token",
                 symbol: "HDT",
                 icon: "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmYKTudDM3chor2KUUQVrRQgyaYvc1XQ6EggVkutpr1zJf",

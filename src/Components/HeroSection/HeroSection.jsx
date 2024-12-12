@@ -245,7 +245,7 @@ const HeroSection = ({
           chainId
         );
         // simply removing if else does not make it dynamic
-        // if (TokenOne.address === "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75") {
+        // if (TokenOne.address === "0x033b82aB3ba626cCCad412a2532897Af82890C72") {
         setTokenQuantity(usdInJpy.toString());
         // } else {
         //     console.log("TokenOne is not HDT, skipping update of tokenQuantity")

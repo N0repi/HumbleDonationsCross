@@ -111,7 +111,10 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
         );
 
         // Filter out tokens with zero balance
-        const nonZeroBalances = balances.filter((token) => token.balance > 0);
+        // Filter out "Unknown Token"
+        const nonZeroBalances = balances.filter(
+          (token) => token.name !== "Unknown Token" && token.balance > 0
+        );
 
         setTokenBalances(nonZeroBalances);
 

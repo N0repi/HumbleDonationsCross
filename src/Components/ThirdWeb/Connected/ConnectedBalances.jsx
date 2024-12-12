@@ -34,7 +34,7 @@ export default function HumbleDonationsBalance({ tokens, chain }) {
   const activeAccount = useActiveAccount();
 
   console.log("HumbleDonationsBalance  chain  -  ", chain);
-  // const tokenAddress = "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75"
+  // const tokenAddress = "0x033b82aB3ba626cCCad412a2532897Af82890C72"
   const tokenPassed = tokens.address;
 
   // Use wagmi balance hook

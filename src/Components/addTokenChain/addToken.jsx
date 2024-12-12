@@ -8,7 +8,7 @@ import images from "../../assets";
 
 // Sonic
 // const tokenDetails = {
-//   address: "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75", // The contract address of the ERC-20 token
+//   address: "0x033b82aB3ba626cCCad412a2532897Af82890C72", // The contract address of the ERC-20 token
 //   symbol: "HDT", // The symbol of your token
 //   decimals: 18, // The decimals used by the token
 //   image:
@@ -17,7 +17,7 @@ import images from "../../assets";
 
 // Arbitrum
 const tokenDetails = {
-  address: "0xBabe338052d822233Df0CD27Be40d6209B86Bae7", // The contract address of the ERC-20 token
+  address: "0xBabe35F94fE6076474F65771Df60d99cb097323A", // The contract address of the ERC-20 token
   symbol: "HDT", // The symbol of your token
   decimals: 18, // The decimals used by the token
   image:

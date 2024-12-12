@@ -198,7 +198,7 @@ const SwapFront = ({
     <main>
       <a
         className={Style.lp}
-        href="https://app.uniswap.org/add/ETH/0xbabe338052d822233df0cd27be40d6209b86bae7/3000?minPrice=19998.702000&maxPrice=79994.808000"
+        href="https://app.uniswap.org/add/ETH/0xBabe35F94fE6076474F65771Df60d99cb097323A/3000?minPrice=19998.702000&maxPrice=79994.808000"
         target="_blank"
         rel="noopener noreferrer"
       >

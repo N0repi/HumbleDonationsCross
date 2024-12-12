@@ -2,7 +2,7 @@
   "myTokenList": [
     {
       "chainId": 42161,
-      "address": "0xBabe338052d822233Df0CD27Be40d6209B86Bae7",
+      "address": "0xBabe35F94fE6076474F65771Df60d99cb097323A",
       "name": "Humble Donations Token",
       "symbol": "HDT",
       "decimals": 18,
@@ -4752,7 +4752,7 @@
     },
     {
       "chainId": 64165,
-      "address": "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75",
+      "address": "0x033b82aB3ba626cCCad412a2532897Af82890C72",
       "name": "Humble Donations Token",
       "symbol": "HDT",
       "decimals": 18,
@@ -4768,7 +4768,7 @@
     },
     {
       "chainId": 64165,
-      "address": "0x625A959a716EF2fA19EE1A73052603E2D3711a82",
+      "address": "0x591E027153ED4e536275984e1b7573367e11dac4",
       "name": "Wrapped Sonic",
       "symbol": "WS",
       "decimals": 18,

@@ -50,29 +50,30 @@ async function calculateSlippage(
   chainId
 ) {
   const { WETH_TOKEN, HDT_TOKEN } = getTokensForChain(chainId);
-  // *****
-  // ****First 4 mentions of tokenInput.decimals should likely be 18, but it's messing up USDT donations do to it's inflated liquidity on Sepolia****
-  // *****
   const { contractAddress, ABI, NATIVE } = await getNetworkConfig(chainId);
+
+  // Define ETH as the native token
   const ETH = {
     name: NATIVE.name,
     address: "0x0000000000000000000000000000000000000000",
   };
+
   const HumbleDonations = new ethers.Contract(
     contractAddress,
     ABI,
     connectedSigner
   );
+
   console.log("donateToken - tokenQuantity", tokenQuantity);
+  console.log("donateToken tokenInput.name", tokenInput.name);
 
-  console.log("donateToken tokenInput.name", tokenInput.name); // *WORKS*
-
+  // Get the tax percentage from the contract
   const taxPercentage = await HumbleDonations.getPercentage();
   const formattedTaxPercentage = (Number(taxPercentage) / 1000).toString();
   console.log("Tax Percentage:", formattedTaxPercentage);
 
-  const taxAmount = (tokenQuantity * formattedTaxPercentage).toString(); // Total tax amount
-  console.log("split taxAmount:", taxAmount);
+  const taxAmount = tokenQuantity * formattedTaxPercentage;
+  console.log("Tax Amount:", taxAmount);
 
   // Split amounts
   const splitWETH = taxAmount * 0.75;
@@ -80,88 +81,71 @@ async function calculateSlippage(
   console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT);
 
   let amountOutMinimumETH = 0;
-  // let splitWETH = 0;
   let amountOutMinimumHDT = 0;
 
+  // Slippage logic
   if (tokenInput.address !== HDT_TOKEN.address) {
     if (
       tokenInput.address === WETH_TOKEN.address ||
       tokenInput.name === ETH.name
     ) {
-      // Special case for WETH | Calculate slippage for HDT part directly since WETH is already tokenIn
-      const taxAmountHDT = taxAmount * 0.25; // Total tax amount for HDT
-      console.log("taxAmountHDT:", taxAmountHDT);
-      console.log("WETH:", WETH_TOKEN);
-      console.log("HDT:", HDT_TOKEN);
-      console.log("payProcessTokenId calc slippage chainId:", chainId);
+      // Special case: WETH or ETH as tokenIn
+      console.log("Calculating slippage for HDT from WETH...");
       amountOutMinimumHDT = await getAmountOutMinimum(
-        WETH_TOKEN, // Intermediate swap from WETH to HDT
+        WETH_TOKEN,
         HDT_TOKEN,
-        taxAmountHDT,
-        connectedSigner,
+        splitHDT,
+        connectedSigner.provider,
         chainId
       );
-      console.log("amountOutMinimumHDT", amountOutMinimumHDT);
     } else {
-      console.log("amountOutMinimumETH", amountOutMinimumETH);
-      // splitWETH = taxAmount * 0.75;
-      // console.log("splitWETH", splitWETH); // 0.000012446360878819499
-      // const splitHDT = amountOutMinimumETH * 0.25;
-      // console.log("splitHDT", splitHDT); // 0.0000041487869596065
-
-      const splitHDTStr = splitHDT.toString();
-      console.log("splitHDTStr", splitHDTStr);
-
+      console.log("Calculating slippage for WETH and HDT...");
       amountOutMinimumETH = await getAmountOutMinimum(
         tokenInput,
         WETH_TOKEN,
         taxAmount,
-        connectedSigner,
+        connectedSigner.provider,
         chainId
       );
 
       amountOutMinimumHDT = await getAmountOutMinimum(
-        WETH_TOKEN, // Intermediate swap from WETH to HDT
+        WETH_TOKEN,
         HDT_TOKEN,
         splitHDT,
-        connectedSigner,
+        connectedSigner.provider,
         chainId
       );
-      console.log("amountOutMinimumHDT", amountOutMinimumHDT);
     }
   } else {
-    console.log("HDT donation - no slippage required");
+    console.log("HDT donation - no slippage required.");
   }
+
   console.log(
-    "amountOutMinimumETH outside of if statements:",
-    amountOutMinimumETH
-  );
-  console.log(
-    "amountOutMinimumHDT outside of if statements:",
+    "Final Slippage Calculations:",
+    "ETH Min:",
+    amountOutMinimumETH,
+    "HDT Min:",
     amountOutMinimumHDT
   );
 
-  // Convert amounts to their string representations without scientific notation
-  const amountOutMinimumETHStr = amountOutMinimumETH.toFixed(
-    tokenInput.decimals
-  );
-  console.log("amountOutMinimumETHStr", amountOutMinimumETHStr);
-  const amountOutMinimumETHParsed = ethers
-    .parseUnits(amountOutMinimumETHStr, tokenInput.decimals)
-    .toString();
-  console.log("amountOutMinimumETHParsed", amountOutMinimumETHParsed);
+  // Format the values for Uniswap logic
+  const slippageETH =
+    amountOutMinimumETH > 0
+      ? ethers
+          .parseUnits(amountOutMinimumETH.toString(), tokenInput.decimals)
+          .toString()
+      : "0";
 
-  const amountOutMinimumHDTStr = amountOutMinimumHDT.toFixed(
-    tokenInput.decimals
-  );
-  console.log("amountOutMinimumHDTStr", amountOutMinimumHDTStr);
-  const amountOutMinimumHDTParsed = ethers
-    .parseUnits(amountOutMinimumHDTStr, tokenInput.decimals)
-    .toString();
-  console.log("amountOutMinimumHDTParsed", amountOutMinimumHDTParsed);
+  const slippageHDT =
+    amountOutMinimumHDT > 0
+      ? ethers
+          .parseUnits(amountOutMinimumHDT.toString(), HDT_TOKEN.decimals)
+          .toString()
+      : "0";
 
-  return { amountOutMinimumETHParsed, amountOutMinimumHDTParsed };
+  return { slippageETH, slippageHDT };
 }
+
 async function approveToken(
   tokenId,
   tokenQuantity,
@@ -227,14 +211,19 @@ async function donateToken(
   console.log("Proof being sent to the contract:", proof); // log proof
 
   // Calculate the slippage of the confirmation transaction in both WETH and HDR
-  const { amountOutMinimumETHParsed, amountOutMinimumHDTParsed } =
-    await calculateSlippage(
-      tokenId,
-      tokenQuantity,
-      tokenInput,
-      connectedSigner,
-      chainId
-    );
+  const { slippageETH, slippageHDT } = await calculateSlippage(
+    tokenId,
+    tokenQuantity,
+    tokenInput,
+    connectedSigner, // CHANGED
+    chainId
+  );
+  console.log("---Payable---");
+  console.log(
+    "amountOutMinimumETHParsed amountOutMinimumHDTParsed  |  ",
+    slippageETH,
+    slippageHDT
+  );
   const HumbleDonations = new ethers.Contract(
     contractAddress,
     ABI,
@@ -246,17 +235,15 @@ async function donateToken(
     tokenInput.decimals
   );
 
-  // const fee = 3000; // @# CAN AND SHOULD LIKELY BE REMOVED
   console.log("tokenQuantityInEthFormat:", tokenQuantityInEthFormat);
   const donateTx = await HumbleDonations.donate(
     tokenId,
     tokenInput.address,
     tokenQuantityInEthFormat,
-    0, // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
-    amountOutMinimumHDTParsed,
-    proof
-    // fee,
-    // { gasLimit: 5000000 }
+    slippageETH, // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
+    slippageHDT,
+    proof,
+    { gasLimit: 1000000 }
   );
   await donateTx.wait();
   const transactionHashConfirmation = donateTx.hash;
@@ -279,19 +266,18 @@ async function Payable(
     address: "0x0000000000000000000000000000000000000000",
   };
   try {
-    const { amountOutMinimumETHParsed, amountOutMinimumHDTParsed } =
-      await calculateSlippage(
-        tokenId,
-        tokenQuantity,
-        tokenInput,
-        connectedSigner, // CHANGED
-        chainId
-      );
+    const { slippageETH, slippageHDT } = await calculateSlippage(
+      tokenId,
+      tokenQuantity,
+      tokenInput,
+      connectedSigner, // CHANGED
+      chainId
+    );
     console.log("---Payable---");
     console.log(
       "amountOutMinimumETHParsed amountOutMinimumHDTParsed  |  ",
-      amountOutMinimumETHParsed,
-      amountOutMinimumHDTParsed
+      slippageETH,
+      slippageHDT
     );
     if (tokenInput.name === ETH.name) {
       const HumbleDonations = new ethers.Contract(
@@ -304,15 +290,13 @@ async function Payable(
         tokenInput.decimals
       );
 
-      const fee = 3000; // @# CAN AND SHOULD LIKELY BE REMOVED
       const donateTx = await HumbleDonations.donate(
         tokenId,
         ETH.address,
         tokenQuantityInEthFormat,
-        amountOutMinimumETHParsed,
-        amountOutMinimumHDTParsed,
+        slippageETH,
+        slippageHDT,
         [],
-        // fee,
         {
           gasLimit: 1000000,
           value: tokenQuantityInEthFormat,

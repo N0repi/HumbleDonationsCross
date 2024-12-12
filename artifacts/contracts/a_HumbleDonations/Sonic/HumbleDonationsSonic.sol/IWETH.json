@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IWETH",
-  "sourceName": "contracts/HumbleDonations.sol",
+  "sourceName": "contracts/HumbleDonationsSonic.sol",
   "abi": [
     {
       "inputs": [],

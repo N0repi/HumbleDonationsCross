@@ -34,8 +34,8 @@ export const SepoliaHDT = "0x9707Be4129F68B767aF550fe1c631BF1779623Cb";
 export const SepoliaWETH = "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14";
 
 //Sonic
-export const SonicHDT = "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75";
-export const SonicWETH = "0x625A959a716EF2fA19EE1A73052603E2D3711a82";
+export const SonicHDT = "0x033b82aB3ba626cCCad412a2532897Af82890C72";
+export const SonicWETH = "0x591E027153ED4e536275984e1b7573367e11dac4";
 // ------TOKENS------
 
 // ------CONTRACTS------
@@ -46,12 +46,12 @@ const ArbitrumABI = HumbleDonationsArbitrum.abi;
 import HumbleDonationsSepolia from "../../artifacts/contracts/a_HumbleDonations/Sepolia/HumbleDonations.sol/HumbleDonations.json";
 const SepoliaABI = HumbleDonationsSepolia.abi;
 
-import HumbleDonationsSonic from "../../artifacts/contracts/a_HumbleDonations/Sonic/HumbleDonations.sol/HumbleDonations.json";
+import HumbleDonationsSonic from "../../artifacts/contracts/a_HumbleDonations/Sonic/HumbleDonationsSonic.sol/HumbleDonationsSonic.json";
 const SonicABI = HumbleDonationsSonic.abi;
 
 // Addressess
 export const SonicContractAddress =
-  "0x505B0a771e2fDBDB8a0909414b8cf23dc400F567";
+  "0xc3b227f2f0C9e1CB8e8BDF36580F582dcea86597";
 export const SepoliaContractAddress =
   "0x977428b2547A247848E2DD736B760c80da192b06";
 // ------CONTRACTS------
@@ -93,7 +93,7 @@ const WRAPPED_SEPOLIA = {
 
 const WRAPPED_SONIC = {
   chainId: 64165,
-  address: "0x625A959a716EF2fA19EE1A73052603E2D3711a82",
+  address: "0x591E027153ED4e536275984e1b7573367e11dac4",
   decimals: 18,
   symbol: "WS",
   name: "Wrapped Sonic",
@@ -111,7 +111,7 @@ const addresses = {
     ABI: ArbitrumABI,
     NATIVE: NATIVE_ETH,
     WRAPPED: WRAPPED_ARBITRUM,
-    HDT: "0xBabe338052d822233Df0CD27Be40d6209B86Bae7",
+    HDT: "0xBabe35F94fE6076474F65771Df60d99cb097323A",
     explorer: ArbitrumOneExplorer,
     ETHUSD: "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612",
     JPYUSD: "0x3dD6e51CB9caE717d5a8778CF79A04029f9cFDF8",
@@ -141,17 +141,18 @@ const addresses = {
   },
   // Sonic Testnet
   64165: {
-    contractAddress: "0x505B0a771e2fDBDB8a0909414b8cf23dc400F567",
+    contractAddress: "0x89E86Bb6A240d7e63253B58b7F2B14656ecbc457",
     ABI: SonicABI,
     NATIVE: NATIVE_SONIC,
     WRAPPED: WRAPPED_SONIC,
-    HDT: "0xD8812d5d42ED80977d21213E3088EE7a24aC8B75",
+    HDT: "0x033b82aB3ba626cCCad412a2532897Af82890C72",
     explorer: SonicExplorer,
     ETHUSD: "0xf4766552D15AE4d256Ad41B6cf2933482B0680dc", // changed - was address of FTMUSD
     JPYUSD: "0x8A6af2B75F23831ADc973ce6288e5329F63D86c6",
     uniQuoter: "0x96F1EDa317935F2E86e7c3550F0bdCDBe5e14A9e",
     uniFactory: "0xBb5F17b4b598641AD1D946E3C2cEf23Fb96249D4",
     uniSwapRouter: "0xE67701aac6D40d34c43367D90FdeaE0095dc28Ba",
+    router: "0xf08413857AF2CFBB6edb69A92475cC27EA51453b",
     Multicall: SONIC_MULTICALL_ADDRESS,
     abstractedTokenList: abstractedTokenListSonic.abstractedTokenList,
     urqlClient: urqlClients.sonic,

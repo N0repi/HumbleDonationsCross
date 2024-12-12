@@ -2,7 +2,7 @@
   "abstractedTokenList": [
     {
       "chainId": 42161,
-      "address": "0xBabe338052d822233Df0CD27Be40d6209B86Bae7",
+      "address": "0xBabe35F94fE6076474F65771Df60d99cb097323A",
       "name": "Humble Donations Token",
       "symbol": "HDT",
       "decimals": 18,

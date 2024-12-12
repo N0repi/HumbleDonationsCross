@@ -126,7 +126,9 @@ function ProjectsList({ searchQuery, selectedTags, sortByNewest }) {
             <div className={Style.tagContainer}>
               {Array.isArray(project.tag) &&
                 project.tag.map((tag, index) => {
-                  const formattedTag = tag.replace(/\s+/g, "-");
+                  const formattedTag = tag
+                    .replace(/\s+&\s+/g, "-and-")
+                    .replace(/\s+/g, "-");
                   const marginLeft = index > 0 ? totalTagWidth + index * 1 : 0;
 
                   return (

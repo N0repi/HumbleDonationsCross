@@ -632,7 +632,9 @@ const URIrender = () => {
             {project &&
               Array.isArray(project.tag) &&
               project.tag.map((tag, index) => {
-                const formattedTag = tag.replace(/\s+/g, "-");
+                const formattedTag = tag
+                  .replace(/\s+&\s+/g, "-and-")
+                  .replace(/\s+/g, "-");
                 return (
                   <div
                     key={index}
