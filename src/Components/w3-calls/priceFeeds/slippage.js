@@ -130,11 +130,9 @@ async function slippageUniswap(tokenIn, tokenOut, amountIn, provider, chainId) {
     // Initialize Quoter contract
     const quoterContract = new ethers.Contract(uniQuoter, Quoter.abi, provider);
 
-    // Convert amountIn to Wei format
-    const amountInWei = ethers.parseUnits(
-      amountIn.toString(),
-      tokenIn.decimals
-    );
+    // Handle small numerical values explicitly
+    const amountInStr = amountIn.toFixed(tokenIn.decimals); // Convert to fixed-point string
+    const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
 
     console.log("Amount in Wei:", amountInWei.toString());
 

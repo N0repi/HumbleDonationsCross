@@ -76,8 +76,8 @@ async function calculateSlippage(
   console.log("Tax Amount:", taxAmount);
 
   // Split amounts
-  const splitWETH = taxAmount * 0.75;
-  const splitHDT = taxAmount * 0.25;
+  const splitWETH = (tokenQuantity * 0.75).toFixed(tokenInput.decimals);
+  const splitHDT = (tokenQuantity * 0.25).toFixed(tokenInput.decimals);
   console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT);
 
   let amountOutMinimumETH = 0;
@@ -240,7 +240,7 @@ async function donateToken(
     tokenId,
     tokenInput.address,
     tokenQuantityInEthFormat,
-    slippageETH, // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
+    "0", // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
     slippageHDT,
     proof,
     { gasLimit: 1000000 }

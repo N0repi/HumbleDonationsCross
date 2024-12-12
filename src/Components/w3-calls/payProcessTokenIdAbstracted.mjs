@@ -26,9 +26,7 @@ async function ethersGetPercentage(chain, contractAddress, ABI) {
   });
   const HumbleDonations = new ethers.Contract(contractAddress, ABI, provider);
   try {
-    const percentage = await HumbleDonations.getPercentage({
-      gasLimit: 10000000,
-    });
+    const percentage = await HumbleDonations.getPercentage();
     return percentage;
   } catch (error) {
     console.error("Error fetching getPercentage:", error);
@@ -84,12 +82,14 @@ async function calculateSlippage(
 
   // Calculate the tax amount
   const formattedTaxPercentage = (Number(taxPercentage) / 1000).toString();
-  const taxAmount = (tokenQuantity * formattedTaxPercentage).toString();
+  console.log("Tax Percentage:", formattedTaxPercentage);
+
+  const taxAmount = tokenQuantity * formattedTaxPercentage;
   console.log("Tax Amount:", taxAmount);
 
   // Calculate splits
-  const splitWETH = taxAmount * 0.75;
-  const splitHDT = taxAmount * 0.25;
+  const splitWETH = (tokenQuantity * 0.75).toFixed(tokenInput.decimals);
+  const splitHDT = (tokenQuantity * 0.25).toFixed(tokenInput.decimals);
   console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT);
 
   let amountOutMinimumETH = 0;
@@ -126,40 +126,34 @@ async function calculateSlippage(
         chain.id
       );
     }
+  } else {
+    console.log("HDT donation - no slippage required.");
   }
 
-  console.log("AmountOutMinimumETH:", amountOutMinimumETH);
-  console.log("AmountOutMinimumHDT:", amountOutMinimumHDT);
-
-  // Default to 0 if calculations fail
-  const amountOutMinimumETHParsed = amountOutMinimumETH
-    ? ethers
-        .parseUnits(
-          amountOutMinimumETH.toFixed(tokenInput.decimals),
-          tokenInput.decimals
-        )
-        .toString()
-    : "0";
-
-  const amountOutMinimumHDTParsed = amountOutMinimumHDT
-    ? ethers
-        .parseUnits(
-          amountOutMinimumHDT.toFixed(tokenInput.decimals),
-          tokenInput.decimals
-        )
-        .toString()
-    : "0";
-
   console.log(
-    "Parsed Amounts:",
-    amountOutMinimumETHParsed,
-    amountOutMinimumHDTParsed
+    "Final Slippage Calculations:",
+    "ETH Min:",
+    amountOutMinimumETH,
+    "HDT Min:",
+    amountOutMinimumHDT
   );
 
-  return {
-    amountOutMinimumETHParsed,
-    amountOutMinimumHDTParsed,
-  };
+  // Format the values for Uniswap logic
+  const slippageETH =
+    amountOutMinimumETH > 0
+      ? ethers
+          .parseUnits(amountOutMinimumETH.toString(), tokenInput.decimals)
+          .toString()
+      : "0";
+
+  const slippageHDT =
+    amountOutMinimumHDT > 0
+      ? ethers
+          .parseUnits(amountOutMinimumHDT.toString(), HDT_TOKEN.decimals)
+          .toString()
+      : "0";
+
+  return { slippageETH, slippageHDT };
 }
 
 export function useApproveTokenAbstracted() {
