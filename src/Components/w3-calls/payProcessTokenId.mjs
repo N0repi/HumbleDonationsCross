@@ -81,18 +81,6 @@ async function calculateSlippage(
   // Skip the call to `getQuote` if tokenInput is WETH or ETH
   let tokenInWETHquote;
   if (
-    chainId === 64165 // Special handling for Sonic
-  ) {
-    console.log("Using Sonic-specific logic...");
-    const slippageResult = await getQuoteSonic(
-      tokenInput,
-      WETH_TOKEN,
-      taxAmount,
-      connectedSigner.provider,
-      chainId
-    );
-    tokenInWETHquote = slippageResult;
-  } else if (
     tokenInput.address === WETH_TOKEN.address ||
     tokenInput.name === ETH.name
   ) {
@@ -102,6 +90,19 @@ async function calculateSlippage(
       18
     ); // Use taxAmount directly
   } else {
+    if (
+      chainId === 64165 // Special handling for Sonic
+    ) {
+      console.log("Using Sonic-specific logic...");
+      const slippageResult = await getQuoteSonic(
+        tokenInput,
+        WETH_TOKEN,
+        toFixedWithoutScientificNotation(taxAmount, 18),
+        connectedSigner.provider,
+        chainId
+      );
+      tokenInWETHquote = slippageResult;
+    }
     console.log("Getting quote for tokenInput to WETH...");
     tokenInWETHquote = await getQuote(
       tokenInput,

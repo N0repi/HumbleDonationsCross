@@ -2,7 +2,10 @@
 
 import { ethers } from "ethers";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-import getAmountOutMinimum, { getQuote } from "./priceFeeds/slippage";
+import getAmountOutMinimum, {
+  getQuote,
+  getQuoteSonic,
+} from "./priceFeeds/slippage";
 import { getTokensForChain } from "./priceFeeds/libs/conversion.mjs";
 import { computeMerkleProof } from "./whiteList/merkle";
 import { approve } from "thirdweb/extensions/erc20";
@@ -111,6 +114,19 @@ async function calculateSlippage(
       18
     );
   } else {
+    if (
+      chainId === 64165 // Special handling for Sonic
+    ) {
+      console.log("Using Sonic-specific logic...");
+      const slippageResult = await getQuoteSonic(
+        tokenInput,
+        WETH_TOKEN,
+        toFixedWithoutScientificNotation(taxAmount, 18),
+        connectedSigner.provider,
+        chainId
+      );
+      tokenInWETHquote = slippageResult;
+    }
     console.log("Getting quote for tokenInput to WETH...");
     console.log("WETH_TOKEN:", WETH_TOKEN);
     tokenInWETHquote = await getQuote(
