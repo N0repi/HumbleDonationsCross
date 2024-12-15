@@ -53,25 +53,6 @@ export async function getQuote(tokenIn, amountIn, provider, chainId) {
   console.log("getQuote log - :", tokenPass);
 
   console.log("WETH log", WETH_TOKEN);
-  // const CurrentConfig = {
-  //   pool: {
-  //     token0: tokenPass,
-  //     token1: WETH_TOKEN,
-  //     fee: FeeAmount.MEDIUM,
-  //   },
-  // };
-
-  // const exactInputConfig = {
-  //   rpc: {
-  //     mainnet: provider,
-  //   },
-  //   tokens: {
-  //     in: tokenPass,
-  //     amountIn: amountIn,
-  //     out: WETH_TOKEN,
-  //     poolFee: FeeAmount.MEDIUM,
-  //   },
-  // };
 
   // Determine token order based on addresses (lexicographical ordering)
   const [token0, token1] =

@@ -9,12 +9,13 @@ import {
   toReadableAmount,
   fromReadableAmount,
   WETH_TOKEN,
+  getTokensForChain,
 } from "./libs/conversion.mjs";
 
 import { useWallet } from "../../Wallet/WalletContext";
 import { getConfig } from "../../../utils/constants";
 
-const slippageTolerance = 0.015; // 0.004 == 0.4%   | increased tolerance for Sonic due to varying liquidity
+const slippageTolerance = 0.015; // 0.04 == 0.4%   | increased tolerance for Sonic due to varying liquidity
 
 function toFixedWithoutScientificNotation(num, decimals) {
   return Number(num).toFixed(decimals);
@@ -71,6 +72,57 @@ async function slippageEqualizer(
 
   console.log("Sonic slippage amountIn (wei):", amountInWei);
 
+  try {
+    // Call the router's getAmountsOut function
+    // const amountsOut = await router.getAmountsOut(amountInWei, routes);
+    // console.log("Output amounts:", amountsOut);
+
+    // const quotedAmountWei = amountsOut[amountsOut.length - 1];
+    // console.log("quotedAmountWei:", quotedAmountWei);
+
+    // const quotedAmountWeiStr = quotedAmountWei.toString();
+    // console.log("quotedAmountWeiStr:", quotedAmountWeiStr);
+
+    const EqualizerQuote = await getQuoteSonic(
+      tokenIn,
+      tokenOut,
+      amountIn,
+      provider,
+      chainId
+    );
+
+    const slippageBuffer =
+      (BigInt(EqualizerQuote) * BigInt(slippageTolerance * 10000)) /
+      BigInt(10000);
+    const amountOutMinimum = BigInt(EqualizerQuote) - slippageBuffer;
+
+    return amountOutMinimum; // The final output token amount
+  } catch (error) {
+    console.error("Error getting amounts out:", error);
+  }
+}
+
+export async function getQuoteSonic(
+  tokenIn,
+  tokenOut,
+  amountIn,
+  provider,
+  chainId
+) {
+  console.log("Sonic slippage amountIn (raw):", amountIn);
+
+  // Ensure amountIn is a fixed-point string without scientific notation
+  const amountInStr = toFixedWithoutScientificNotation(
+    amountIn,
+    tokenIn.decimals
+  );
+  console.log("Sonic slippage amountIn (fixed):", amountInStr);
+
+  // Convert amountIn to wei
+  const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
+
+  console.log("Sonic slippage amountIn (wei):", amountInWei);
+
   const routerAddress = "0xf08413857AF2CFBB6edb69A92475cC27EA51453b";
 
   const routes = [
@@ -87,277 +139,425 @@ async function slippageEqualizer(
     const amountsOut = await router.getAmountsOut(amountInWei, routes);
     console.log("Output amounts:", amountsOut);
 
-    const parseArray = amountsOut[amountsOut.length - 1];
-    console.log("parseArray:", parseArray);
+    const quotedAmountWei = amountsOut[amountsOut.length - 1];
+    console.log("quotedAmountWei:", quotedAmountWei);
 
-    const parseArrayStr = parseArray.toString();
-    console.log("parseArrayStr:", parseArrayStr);
-    const quotedAmountV2format = toReadableAmount(
-      parseArrayStr,
-      tokenIn.decimals
-    );
-    console.log("quotedAmountV2format:", quotedAmountV2format);
-
-    const amountOutMinimum =
-      (quotedAmountV2format * (10000 - slippageTolerance * 10000)) / 10000;
-    console.log("slippageEqualizer - ", amountOutMinimum);
-
-    return amountOutMinimum; // The final output token amount
+    return quotedAmountWei; // The final output token amount
   } catch (error) {
     console.error("Error getting amounts out:", error);
   }
 }
 
+// Recieve swap quote and calculate slippage from quote
 async function slippageUniswap(tokenIn, tokenOut, amountIn, provider, chainId) {
   try {
-    console.log("slippageUniswap - ChainId:", chainId);
-    if (!provider) throw new Error("Provider not connected");
-    if (!chainId) throw new Error("Invalid chain");
-
-    // Validate input amount
-    if (amountIn <= 0) {
-      console.warn("amountIn is zero or invalid, skipping quote.");
-      return 0;
-    }
-
-    // Get Uniswap configuration
-    const { uniQuoter } = getConfig(chainId);
-    if (!uniQuoter)
-      throw new Error(`Quoter address not configured for chainId: ${chainId}`);
-
-    console.log("Using Uniswap Quoter at address:", uniQuoter);
-
-    // Initialize Quoter contract
-    const quoterContract = new ethers.Contract(uniQuoter, Quoter.abi, provider);
-
-    // Handle small numerical values explicitly
-    const amountInStr = amountIn.toFixed(tokenIn.decimals); // Convert to fixed-point string
-    const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
-
-    console.log("Amount in Wei:", amountInWei.toString());
-
-    // Fetch quote using Uniswap Quoter
-    const quotedAmount = await quoterContract.quoteExactInputSingle(
-      tokenIn.address,
-      tokenOut.address,
-      3000, // Fee tier (0.3%)
-      amountInWei,
-      0 // No sqrtPriceLimitX96
+    console.log("slippageUniswap tokenOut:", tokenOut);
+    console.log("slippageUniswap amountIn:", amountIn);
+    const amountOut = await getQuote(
+      tokenIn,
+      tokenOut,
+      amountIn,
+      provider,
+      chainId
     );
+    console.log("amountOut: Quoted Amount (BigNumber):", amountOut);
 
-    console.log("Quoted Amount:", quotedAmount);
+    // Convert quoted amount to BigInt
+    const quotedAmountWei = BigInt(amountOut.toString());
+    console.log("Quoted Amount:", amountOut);
 
-    // Calculate slippage-adjusted minimum amount out
-    const slippageBuffer = (BigInt(quotedAmount) * BigInt(150)) / BigInt(10000); // 1.5% slippage
-    const amountOutMinimumWei = BigInt(quotedAmount) - slippageBuffer;
+    // apply slippage tolerance (everything needs to be in BigInt [n]) ->>> send BigInt slippage to `donate`
+    const slippageBuffer =
+      (BigInt(quotedAmountWei) * BigInt(slippageTolerance * 10000)) /
+      BigInt(10000);
+    const amountOutMinimum = BigInt(quotedAmountWei) - slippageBuffer;
 
-    console.log(
-      "Amount Out Minimum (After Slippage):",
-      amountOutMinimumWei.toString()
+    console.log("Slippage Buffer:", slippageBuffer);
+
+    console.log("Amount Out Minimum:", amountOutMinimum);
+
+    const amountOutMinimumParsed = ethers.formatUnits(
+      amountOutMinimum.toString(),
+      tokenIn.decimals
     );
+    console.log("amountOutMinimumParsed:", amountOutMinimumParsed);
 
-    // Return result as a human-readable string
-    return ethers.formatUnits(amountOutMinimumWei, tokenOut.decimals);
+    return amountOutMinimum;
   } catch (error) {
     console.error("Error calculating Uniswap slippage:", error);
-
-    // Fallback: Return the input amount formatted to the tokenOut decimals
-    return ethers.formatUnits(
-      ethers.parseUnits(amountIn.toString(), tokenOut.decimals),
-      tokenOut.decimals
-    );
+    throw error;
   }
 }
 
-// async function slippageUniswap(tokenIn, tokenOut, amountIn, provider, chainId) {
-//   console.log("slippage chainId:", chainId);
-//   if (!provider) {
-//     throw new Error("Provider not connected");
-//   }
-//   if (!chainId) {
-//     throw new Error("Invalid chain");
-//   }
-//   // Validate amountIn
-//   if (amountIn <= 0) {
-//     console.warn("amountIn is zero or invalid, skipping quote.");
-//     return 0;
-//   }
+// Iteratively check all of the pools and find the best route, then send swap quote to `slippageUniswap`
+export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
+  const { uniQuoter, uniFactory } = getConfig(chainId);
+  console.log("chainId:", chainId);
+  const { WETH_TOKEN } = getTokensForChain(chainId);
 
-//   // getConfig
-//   const { uniQuoter, uniFactory } = getConfig(chainId);
+  const tokenPass = new Token(
+    tokenIn.chainId,
+    tokenIn.address,
+    tokenIn.decimals,
+    tokenIn.symbol,
+    tokenIn.name
+  );
 
-//   console.log("----Slippage logs----");
-//   console.log("tokenIn", tokenIn);
-//   console.log("tokenOut", tokenOut);
-//   console.log("amountIn", amountIn);
+  const tokenPassOut = new Token(
+    tokenOut.chainId,
+    tokenOut.address,
+    tokenOut.decimals,
+    tokenOut.symbol,
+    tokenOut.name
+  );
 
-//   const tokenPass = new Token(
-//     tokenIn.chainId,
-//     tokenIn.address,
-//     tokenIn.decimals,
-//     tokenIn.symbol,
-//     tokenIn.name
-//   );
+  console.log("----getQuote----");
+  console.log("amountIn:", amountIn);
+  console.log("tokenIn.address:", tokenIn.address);
+  console.log("tokenPass.address:", tokenPass.address);
 
-//   const QUOTER_CONTRACT_ADDRESS = uniQuoter;
+  // Determine token order
+  const isTokenPassWETH =
+    tokenPass.address.toLowerCase() === WETH_TOKEN.address.toLowerCase();
+  const isTokenPassOutWETH =
+    tokenPassOut.address.toLowerCase() === WETH_TOKEN.address.toLowerCase();
 
-//   const CurrentConfig = {
-//     pool: {
-//       token0: tokenPass,
-//       token1: tokenOut,
-//       fee: FeeAmount.MEDIUM,
-//     },
-//   };
+  const [token0, token1] = isTokenPassWETH
+    ? [tokenPass, tokenPassOut]
+    : isTokenPassOutWETH
+    ? [tokenPassOut, tokenPass]
+    : tokenPass.address.toLowerCase() < tokenPassOut.address.toLowerCase()
+    ? [tokenPass, tokenPassOut]
+    : [tokenPassOut, tokenPass];
 
-//   const exactInputConfig = {
-//     rpc: {
-//       mainnet: provider,
-//     },
-//     tokens: {
-//       in: tokenPass,
-//       amountIn: amountIn,
-//       out: tokenOut,
-//       poolFee: FeeAmount.MEDIUM,
-//     },
-//   };
+  console.log("0-----", token0);
+  console.log("1-----", token1);
 
-//   const currentPoolAddress = computePoolAddress({
-//     factoryAddress: uniFactory,
-//     tokenA: CurrentConfig.pool.token0,
-//     tokenB: CurrentConfig.pool.token1,
-//     fee: CurrentConfig.pool.fee,
-//   });
-//   console.log("Pool Address:", currentPoolAddress);
+  const fees = [FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH];
+  let bestQuote = null;
 
-//   const poolContract = new ethers.Contract(
-//     currentPoolAddress,
-//     IUniswapV3Pool.abi,
-//     provider
-//   );
+  for (const fee of fees) {
+    try {
+      const poolAddress = computePoolAddress({
+        factoryAddress: uniFactory,
+        tokenA: token0,
+        tokenB: token1,
+        fee,
+      });
 
-//   if (tokenIn.symbol === "WETH") {
-//     const [token0, token1, fee] = await Promise.all([
-//       poolContract.token1(),
-//       poolContract.token0(),
-//       poolContract.fee(),
-//     ]);
-//     const quoterContract = new ethers.Contract(
-//       QUOTER_CONTRACT_ADDRESS,
-//       Quoter.abi,
-//       provider
-//     );
+      console.log(`Trying pool with fee: ${fee}, Address: ${poolAddress}`);
 
-//     // Convert amountIn to a fixed-point string without scientific notation
-//     const fixedAmountIn = toFixedWithoutScientificNotation(
-//       amountIn,
-//       tokenIn.decimals
-//     );
-//     console.log("amountIn 2:", amountIn);
-//     console.log("fixedAmountIn:", fixedAmountIn);
+      const poolContract = new ethers.Contract(
+        poolAddress,
+        IUniswapV3Pool.abi,
+        provider
+      );
 
-//     function formatToDecimals(value, decimals) {
-//       const factor = Math.pow(10, decimals);
-//       return (Math.floor(value * factor) / factor).toFixed(decimals);
-//     }
-//     const formattedAmountIn = formatToDecimals(amountIn, tokenIn.decimals);
+      // Check if the pool exists
+      await poolContract.token0();
 
-//     const params = {
-//       tokenIn: token0,
-//       tokenOut: token1,
-//       fee: fee,
-//       amountIn: ethers
-//         .parseUnits(formattedAmountIn, tokenIn.decimals)
-//         .toString(),
-//       sqrtPriceLimitX96: 0,
-//     };
+      const quoterContract = new ethers.Contract(
+        uniQuoter,
+        Quoter.abi,
+        provider
+      );
 
-//     console.log("****params.amountIn:", params.amountIn);
+      const isTokenInToken0 =
+        (await poolContract.token0()).toLowerCase() ===
+        tokenPass.address.toLowerCase();
 
-//     try {
-//       const quotedAmountV2 =
-//         await quoterContract.quoteExactInputSingle.staticCall(params);
-//       console.log("Slippage value check:", slippageTolerance);
-//       console.log("----Quote----");
-//       console.log("quotedAmountV2:", quotedAmountV2.amountOut);
+      const params = {
+        tokenIn: isTokenInToken0 ? token0.address : token1.address,
+        tokenOut: isTokenInToken0 ? token1.address : token0.address,
+        fee,
+        amountIn: ethers.parseUnits(amountIn.toString(), tokenPass.decimals),
+        sqrtPriceLimitX96: 0,
+      };
 
-//       const quotedAmountV2format = toReadableAmount(
-//         quotedAmountV2.amountOut,
-//         exactInputConfig.tokens.in.decimals
-//       );
-//       console.log("quotedAmountV2 format:", quotedAmountV2format);
-//       console.log("----Slippage----");
-//       const amountOutMinimum =
-//         (quotedAmountV2format * (10000 - slippageTolerance * 10000)) / 10000;
+      console.log("slippage quote params:", params);
 
-//       console.log("amountOutMinimum", amountOutMinimum);
-//       console.log("amountOutMinimum Str - ", amountOutMinimum.toString());
+      const quotedAmount =
+        await quoterContract.quoteExactInputSingle.staticCall(params);
 
-//       return amountOutMinimum;
-//     } catch (error) {
-//       console.error("Error getting quote:", error);
-//       throw error;
-//     }
-//   } else {
-//     const [token0, token1, fee] = await Promise.all([
-//       poolContract.token0(),
-//       poolContract.token1(),
-//       poolContract.fee(),
-//     ]);
-//     const quoterContract = new ethers.Contract(
-//       QUOTER_CONTRACT_ADDRESS,
-//       Quoter.abi,
-//       provider
-//     );
+      // `quotedAmount.amountOut` is a BigNumber, scale to BigInt
+      const quotedAmountScaled = quotedAmount.amountOut;
 
-//     // Convert amountIn to a fixed-point string without scientific notation
-//     const fixedAmountIn = toFixedWithoutScientificNotation(
-//       amountIn,
-//       tokenIn.decimals
-//     );
-//     console.log("amountIn 2:", amountIn);
-//     console.log("fixedAmountIn:", fixedAmountIn);
+      if (!bestQuote || quotedAmountScaled > bestQuote.amountOut) {
+        bestQuote = { fee, poolAddress, amountOut: quotedAmountScaled };
+      }
+    } catch (error) {
+      console.warn(`Failed to fetch quote for fee ${fee}:`, error);
+    }
+  }
 
-//     function formatToDecimals(value, decimals) {
-//       const factor = Math.pow(10, decimals);
-//       return (Math.floor(value * factor) / factor).toFixed(decimals);
-//     }
-//     const formattedAmountIn = formatToDecimals(amountIn, tokenIn.decimals);
+  if (!bestQuote) {
+    throw new Error("No valid pool found for the given token pair.");
+  }
 
-//     const params = {
-//       tokenIn: token0,
-//       tokenOut: token1,
-//       fee: fee,
-//       amountIn: ethers
-//         .parseUnits(formattedAmountIn, tokenIn.decimals)
-//         .toString(),
-//       sqrtPriceLimitX96: 0,
-//     };
+  console.log(
+    `Best quote found for Fee: ${bestQuote.fee}, Pool: ${bestQuote.poolAddress}, Quote: ${bestQuote.amountOut}`
+  );
+  return bestQuote.amountOut; // { fee, amountOut: BigInt }
+}
 
-//     console.log("****params.amountIn:", params.amountIn);
+const feeTiers = [500, 3000, 10000]; // Supported fee tiers
 
-//     try {
-//       const quotedAmountV2 =
-//         await quoterContract.quoteExactInputSingle.staticCall(params);
-//       console.log("Slippage value check:", slippageTolerance);
-//       console.log("----Quote----");
-//       console.log("quotedAmountV2:", quotedAmountV2.amountOut);
+async function validatePool(uniFactory, provider, tokenIn, tokenOut) {
+  const tokenA = new Token(
+    tokenIn.chainId,
+    tokenIn.address,
+    tokenIn.decimals,
+    tokenIn.symbol,
+    tokenIn.name
+  );
 
-//       const quotedAmountV2format = toReadableAmount(
-//         quotedAmountV2.amountOut,
-//         exactInputConfig.tokens.in.decimals
-//       );
-//       console.log("quotedAmountV2 format:", quotedAmountV2format);
-//       console.log("----Slippage----");
-//       const amountOutMinimum =
-//         (quotedAmountV2format * (10000 - slippageTolerance * 10000)) / 10000;
+  const tokenB = new Token(
+    tokenOut.chainId,
+    tokenOut.address,
+    tokenOut.decimals,
+    tokenOut.symbol,
+    tokenOut.name
+  );
 
-//       console.log("amountOutMinimum", amountOutMinimum);
-//       console.log("amountOutMinimum Str - ", amountOutMinimum.toString());
+  for (const fee of feeTiers) {
+    const poolAddress = computePoolAddress({
+      factoryAddress: uniFactory,
+      tokenA: tokenA,
+      tokenB: tokenB,
+      fee: fee,
+    });
 
-//       return amountOutMinimum;
-//     } catch (error) {
-//       console.error("Error getting quote:", error);
-//       throw error;
-//     }
-//   }
-// }
+    console.log(`Checking pool: ${poolAddress} with fee: ${fee}`);
+
+    const poolContract = new ethers.Contract(
+      poolAddress,
+      IUniswapV3Pool.abi,
+      provider
+    );
+    try {
+      const [token0, token1] = await Promise.all([
+        poolContract.token1(),
+        poolContract.token0(),
+      ]);
+
+      console.log("Pool Token0:", token0);
+      console.log("Pool Token1:", token1);
+
+      if (
+        [token0.toLowerCase(), token1.toLowerCase()].includes(
+          tokenIn.address.toLowerCase()
+        ) &&
+        [token0.toLowerCase(), token1.toLowerCase()].includes(
+          tokenOut.address.toLowerCase()
+        )
+      ) {
+        console.log(`Valid pool found at ${poolAddress} with fee: ${fee}`);
+        return { poolAddress, fee };
+      }
+    } catch (error) {
+      console.log(`Pool does not exist for fee: ${fee}`);
+    }
+  }
+  throw new Error(
+    "No valid pool exists for the given token pair and fee tiers."
+  );
+}
+
+async function slippageUniswapOriginal(
+  tokenIn,
+  tokenOut,
+  amountIn,
+  provider,
+  chainId
+) {
+  console.log("slippage chainId:", chainId);
+  if (!provider) {
+    throw new Error("Provider not connected");
+  }
+  if (!chainId) {
+    throw new Error("Invalid chain");
+  }
+  // Validate amountIn
+  if (amountIn <= 0) {
+    console.warn("amountIn is zero or invalid, skipping quote.");
+    return 0;
+  }
+
+  // getConfig
+  const { uniQuoter, uniFactory } = getConfig(chainId);
+
+  console.log("----Slippage logs----");
+  console.log("tokenIn", tokenIn);
+  console.log("tokenOut", tokenOut);
+  console.log("amountIn", amountIn);
+
+  const tokenPass = new Token(
+    tokenIn.chainId,
+    tokenIn.address,
+    tokenIn.decimals,
+    tokenIn.symbol,
+    tokenIn.name
+  );
+
+  const QUOTER_CONTRACT_ADDRESS = uniQuoter;
+
+  const CurrentConfig = {
+    pool: {
+      token0: tokenPass,
+      token1: tokenOut,
+      fee: FeeAmount.MEDIUM,
+    },
+  };
+
+  const exactInputConfig = {
+    rpc: {
+      mainnet: provider,
+    },
+    tokens: {
+      in: tokenPass,
+      amountIn: amountIn,
+      out: tokenOut,
+      poolFee: FeeAmount.MEDIUM,
+    },
+  };
+
+  const currentPoolAddress = computePoolAddress({
+    factoryAddress: uniFactory,
+    tokenA: CurrentConfig.pool.token0,
+    tokenB: CurrentConfig.pool.token1,
+    fee: CurrentConfig.pool.fee,
+  });
+  console.log("Pool Address:", currentPoolAddress);
+
+  const poolContract = new ethers.Contract(
+    currentPoolAddress,
+    IUniswapV3Pool.abi,
+    provider
+  );
+
+  if (tokenIn.symbol === "WETH") {
+    const [token0, token1, fee] = await Promise.all([
+      poolContract.token1(),
+      poolContract.token0(),
+      poolContract.fee(),
+    ]);
+    const quoterContract = new ethers.Contract(
+      QUOTER_CONTRACT_ADDRESS,
+      Quoter.abi,
+      provider
+    );
+
+    // Convert amountIn to a fixed-point string without scientific notation
+    const fixedAmountIn = toFixedWithoutScientificNotation(
+      amountIn,
+      tokenIn.decimals
+    );
+    console.log("amountIn 2:", amountIn);
+    console.log("fixedAmountIn:", fixedAmountIn);
+
+    function formatToDecimals(value, decimals) {
+      const factor = Math.pow(10, decimals);
+      return (Math.floor(value * factor) / factor).toFixed(decimals);
+    }
+    const formattedAmountIn = formatToDecimals(amountIn, tokenIn.decimals);
+
+    const params = {
+      tokenIn: token0,
+      tokenOut: token1,
+      fee: fee,
+      amountIn: ethers
+        .parseUnits(formattedAmountIn, tokenIn.decimals)
+        .toString(),
+      sqrtPriceLimitX96: 0,
+    };
+
+    console.log("****params.amountIn:", params.amountIn);
+
+    try {
+      const quotedAmountV2 =
+        await quoterContract.quoteExactInputSingle.staticCall(params);
+      console.log("Slippage value check:", slippageTolerance);
+      console.log("----Quote----");
+      console.log("quotedAmountV2:", quotedAmountV2.amountOut);
+
+      const quotedAmountV2format = toReadableAmount(
+        quotedAmountV2.amountOut,
+        exactInputConfig.tokens.in.decimals
+      );
+      console.log("quotedAmountV2 format:", quotedAmountV2format);
+      console.log("----Slippage----");
+      const amountOutMinimum =
+        (quotedAmountV2format * (10000 - slippageTolerance * 10000)) / 10000;
+
+      console.log("amountOutMinimum", amountOutMinimum);
+      console.log("amountOutMinimum Str - ", amountOutMinimum.toString());
+
+      return amountOutMinimum;
+    } catch (error) {
+      console.error("Error getting quote:", error);
+      throw error;
+    }
+  } else {
+    const [token0, token1, fee] = await Promise.all([
+      poolContract.token0(),
+      poolContract.token1(),
+      poolContract.fee(),
+    ]);
+    const quoterContract = new ethers.Contract(
+      QUOTER_CONTRACT_ADDRESS,
+      Quoter.abi,
+      provider
+    );
+
+    // Convert amountIn to a fixed-point string without scientific notation
+    const fixedAmountIn = toFixedWithoutScientificNotation(
+      amountIn,
+      tokenIn.decimals
+    );
+    console.log("amountIn 2:", amountIn);
+    console.log("fixedAmountIn:", fixedAmountIn);
+
+    function formatToDecimals(value, decimals) {
+      const factor = Math.pow(10, decimals);
+      return (Math.floor(value * factor) / factor).toFixed(decimals);
+    }
+    const formattedAmountIn = formatToDecimals(amountIn, tokenIn.decimals);
+
+    const params = {
+      tokenIn: token0,
+      tokenOut: token1,
+      fee: fee,
+      amountIn: ethers
+        .parseUnits(formattedAmountIn, tokenIn.decimals)
+        .toString(),
+      sqrtPriceLimitX96: 0,
+    };
+
+    console.log("****params.amountIn:", params.amountIn);
+
+    try {
+      const quotedAmountV2 =
+        await quoterContract.quoteExactInputSingle.staticCall(params);
+      console.log("Slippage value check:", slippageTolerance);
+      console.log("----Quote----");
+      console.log("quotedAmountV2:", quotedAmountV2.amountOut);
+
+      const quotedAmountV2format = toReadableAmount(
+        quotedAmountV2.amountOut,
+        exactInputConfig.tokens.in.decimals
+      );
+      console.log("quotedAmountV2 format:", quotedAmountV2format);
+      console.log("----Slippage----");
+      const amountOutMinimum =
+        (quotedAmountV2format * (10000 - slippageTolerance * 10000)) / 10000;
+
+      console.log("amountOutMinimum", amountOutMinimum);
+      console.log("amountOutMinimum Str - ", amountOutMinimum.toString());
+
+      return amountOutMinimum;
+    } catch (error) {
+      console.error("Error getting quote:", error);
+      throw error;
+    }
+  }
+}

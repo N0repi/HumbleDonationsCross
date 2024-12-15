@@ -2,7 +2,7 @@
 
 import { ethers } from "ethers";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-import getAmountOutMinimum from "./priceFeeds/slippage";
+import getAmountOutMinimum, { getQuote } from "./priceFeeds/slippage";
 import { getTokensForChain } from "./priceFeeds/libs/conversion.mjs";
 import { computeMerkleProof } from "./whiteList/merkle";
 import { approve } from "thirdweb/extensions/erc20";
@@ -12,9 +12,13 @@ import { client } from "../../Components/Model/thirdWebClient";
 import erc20ABI from "./erc20.json" assert { type: "json" };
 import { getConfig } from "../../utils/constants.js";
 
+function toFixedWithoutScientificNotation(num, decimals) {
+  return Number(num).toFixed(decimals);
+}
+
 async function getNetworkConfig(chainId) {
   const { contractAddress, ABI, NATIVE, HDT, explorer } = getConfig(
-    chainId || FALLBACK_CHAIN_ID
+    chainId || 42161
   );
   return { contractAddress, ABI, NATIVE, HDT, explorer };
 }
@@ -55,11 +59,9 @@ async function validateToken(tokenInput, chainId) {
   console.log("checkWhiteListProof log:", checkWhiteListProof);
 
   if (checkWhiteListProof.length > 0) {
-    console.log(`Token at address ${tokenInput.address} is in the whitelist.`);
+    console.log(`Token at address ${tokenInput} is in the whitelist.`);
   } else {
-    console.log(
-      `Token at address ${tokenInput.address} is NOT in the whitelist.`
-    );
+    console.log(`Token at address ${tokenInput} is NOT in the whitelist.`);
   }
 
   return checkWhiteListProof;
@@ -72,7 +74,17 @@ async function calculateSlippage(
   taxPercentage,
   chain
 ) {
-  const { WETH_TOKEN, HDT_TOKEN } = getTokensForChain(chain.id);
+  console.log("chain:", chain);
+  const chainId = chain.id;
+  console.log("chainId:", chainId);
+  const { WETH_TOKEN, HDT_TOKEN } = getTokensForChain(chainId);
+  const { NATIVE } = await getNetworkConfig(chainId);
+
+  const ETH = {
+    name: NATIVE.name,
+    address: "0x0000000000000000000000000000000000000000",
+  };
+
   const provider = ethers6Adapter.provider.toEthers({
     client: client,
     chain: chain,
@@ -87,10 +99,43 @@ async function calculateSlippage(
   const taxAmount = tokenQuantity * formattedTaxPercentage;
   console.log("Tax Amount:", taxAmount);
 
-  // Calculate splits
-  const splitWETH = (tokenQuantity * 0.75).toFixed(tokenInput.decimals);
-  const splitHDT = (tokenQuantity * 0.25).toFixed(tokenInput.decimals);
-  console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT);
+  let tokenInWETHquote;
+
+  if (
+    tokenInput.address === WETH_TOKEN.address ||
+    tokenInput.name === ETH.name
+  ) {
+    console.log("tokenInput is WETH or ETH, skipping getQuote...");
+    tokenInWETHquote = ethers.parseUnits(
+      toFixedWithoutScientificNotation(taxAmount, 18),
+      18
+    );
+  } else {
+    console.log("Getting quote for tokenInput to WETH...");
+    console.log("WETH_TOKEN:", WETH_TOKEN);
+    tokenInWETHquote = await getQuote(
+      tokenInput,
+      WETH_TOKEN,
+      toFixedWithoutScientificNotation(taxAmount, 18),
+      provider,
+      chainId
+    );
+  }
+  console.log("tokenInWETHquote:", tokenInWETHquote);
+
+  const WETHquoteDecimals = ethers.formatUnits(tokenInWETHquote.toString(), 18);
+  console.log("WETHquoteDecimals:", WETHquoteDecimals);
+
+  // Split amounts
+  const fractionHDT = 0.25; // For HDT split
+  const fractionWETH = 0.75; // For WETH split
+
+  // Directly use tokenInWETHquote (BigInt)
+  const splitWETH = (taxAmount * fractionWETH).toFixed(18); // 0.75 * taxAmount
+  const splitHDT = (
+    parseFloat(ethers.formatUnits(tokenInWETHquote, 18)) * fractionHDT
+  ).toFixed(18); // Scaled to 18 decimals
+  console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT); // eg 0.00001125 WETH, 0.00000375 HDT
 
   let amountOutMinimumETH = 0;
   let amountOutMinimumHDT = 0;
@@ -98,24 +143,25 @@ async function calculateSlippage(
   if (tokenInput.address !== HDT_TOKEN.address) {
     if (
       tokenInput.address === WETH_TOKEN.address ||
-      tokenInput.name === "Ethereum"
+      tokenInput.name === ETH.name
     ) {
-      // Special case for WETH as input
+      // Special case: WETH or ETH as tokenIn
+      console.log("Calculating slippage for HDT from WETH...");
       amountOutMinimumHDT = await getAmountOutMinimum(
         WETH_TOKEN,
         HDT_TOKEN,
-        splitHDT, // Use splitHDT for the calculation
+        splitHDT,
         provider,
-        chain.id
+        chainId
       );
     } else {
-      // Handle non-WETH token inputs
+      console.log("Calculating slippage for WETH and HDT...");
       amountOutMinimumETH = await getAmountOutMinimum(
         tokenInput,
         WETH_TOKEN,
-        taxAmount, // Use splitWETH for the calculation
+        taxAmount,
         provider,
-        chain.id
+        chainId
       );
 
       amountOutMinimumHDT = await getAmountOutMinimum(
@@ -123,7 +169,7 @@ async function calculateSlippage(
         HDT_TOKEN,
         splitHDT,
         provider,
-        chain.id
+        chainId
       );
     }
   } else {
@@ -139,19 +185,15 @@ async function calculateSlippage(
   );
 
   // Format the values for Uniswap logic
-  const slippageETH =
-    amountOutMinimumETH > 0
-      ? ethers
-          .parseUnits(amountOutMinimumETH.toString(), tokenInput.decimals)
-          .toString()
-      : "0";
+  const slippageETH = amountOutMinimumETH;
+  // amountOutMinimumETH > 0
+  //   ? ethers.formatUnits(amountOutMinimumETH.toString(), tokenInput.decimals)
+  //   : "0";
 
-  const slippageHDT =
-    amountOutMinimumHDT > 0
-      ? ethers
-          .parseUnits(amountOutMinimumHDT.toString(), HDT_TOKEN.decimals)
-          .toString()
-      : "0";
+  const slippageHDT = amountOutMinimumHDT;
+  // amountOutMinimumHDT > 0
+  //   ? ethers.formatUnits(amountOutMinimumHDT.toString(), HDT_TOKEN.decimals)
+  //   : "0";
 
   return { slippageETH, slippageHDT };
 }
@@ -243,18 +285,19 @@ export function useDonateTokenAbstracted() {
         ABI
       );
 
+      console.log("tokenQuantity:", tokenQuantity);
+
       console.log(taxPercentage); // 15n
       console.log("payProcessTokenIdAbstracted donateToken chainId:", chainId);
       const proof = await validateToken(tokenInput.address, chainId);
 
-      const { amountOutMinimumETHParsed, amountOutMinimumHDTParsed } =
-        await calculateSlippage(
-          tokenId,
-          tokenQuantity,
-          tokenInput,
-          taxPercentage,
-          chain
-        );
+      const { slippageETH, slippageHDT } = await calculateSlippage(
+        tokenId,
+        tokenQuantity,
+        tokenInput,
+        taxPercentage,
+        chain
+      );
 
       const tokenQuantityInEthFormat = ethers.parseUnits(
         tokenQuantity,
@@ -275,10 +318,9 @@ export function useDonateTokenAbstracted() {
           tokenId,
           tokenInput.address,
           tokenQuantityInEthFormat,
-          amountOutMinimumETHParsed, // amountOutMinimumETHParsed
-          amountOutMinimumHDTParsed,
+          slippageETH,
+          slippageHDT,
           proof,
-          // 3000,
         ],
       });
 

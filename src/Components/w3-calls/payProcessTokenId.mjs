@@ -2,11 +2,18 @@
 
 import { ethers } from "ethers";
 import erc20ABI from "./erc20.json" assert { type: "json" };
-import getAmountOutMinimum from "./priceFeeds/slippage";
+import getAmountOutMinimum, {
+  getQuote,
+  getQuoteSonic,
+} from "./priceFeeds/slippage";
 import { getTokensForChain } from "./priceFeeds/libs/conversion.mjs";
 import { computeMerkleProof } from "./whiteList/merkle";
 
 import { getConfig } from "../../utils/constants.js";
+
+function toFixedWithoutScientificNotation(num, decimals) {
+  return Number(num).toFixed(decimals);
+}
 
 async function getNetworkConfig(chainId) {
   const { contractAddress, ABI, NATIVE, HDT, explorer } = getConfig(
@@ -14,11 +21,6 @@ async function getNetworkConfig(chainId) {
   );
   return { contractAddress, ABI, NATIVE, HDT, explorer };
 }
-
-// const ETH = {
-//   name: NATIVE.name,
-//   address: "0x0000000000000000000000000000000000000000",
-// };
 
 async function validateToken(tokenInput, chainId) {
   console.log("validateToken tokenInput address:", tokenInput);
@@ -69,16 +71,61 @@ async function calculateSlippage(
 
   // Get the tax percentage from the contract
   const taxPercentage = await HumbleDonations.getPercentage();
+  console.log("taxPercentage:", taxPercentage);
   const formattedTaxPercentage = (Number(taxPercentage) / 1000).toString();
   console.log("Tax Percentage:", formattedTaxPercentage);
 
-  const taxAmount = tokenQuantity * formattedTaxPercentage;
-  console.log("Tax Amount:", taxAmount);
+  const taxAmount = tokenQuantity * formattedTaxPercentage; // eg 0.001 (in) * 0.015 = 0.000015
+  console.log("Tax Amount:", taxAmount); // 0.000015
+
+  // Skip the call to `getQuote` if tokenInput is WETH or ETH
+  let tokenInWETHquote;
+  if (
+    chainId === 64165 // Special handling for Sonic
+  ) {
+    console.log("Using Sonic-specific logic...");
+    const slippageResult = await getQuoteSonic(
+      tokenInput,
+      WETH_TOKEN,
+      taxAmount,
+      connectedSigner.provider,
+      chainId
+    );
+    tokenInWETHquote = slippageResult;
+  } else if (
+    tokenInput.address === WETH_TOKEN.address ||
+    tokenInput.name === ETH.name
+  ) {
+    console.log("tokenInput is WETH or ETH, skipping getQuote...");
+    tokenInWETHquote = ethers.parseUnits(
+      toFixedWithoutScientificNotation(taxAmount, 18),
+      18
+    ); // Use taxAmount directly
+  } else {
+    console.log("Getting quote for tokenInput to WETH...");
+    tokenInWETHquote = await getQuote(
+      tokenInput,
+      WETH_TOKEN,
+      toFixedWithoutScientificNotation(taxAmount, 18),
+      connectedSigner.provider,
+      chainId
+    );
+  }
+  console.log("tokenInWETHquote:", tokenInWETHquote);
+
+  const WETHquoteDecimals = ethers.formatUnits(tokenInWETHquote.toString(), 18);
+  console.log("WETHquoteDecimals:", WETHquoteDecimals);
 
   // Split amounts
-  const splitWETH = (tokenQuantity * 0.75).toFixed(tokenInput.decimals);
-  const splitHDT = (tokenQuantity * 0.25).toFixed(tokenInput.decimals);
-  console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT);
+  const fractionHDT = 0.25; // For HDT split
+  const fractionWETH = 0.75; // For WETH split
+
+  // Directly use tokenInWETHquote (BigInt)
+  const splitWETH = (taxAmount * fractionWETH).toFixed(18); // 0.75 * taxAmount
+  const splitHDT = (
+    parseFloat(ethers.formatUnits(tokenInWETHquote, 18)) * fractionHDT
+  ).toFixed(18); // Scaled to 18 decimals
+  console.log("Split WETH:", splitWETH, "Split HDT:", splitHDT); // eg 0.00001125 WETH, 0.00000375 HDT
 
   let amountOutMinimumETH = 0;
   let amountOutMinimumHDT = 0;
@@ -129,19 +176,15 @@ async function calculateSlippage(
   );
 
   // Format the values for Uniswap logic
-  const slippageETH =
-    amountOutMinimumETH > 0
-      ? ethers
-          .parseUnits(amountOutMinimumETH.toString(), tokenInput.decimals)
-          .toString()
-      : "0";
+  const slippageETH = amountOutMinimumETH;
+  // amountOutMinimumETH > 0
+  //   ? ethers.formatUnits(amountOutMinimumETH.toString(), tokenInput.decimals)
+  //   : "0";
 
-  const slippageHDT =
-    amountOutMinimumHDT > 0
-      ? ethers
-          .parseUnits(amountOutMinimumHDT.toString(), HDT_TOKEN.decimals)
-          .toString()
-      : "0";
+  const slippageHDT = amountOutMinimumHDT;
+  // amountOutMinimumHDT > 0
+  //   ? ethers.formatUnits(amountOutMinimumHDT.toString(), HDT_TOKEN.decimals)
+  //   : "0";
 
   return { slippageETH, slippageHDT };
 }
@@ -186,8 +229,9 @@ async function approveToken(
   // }
   const approvalTx = await erc20Contract.approve(
     contractAddress,
-    tokenQuantityInEthFormat,
-    { gasLimit: 1000000 }
+    tokenQuantityInEthFormat
+    // { gasLimit: 1000000 }
+    // #@
   );
   await approvalTx.wait();
   const transactionHashApproval = approvalTx.hash;
@@ -219,10 +263,10 @@ async function donateToken(
     chainId
   );
   console.log("---Payable---");
+  console.log("slippageETH:", slippageETH);
+  console.log("slippageHDT", slippageHDT);
   console.log(
-    "amountOutMinimumETHParsed amountOutMinimumHDTParsed  |  ",
-    slippageETH,
-    slippageHDT
+    `donateToken - slippageETH ${slippageETH} | slippageHDT ${slippageHDT}`
   );
   const HumbleDonations = new ethers.Contract(
     contractAddress,
@@ -234,16 +278,21 @@ async function donateToken(
     tokenQuantity,
     tokenInput.decimals
   );
+  console.log(
+    "donateToken - tokenQuantityInEthFormat:",
+    tokenQuantityInEthFormat
+  );
 
   console.log("tokenQuantityInEthFormat:", tokenQuantityInEthFormat);
   const donateTx = await HumbleDonations.donate(
     tokenId,
     tokenInput.address,
     tokenQuantityInEthFormat,
-    "0", // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
+    slippageETH, // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
     slippageHDT,
-    proof,
-    { gasLimit: 1000000 }
+    proof
+    // { gasLimit: 1000000 }
+    // #@
   );
   await donateTx.wait();
   const transactionHashConfirmation = donateTx.hash;
