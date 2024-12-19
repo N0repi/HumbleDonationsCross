@@ -12,12 +12,15 @@ import { getConfig } from "../../../utils/constants.js";
 // Buy
 import Buy from "../Pay/PayTrad.jsx";
 import { client } from "../../Model/thirdWebClient";
+// Send
+import Send from "../Pay/Send";
 
 // Network Switcher
 import NetworkSwitcher from "../../NetworkSwitcher/NetworkSwitcher";
 
 const WalletModal = ({ setOpenWalletModal }) => {
   const [isPayEmbedOpen, setIsPayEmbedOpen] = useState(false);
+  const [sendOpen, setSendOpen] = useState(false);
   const { chain, HDT } = useWallet();
   const { abstractedTokenList } = getConfig(chain?.id);
 
@@ -31,6 +34,9 @@ const WalletModal = ({ setOpenWalletModal }) => {
 
   const handleBuyClick = () => {
     setIsPayEmbedOpen(true);
+  };
+  const handleSendClick = () => {
+    setSendOpen(true);
   };
 
   return (
@@ -46,7 +52,7 @@ const WalletModal = ({ setOpenWalletModal }) => {
         </div>
 
         <div className={Style.SRBparent}>
-          <button className={Style.SRBbutton} onClick={handleClaimClick}>
+          <button className={Style.SRBbutton} onClick={handleSendClick}>
             Send
           </button>
           {/* <button className={Style.SRBbutton} onClick={handleClaimClick}>
@@ -62,6 +68,7 @@ const WalletModal = ({ setOpenWalletModal }) => {
           </button>
         </div>
 
+        <Send isOpen={sendOpen} onClose={() => setSendOpen(false)} />
         <Buy
           client={client}
           isOpen={isPayEmbedOpen}

@@ -20,7 +20,7 @@ import erc20 from "./liquidityABI/erc20.json";
 
 import "./StakingEthers5.module.css";
 import { getINtoUSD } from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
-import { useTransaction } from "../../pages/TransactionContext";
+import { useTransaction } from "../Transaction/TransactionContext";
 
 const name0 = "Wrapped Ether";
 const symbol0 = "WETH";

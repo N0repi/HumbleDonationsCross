@@ -6,11 +6,11 @@ import Head from "next/head";
 import images from "../../assets/index.js";
 import { useRouter } from "next/router";
 import { BASE_API_URL, getConfig } from "../../utils/constants.js";
-import HeroSection from "../../Components/HeroSection/HeroSection.jsx";
+import DonateBox from "../../Components/DonateBox/DonateBox.jsx";
 import Style from "./[title].module.css";
 
-import GetTokenBalance from "../Rewards/MetricsForTitle.jsx";
-import { useTransaction } from "../../pages/TransactionContext";
+import GetTokenBalance from "../../Components/Rewards/MetricsForTitle.jsx";
+import { useTransaction } from "../../Components/Transaction/TransactionContext.js";
 import { ethers } from "ethers";
 
 // thirdweb
@@ -25,7 +25,7 @@ const URIrender = () => {
   const router = useRouter();
   const { title } = router.query;
   const [project, setProject] = useState(null);
-  const [showHeroSection, setShowHeroSection] = useState(false);
+  const [showDonateBox, setShowDonateBox] = useState(false);
   const [tokenId, setTokenId] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const [provider, setProvider] = useState(null); // State to store the provider for MetricsForTitle to get fiat value
@@ -132,8 +132,8 @@ const URIrender = () => {
     }
   }, [title, wagmiIsConnected, wagmiAddress]);
 
-  const toggleHeroSection = () => {
-    setShowHeroSection(!showHeroSection);
+  const toggleDonateBox = () => {
+    setShowDonateBox(!showDonateBox);
   };
 
   const handleDelete = async () => {
@@ -411,13 +411,10 @@ const URIrender = () => {
       </div>
       {project ? (
         <div className={Style.contentContainer} ref={contentRef}>
-          {showHeroSection ? (
+          {showDonateBox ? (
             true
           ) : (
-            <button
-              onClick={toggleHeroSection}
-              className={Style.buttonContainer}
-            >
+            <button onClick={toggleDonateBox} className={Style.buttonContainer}>
               Donate
               <div className={Style.expandContract}>
                 <Image src={images.expand} alt="expand" />
@@ -465,13 +462,13 @@ const URIrender = () => {
         <p>Loading...</p> // Display a loading message while project is null
       )}
       <div>
-        <div className={Style.heroSectionContainer}>
-          {showHeroSection && (
+        <div className={Style.DonateBoxContainer}>
+          {showDonateBox && (
             <>
-              <HeroSection
+              <DonateBox
                 tokenId={tokenId}
                 projectTitle={project.title}
-                toggleHeroSection={toggleHeroSection}
+                toggleDonateBox={toggleDonateBox}
               />
               {tokenId &&
                 provider && ( // Ensure provider is defined before passing it

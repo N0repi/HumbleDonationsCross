@@ -8,7 +8,7 @@ import { TokenSwapFront, SearchToken, LanguageToggle } from "../index";
 import { ethers } from "ethers";
 import { useWallet } from "../Wallet/WalletContext";
 import { getConfig } from "../../utils/constants.js";
-import { useTransaction } from "../../pages/TransactionContext";
+import { useTransaction } from "../Transaction/TransactionContext";
 import CurrencyContext from "../LanguageToggle/CurrencyContext.jsx";
 import { client } from "../Model/thirdWebClient";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";

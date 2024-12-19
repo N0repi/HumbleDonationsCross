@@ -14,7 +14,7 @@
   width: 100%;
 }
 
-/* Additional styling to adjust the space between .contentContainer and HeroSection -- condensed project text */
+/* Additional styling to adjust the space between .contentContainer and DonateBox -- condensed project text */
 .mainContainer > div:last-child {
   margin-left: 0rem;
 }
@@ -59,13 +59,13 @@
   width: 70%;
 }
 
-.heroSectionContainer {
+.DonateBoxContainer {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Align to the top of the container */
   align-items: center;
-  margin-left: 2rem; /* Add margin to separate HeroSection from text */
+  margin-left: 2rem; /* Add margin to separate DonateBox from text */
   margin-top: 5rem; /* Adjust margin-top to position it at the top */
 }
 
@@ -315,13 +315,13 @@
     width: 100%; /* Adjust the width of the text container */
   }
 
-  /* Center the HeroSection */
-  .heroSectionContainer {
+  /* Center the DonateBox */
+  .DonateBoxContainer {
     position: fixed;
     top: 30%;
     left: 50%;
     transform: translate(-55%, -50%);
-    z-index: 1000; /* Ensure the HeroSection appears above other content */
+    z-index: 1000; /* Ensure the DonateBox appears above other content */
   }
   .expandContract {
     width: 40px;
@@ -363,11 +363,11 @@
 }
 
 @media only screen and (max-width: 1030px) {
-  .heroSectionContainer {
+  .DonateBoxContainer {
     position: fixed;
     top: 30%;
     left: 50%;
     transform: translate(-55%, -50%);
-    z-index: 1000; /* Ensure the HeroSection appears above other content */
+    z-index: 1000; /* Ensure the DonateBox appears above other content */
   }
 }

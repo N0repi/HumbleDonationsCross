@@ -7,7 +7,6 @@ import { arbitrum } from "thirdweb/chains";
 import { sonicTestnet } from "../../../constants/thirdwebChains/sonicTestnet";
 
 import { supportedTokens } from "./SupportedTokens.json";
-import Style from "./PadTrad.module.css";
 
 /*
 * ADD TO SUPPORTED CHAINS WHEN SONIC IS SUPPORTED *
@@ -49,7 +48,6 @@ export default function Buy({ client, isOpen, onClose, chain, HDT }) {
 
   Same with the HDT address in `prefillBuy`
   */
-  console.log(HDT);
 
   useEffect(() => {
     if (isOpen && !client) {

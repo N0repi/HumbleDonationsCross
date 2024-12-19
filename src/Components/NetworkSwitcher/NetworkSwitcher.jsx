@@ -6,6 +6,8 @@ import images from "../../assets";
 import { useSwitchNetwork } from "wagmi";
 import { useSwitchActiveWalletChain } from "thirdweb/react";
 import { useWallet } from "../../Components/Wallet/WalletContext";
+import { arbitrum, sepolia } from "thirdweb/chains";
+import { sonicTestnet } from "../../constants/thirdwebChains/sonicTestnet.ts";
 
 import Style from "./NetworkSwitcher.module.css";
 
@@ -18,20 +20,14 @@ const NetworkSwitcher = () => {
 
   // Available networks
   const networks = {
-    42161: { name: "Arbitrum", image: images.arbitrum },
-    11155111: { name: "Sepolia", image: images.sepolia },
-    64165: { name: "Sonic", image: images.sonic },
+    42161: { name: "Arbitrum", image: images.arbitrum, chain: arbitrum },
+    11155111: { name: "Sepolia", image: images.sepolia, chain: sepolia },
+    64165: { name: "Sonic", image: images.sonic, chain: sonicTestnet },
   };
 
-  // Always call both hooks to maintain consistent order
   const wagmiSwitch = useSwitchNetwork();
   const thirdwebSwitch = useSwitchActiveWalletChain();
 
-  // Determine which hook to use based on `walletType`
-  const switchNetwork =
-    walletType === "wagmi"
-      ? wagmiSwitch.switchNetwork
-      : thirdwebSwitch.switchChain;
   const isLoading =
     walletType === "wagmi" ? wagmiSwitch.isLoading : thirdwebSwitch.isSwitching;
   const pendingChainId =
@@ -39,9 +35,29 @@ const NetworkSwitcher = () => {
   const error =
     walletType === "wagmi" ? wagmiSwitch.error : thirdwebSwitch.error;
 
-  // Toggle dropdown visibility
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
+  const handleSwitchNetwork = async (chainId) => {
+    try {
+      if (walletType === "thirdweb") {
+        const chain = networks[chainId]?.chain;
+        if (!chain) {
+          console.error("Invalid chain object for Thirdweb.");
+          return;
+        }
+        await thirdwebSwitch(chain); // Call the function with the chain object
+      } else if (walletType === "wagmi") {
+        if (!wagmiSwitch.switchNetwork) {
+          console.error("switchNetwork function is undefined.");
+          return;
+        }
+        await wagmiSwitch.switchNetwork(parseInt(chainId)); // Call Wagmi's switchNetwork
+      }
+      setDropdownOpen(false); // Close dropdown after success
+    } catch (err) {
+      console.error("Failed to switch network:", err.message);
+    }
+  };
   return (
     <div
       style={{
@@ -50,7 +66,6 @@ const NetworkSwitcher = () => {
         textAlign: "center",
       }}
     >
-      {/* Currently connected network */}
       {currentChainId && networks[currentChainId] && (
         <div onClick={toggleDropdown} style={{ cursor: "pointer" }}>
           <Image
@@ -64,16 +79,12 @@ const NetworkSwitcher = () => {
         </div>
       )}
 
-      {/* Dropdown menu */}
       {dropdownOpen && (
         <div className={Style.dropdownMenu}>
           {Object.entries(networks).map(([chainId, { name, image }]) => (
             <button
               key={chainId}
-              onClick={() => {
-                switchNetwork && switchNetwork(parseInt(chainId));
-                setDropdownOpen(false); // Close dropdown after switching
-              }}
+              onClick={() => handleSwitchNetwork(chainId)}
               disabled={isLoading && pendingChainId === parseInt(chainId)}
               className={`${Style.dropDownItem} ${
                 currentChainId === parseInt(chainId)

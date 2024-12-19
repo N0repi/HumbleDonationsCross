@@ -24,8 +24,8 @@ import { explorer } from "../utils/constants.js";
 // import walletArray from "./rainbowkit-wallets"
 
 // Transaction Components
-import { TransactionProvider } from "./TransactionContext.js";
-import PaymentResult from "../Components/HeroSection/PaymentResult";
+import { TransactionProvider } from "../Components/Transaction/TransactionContext.js";
+import PaymentResult from "../Components/DonateBox/PaymentResult";
 
 // Currency Context | USD or JPY
 import { CurrencyProvider } from "../Components/LanguageToggle/CurrencyContext.jsx";

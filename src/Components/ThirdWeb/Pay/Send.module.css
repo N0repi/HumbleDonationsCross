@@ -1,0 +1,106 @@
+/* Send.module.css */
+
+.modalContainer {
+  background: rgba(175, 173, 173, 0.7); /* White with 20% opacity */
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Apply the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  border: 2px solid rgba(255, 255, 255, 0.3);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  margin-bottom: 0.9rem;
+}
+
+.title {
+  color: #1e1e1e;
+  font-size: 1.5rem;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttonContainer {
+  gap: 9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.submitButton {
+  margin: 0.5rem;
+
+  width: 5rem;
+  height: 2.5rem;
+
+  border: 1px solid rgba(233, 228, 228, 0.3);
+  border-radius: 10px;
+}
+
+.submitButton:hover {
+  background-color: rgba(138, 136, 136, 0.3);
+}
+
+.cancelButton {
+  margin: 0.5rem;
+
+  width: 5rem;
+  height: 2.5rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.cancelButton:hover {
+  background-color: rgba(138, 136, 136, 0.3);
+}
+
+.formGroup {
+  margin-top: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+
+.formGroup label {
+  background-color: rgb(95, 93, 95);
+  border-radius: 0.6rem;
+  margin-right: 0.4rem;
+  padding: 0.4rem;
+}
+
+.formGroup input {
+  background-color: rgba(138, 136, 136, 0.3);
+  border-radius: 1rem;
+  padding: 0.4rem;
+  color: #ffffff !important;
+}
+.tokenButton {
+  background-color: rgba(138, 136, 136, 0.3);
+  border-radius: 1rem;
+  padding: 0.6rem;
+}
+
+.token label {
+  background-color: rgb(95, 93, 95);
+  border-radius: 0.6rem;
+  margin-right: 0.4rem;
+  padding: 0.4rem;
+}
+
+.token {
+  font-weight: 600;
+}
+
+.tokenImage {
+  margin-right: 0.5rem;
+}
+.tokenDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

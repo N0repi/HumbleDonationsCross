@@ -17,7 +17,7 @@ import {
 } from "./StakingEthers5";
 import Position from "../../utils/Graph/Liquidity/graphReact.jsx";
 import { getINtoUSD } from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
-import { useTransaction } from "../../pages/TransactionContext";
+import { useTransaction } from "../Transaction/TransactionContext";
 import Style from "./Liquidity.module.css";
 import Image from "next/image";
 import images from "../../assets";
@@ -203,7 +203,7 @@ const Liquidity = () => {
               alt="minusCircle"
             />
           </div>
-          <div className={Style.HeroSection_box_input}>
+          <div className={Style.DonateBox_box_input}>
             <input
               type="text"
               placeholder={

@@ -1,7 +1,7 @@
 // PaymentResult.js
 
 import React, { useState, useEffect } from "react";
-import { useTransaction } from "../../pages/TransactionContext";
+import { useTransaction } from "../Transaction/TransactionContext";
 import Style from "./PaymentResult.module.css";
 import { useWallet } from "../Wallet/WalletContext";
 import { getConfig } from "../../utils/constants";
@@ -12,6 +12,7 @@ const PaymentResult = ({ projectTitle, tokenQuantity, tokenAddress }) => {
     confirmationHash,
     donationHash,
     burnHash,
+    transferHash,
     transactionError,
     resetTransactionState,
   } = useTransaction();
@@ -51,6 +52,7 @@ const PaymentResult = ({ projectTitle, tokenQuantity, tokenAddress }) => {
     approvalHash,
     confirmationHash,
     burnHash,
+    transferHash,
     transactionError,
     resetTransactionState,
   ]);
@@ -211,6 +213,31 @@ const PaymentResult = ({ projectTitle, tokenQuantity, tokenAddress }) => {
             onMouseLeave={handleProgressBarMouseLeave}
           >
             Burn TX
+          </a>
+          {timerId && (
+            <div
+              className={Style.progressBar}
+              style={{ width: `${progress}%` }}
+              onMouseEnter={handleProgressBarMouseEnter}
+              onMouseLeave={handleProgressBarMouseLeave}
+            ></div>
+          )}
+        </div>
+      )}
+      {transferHash && (
+        <div
+          className={Style.transactionPosBox}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <a
+            href={`${explorer}tx/${transferHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onMouseEnter={handleProgressBarMouseEnter}
+            onMouseLeave={handleProgressBarMouseLeave}
+          >
+            Transfer TX
           </a>
           {timerId && (
             <div

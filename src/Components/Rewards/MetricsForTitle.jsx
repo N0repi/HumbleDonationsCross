@@ -6,7 +6,7 @@ import { myTokenList } from "../../Components/SearchToken/tokenListNoDupes.json"
 import {
   getINtoUSD,
   getINtoJPY,
-} from "../../Components/w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
+} from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
 
 import { useQuery } from "urql";
 import { Provider } from "urql";

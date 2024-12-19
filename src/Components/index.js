@@ -1,4 +1,4 @@
-import HeroSection from "./HeroSection/HeroSection";
+import DonateBox from "./DonateBox/DonateBox";
 import Model from "./Model/Model";
 import Header from "./NavBar/Header";
 import SearchToken from "./SearchToken/SearchToken";
@@ -13,7 +13,7 @@ import Airdrop from "./Airdrop/Airdrop";
 import swap from "../pages/swap";
 
 export {
-  HeroSection,
+  DonateBox,
   LanguageToggle,
   Model,
   SearchToken,

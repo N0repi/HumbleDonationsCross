@@ -1,10 +1,10 @@
-// HeroSection.jsx
+// DonateBox.jsx
 
 import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 
 // IMPORT INTERNAL
-import Style from "./HeroSection.module.css";
+import Style from "./DonateBox.module.css";
 import images from "../../assets";
 import { Token, SearchToken, LanguageToggle } from "../index";
 
@@ -21,9 +21,9 @@ import {
   useDonateTokenAbstracted,
 } from "../w3-calls/payProcessTokenIdAbstracted.mjs";
 
-import { useWallet } from "../../Components/Wallet/WalletContext";
+import { useWallet } from "../Wallet/WalletContext";
 
-import { useTransaction } from "../../pages/TransactionContext";
+import { useTransaction } from "../Transaction/TransactionContext";
 
 // Token Balance Logic
 import conditionalBalance from "../w3-calls/useBalanceBothNoCond";
@@ -41,19 +41,19 @@ import CurrencyContext from "../LanguageToggle/CurrencyContext.jsx";
 import { getConfig } from "../../utils/constants.js";
 
 // thirdweb
-import { client } from "../../Components/Model/thirdWebClient";
+import { client } from "../Model/thirdWebClient";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 
 // Session
 // import { useSession } from "../../pages/sessions/session"
 // import SessionComponent from "../../pages/w3-calls/sessionComponent"
 
-const HeroSection = ({
+const DonateBox = ({
   accounts,
   tokenData,
   project,
   projectTitle,
-  toggleHeroSection,
+  toggleDonateBox,
   tokenId,
 }) => {
   //USESTATE
@@ -106,8 +106,8 @@ const HeroSection = ({
     image: "",
     symbol: "",
   });
-  const toggleHeroSectionClick = () => {
-    toggleHeroSection();
+  const toggleDonateBoxClick = () => {
+    toggleDonateBox();
   };
 
   const handleQuantityChange = (e) => {
@@ -132,7 +132,7 @@ const HeroSection = ({
       return provider.getSigner();
     }
   }
-  // ***** Handling Payable in HeroSection.jsx *****
+  // ***** Handling Payable in DonateBox.jsx *****
   const handleDonateClick = async () => {
     try {
       if (walletType === "thirdweb") {
@@ -279,7 +279,7 @@ const HeroSection = ({
         const chainId = chain?.id ?? 42161;
         const provider = await getConnectedSigner(thirdwebActiveAccount);
         if (selectedCurrency === "USD") {
-          console.log("HeroSection getIntoUSD chainId:", chain?.id, chainId);
+          console.log("DonateBox getIntoUSD chainId:", chain?.id, chainId);
           value = await getINtoUSD(TokenOne, tokenQuantity, provider, chainId);
           setUsdValue(value);
         } else if (selectedCurrency === "JPY") {
@@ -300,20 +300,18 @@ const HeroSection = ({
   const balanceMax = conditionalBalance(TokenOne, chain);
 
   return (
-    <div className={Style.HeroSection}>
-      <div
-        className={`${Style.HeroSection_box} ${expand ? Style.Expanded : ""}`}
-      >
-        <div className={Style.HeroSection_box_heading}>
+    <div className={Style.DonateBox}>
+      <div className={`${Style.DonateBox_box} ${expand ? Style.Expanded : ""}`}>
+        <div className={Style.DonateBox_box_heading}>
           <button
-            onClick={toggleHeroSectionClick}
+            onClick={toggleDonateBoxClick}
             className={Style.buttonContainer}
           >
             <div className={Style.expandContract}>
               <Image src={images.contract} alt="expand" />
             </div>
           </button>
-          <div className={Style.HeroSection_box_heading_img}>
+          <div className={Style.DonateBox_box_heading_img}>
             <Image
               src={images.filledGrad}
               alt="image"
@@ -324,7 +322,7 @@ const HeroSection = ({
           </div>
         </div>
 
-        <div className={Style.HeroSection_box_input}>
+        <div className={Style.DonateBox_box_input}>
           <input
             type="text"
             placeholder="0"
@@ -350,10 +348,8 @@ const HeroSection = ({
           </button>
         </div>
         <div className={Style.balanceBar}>
-          <div className={Style.HeroSection_box_balance}>
-            Balance: {balance}
-          </div>
-          <div className={Style.HeroSection_box_balance}>
+          <div className={Style.DonateBox_box_balance}>Balance: {balance}</div>
+          <div className={Style.DonateBox_box_balance}>
             {selectedCurrency === "USD"
               ? usdValue !== null
                 ? usdValue
@@ -451,7 +447,7 @@ const HeroSection = ({
         {/* If account connected to swap then display the following */}
         {accounts ? (
           <button
-            className={`${Style.HeroSection_box_btn} ${
+            className={`${Style.DonateBox_box_btn} ${
               expand ? Style.MoveBtn : ""
             }`}
           >
@@ -459,7 +455,7 @@ const HeroSection = ({
           </button>
         ) : (
           <button
-            className={`${Style.HeroSection_box_btn} ${
+            className={`${Style.DonateBox_box_btn} ${
               expand ? Style.MoveBtn : ""
             }`}
             onClick={handleDonateClick}
@@ -514,4 +510,4 @@ const HeroSection = ({
   );
 };
 
-export default HeroSection;
+export default DonateBox;
