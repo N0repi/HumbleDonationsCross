@@ -7,7 +7,7 @@ import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 // INTERNAL IMPORTS
 import fetchAndVerifyReferralCodes from "../../../lib/referral/checkCodes";
 import ReferralProjectBatchPausable from "../../../../artifacts/contracts/referral/ReferralProjectBatchPausable.sol/ReferralProjectBatchPausable.json";
-import erc20ABI from "/home/norepi/Documents/Solidity/front-end/crossChain/src/Components/w3-calls/erc20.json";
+import erc20ABI from "../../../Components/w3-calls/erc20.json";
 // thirdweb
 import { client } from "../../Model/thirdWebClient";
 
