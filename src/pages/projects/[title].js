@@ -19,6 +19,9 @@ import { useSendTransaction } from "thirdweb/react";
 import { useWallet } from "../../Components/Wallet/WalletContext";
 import { client } from "../../Components/Model/thirdWebClient";
 
+// Referral Code
+import ReferralFront from "../../Components/forms/Referral/ReferralFront.jsx";
+
 // ERC721 Render
 
 const URIrender = () => {
@@ -40,6 +43,21 @@ const URIrender = () => {
     chain,
     getProvider,
   } = useWallet();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (project?.ReferralCode) {
+      navigator.clipboard
+        .writeText(project.ReferralCode)
+        .then(() => {
+          setCopied(true); // Show "Copied!" after successful copy
+          setTimeout(() => setCopied(false), 2000); // Reset back to "Copy" after 2 seconds
+        })
+        .catch((err) => {
+          console.error("Failed to copy referral code: ", err);
+        });
+    }
+  };
 
   const networks = {
     42161: { name: "Arbitrum", image: images.arbitrum },
@@ -409,6 +427,7 @@ const URIrender = () => {
           </div>
         )}
       </div>
+
       {project ? (
         <div className={Style.contentContainer} ref={contentRef}>
           {showDonateBox ? (
@@ -421,9 +440,38 @@ const URIrender = () => {
               </div>
             </button>
           )}
+          <div className={Style.referralContainer}>
+            {project?.ReferralCode && (
+              <div className={Style.referralCode}>
+                <button onClick={handleCopy} className={Style.copyButton}>
+                  <span style={{ marginRight: "0.5rem" }}>
+                    Referral Code: {project.ReferralCode}
+                  </span>
+                  <Image
+                    src={copied ? images.copyDark : images.copy}
+                    alt="copy"
+                    width={24}
+                    height={24}
+                  />
+                </button>
+              </div>
+            )}
+            <div>
+              {isOwner && (
+                <div className={Style.referralFront}>
+                  <ReferralFront
+                    chain={chain}
+                    ReferralCode={project.ReferralCode}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
           <div className={Style.textContainer}>
-            <div className={Style.titleStyle}>
-              <h3>{project.title}</h3>
+            <div>
+              <div className={Style.titleStyle}>
+                <h3>{project.title}</h3>
+              </div>
             </div>
             {project.ipfsUri ? (
               <div className={Style.logoContainer}>

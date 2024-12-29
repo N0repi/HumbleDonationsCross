@@ -13,7 +13,9 @@ const PaymentResult = ({ projectTitle, tokenQuantity, tokenAddress }) => {
     donationHash,
     burnHash,
     transferHash,
+    claimHash,
     transactionError,
+    nothingToClaim,
     resetTransactionState,
   } = useTransaction();
   const [timerId, setTimerId] = useState(null);
@@ -53,6 +55,7 @@ const PaymentResult = ({ projectTitle, tokenQuantity, tokenAddress }) => {
     confirmationHash,
     burnHash,
     transferHash,
+    claimHash,
     transactionError,
     resetTransactionState,
   ]);
@@ -249,6 +252,31 @@ const PaymentResult = ({ projectTitle, tokenQuantity, tokenAddress }) => {
           )}
         </div>
       )}
+      {claimHash && (
+        <div
+          className={Style.transactionPosBox}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <a
+            href={`${explorer}tx/${claimHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onMouseEnter={handleProgressBarMouseEnter}
+            onMouseLeave={handleProgressBarMouseLeave}
+          >
+            Claim TX
+          </a>
+          {timerId && (
+            <div
+              className={Style.progressBar}
+              style={{ width: `${progress}%` }}
+              onMouseEnter={handleProgressBarMouseEnter}
+              onMouseLeave={handleProgressBarMouseLeave}
+            ></div>
+          )}
+        </div>
+      )}
       {transactionError && (
         <div
           className={Style.transactionPosBox}
@@ -263,6 +291,28 @@ const PaymentResult = ({ projectTitle, tokenQuantity, tokenAddress }) => {
             onMouseLeave={handleProgressBarMouseLeave}
           >
             Error TX
+          </a>
+          {timerId && (
+            <div
+              className={Style.progressBar}
+              style={{ width: `${progress}%` }}
+              onMouseEnter={handleProgressBarMouseEnter}
+              onMouseLeave={handleProgressBarMouseLeave}
+            ></div>
+          )}
+        </div>
+      )}
+      {nothingToClaim && (
+        <div
+          className={Style.transactionPosBox}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <a
+            onMouseEnter={handleProgressBarMouseEnter}
+            onMouseLeave={handleProgressBarMouseLeave}
+          >
+            Nothing to claim
           </a>
           {timerId && (
             <div

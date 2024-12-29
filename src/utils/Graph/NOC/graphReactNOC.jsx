@@ -7,7 +7,6 @@ const ProjectFields = gql`
     id
     projectTitle
     uri
-    network
   }
 `;
 
@@ -28,6 +27,51 @@ export const GET_PROJECTS_MINIMAL = gql`
       orderDirection: asc
     ) {
       ...ProjectFields
+      network
+    }
+  }
+  ${ProjectFields}
+`;
+
+// For Referral
+export const GET_PROJECTS_REFERRAL_ALL = gql`
+  query GetProjectsMinimal {
+    projects(
+      where: { isDeleted: false }
+      orderBy: createdAt
+      orderDirection: asc
+    ) {
+      ...ProjectFields
+      owner
+    }
+  }
+  ${ProjectFields}
+`;
+
+// Specific to single referral code
+// referralCode cannot be nested in uri needs to be
+/*export const GET_PROJECTS_REFERRAL_SPECIFIC = gql`
+  query GetProjectByReferralCode($referralCode: String!) {
+    projects(
+      where: { referralCode: $referralCode, isDeleted: false }
+      orderBy: createdAt
+      orderDirection: desc
+    ) {
+      ...ProjectFields
+      owner
+    }
+  }
+  ${ProjectFields}
+`;*/
+export const GET_PROJECTS_REFERRAL_SPECIFIC = gql`
+  query GetProjectByReferralCode {
+    projects(
+      where: { isDeleted: false }
+      orderBy: createdAt
+      orderDirection: asc
+    ) {
+      ...ProjectFields
+      owner
     }
   }
   ${ProjectFields}

@@ -299,6 +299,80 @@
   margin-top: 1rem;
 }
 
+.copyButton {
+  display: flex; /* Ensure text and image are on the same line */
+  align-items: center; /* Align items vertically */
+  background-color: transparent; /* Remove default button styling */
+  border: none; /* Remove button border */
+  cursor: pointer; /* Show pointer on hover */
+  padding: 0; /* Remove padding */
+}
+
+.copyButton span {
+  font-size: 1rem; /* Adjust text size if needed */
+  color: #fff; /* White text */
+}
+
+.copyButton img {
+  display: inline-block; /* Ensure image stays inline */
+}
+
+.referralContainer {
+  position: absolute; /* Position it at the top-left */
+  top: 1rem; /* Adjust distance from the top */
+  left: 1rem; /* Adjust distance from the left */
+  display: flex;
+  flex-direction: column; /* Stack referralCode and referralFront vertically */
+
+  z-index: 10; /* Ensure it appears above other elements */
+}
+
+.referralCode {
+  display: inline-flex;
+
+  align-items: center; /* Vertically align items */
+  justify-content: space-between; /* Add space between the elements */
+
+  padding: 0 0.4rem;
+  max-width: max-content; /* Restrict width to content size */
+  white-space: nowrap;
+
+  margin-top: 1rem;
+
+  margin-left: 0.5rem;
+
+  height: 2.5rem;
+
+  background: rgba(78, 78, 78, 0.6); /* White with 20% opacity */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+.referralCode:hover {
+  background-color: rgba(138, 136, 136, 0.3);
+}
+
+.referralFront {
+  display: inline-flex;
+
+  align-items: center; /* Vertically align items */
+  justify-content: space-between; /* Add space between the elements */
+
+  padding: 0 0.4rem;
+  max-width: max-content; /* Restrict width to content size */
+  white-space: nowrap;
+  margin-top: 0.2rem;
+  margin-left: 0.5rem;
+
+  height: 2.5rem;
+
+  background: rgba(78, 78, 78, 0.6); /* White with 20% opacity */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+.referralFront:hover {
+  background-color: rgba(138, 136, 136, 0.3);
+}
+
 @media only screen and (max-width: 36rem) {
   .hideOnMobile {
     display: none;

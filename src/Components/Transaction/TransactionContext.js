@@ -10,7 +10,9 @@ export const TransactionProvider = ({ children }) => {
   const [donationHash, setDonationHash] = useState(null);
   const [burnHash, setBurnHash] = useState(null);
   const [transferHash, setTransferHash] = useState(null);
+  const [claimHash, setClaimHash] = useState(null); // For ReferralFront
   const [transactionError, setTransactionError] = useState(null); // for transaction errors / failures
+  const [nothingToClaim, setNothingToClaim] = useState(null); // For ReferralFront
 
   const resetTransactionState = () => {
     setApprovalHash(null);
@@ -18,7 +20,9 @@ export const TransactionProvider = ({ children }) => {
     setDonationHash(null);
     setBurnHash(null);
     setTransferHash(null);
+    setClaimHash(null);
     setTransactionError(null);
+    setNothingToClaim(null);
   };
 
   return (
@@ -34,8 +38,12 @@ export const TransactionProvider = ({ children }) => {
         setBurnHash,
         transferHash,
         setTransferHash,
+        claimHash,
+        setClaimHash,
         transactionError,
         setTransactionError,
+        nothingToClaim,
+        setNothingToClaim,
         resetTransactionState,
       }}
     >

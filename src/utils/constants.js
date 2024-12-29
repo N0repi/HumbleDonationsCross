@@ -137,6 +137,9 @@ const addresses = {
     uniSwapRouter: "0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E",
     Multicall: SEPOLIA_MULTICALL_ADDRESS,
     abstractedTokenList: abstractedTokenListSepolia.abstractedTokenList,
+    ReferralProjectContractAddress:
+      "0x8F3ea37167D68a94ef1f295248ddbFDDF3060AC1",
+    ReferralProjectSafe: "0xfdA30F9d6A3864f092586Cf755Fc8FCdaF8BB5Ae",
     urqlClient: urqlClients.sepolia,
   },
   // Sonic Testnet

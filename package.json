@@ -20,6 +20,7 @@
     "@urql/core": "^5.0.8",
     "@vercel/analytics": "^1.4.1",
     "aws-sdk": "^2.1528.0",
+    "axios": "^1.7.9",
     "chart.js": "^4.4.1",
     "ethers": "^6.9.1",
     "ethers-v5": "npm:ethers@5.7.2",

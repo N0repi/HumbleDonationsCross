@@ -26,6 +26,11 @@ import { arbitrum, sepolia } from "thirdweb/chains";
 import { useWallet } from "../Wallet/WalletContext";
 import { getConfig } from "../../utils/constants";
 
+// Referral
+import generateUID from "./genUID";
+// dev testing
+import matches from "../../lib/referral/signMessage";
+
 function getByteSize(str) {
   return new TextEncoder().encode(str).length;
 }
@@ -49,6 +54,10 @@ export default function CreateForm() {
   const [github, setGithub] = useState("");
   // Network
   const [network, setNetwork] = useState("Unkown chainId");
+  // ReferralUID
+  const [ReferralCode, setReferralCode] = useState("");
+  const [EnteredReferralCode, setEnteredReferralCode] = useState("");
+
   // Tag Array
   const [tag, setTag] = useState([]);
 
@@ -77,6 +86,10 @@ export default function CreateForm() {
   const maxTags = 3;
 
   const { mutate: sendTransaction } = useSendTransaction();
+
+  // Added for dev testing
+  // const signMessage = matches();
+  // console.log("verifyReferralCode signMessage log - ", signMessage);
 
   // auto resize state
   const handleTextareaChange = (e) => {
@@ -216,6 +229,7 @@ export default function CreateForm() {
       github: metadata.github,
       network: metadata.network,
       logo: metadata.ipfsUri,
+      ReferralCode: metadata.ReferralCode,
     };
 
     await createProject(project);
@@ -224,6 +238,17 @@ export default function CreateForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPStatus(false);
+
+    // generate uid for Referral Program
+    const addressReferralCode = thirdwebActiveAccount?.address || wagmiAddress;
+    if (!addressReferralCode) {
+      alert("Wallet not connected. Please connect your wallet.");
+      return;
+    }
+    const uid = generateUID(title, addressReferralCode); // Generate UID Referral Code
+    setReferralCode(uid); // Optionally set the UID in state for UI updates
+
+    console.log("Generated UID:", uid);
     // Construct the metadata object
     const metadata = {
       title,
@@ -238,6 +263,8 @@ export default function CreateForm() {
       github,
       network,
       ipfsUri,
+      ReferralCode: uid,
+      EnteredReferralCode,
     };
 
     // Convert the metadata object to a JSON string
@@ -687,6 +714,19 @@ export default function CreateForm() {
           </div>
 
           {mintRate && <div></div>}
+          <label>
+            <div className={Style.mintRate}>
+              <span>Referral Code</span>
+              <input
+                className={Style.enterReferralCode}
+                type="text"
+                placeholder="Enter referral code"
+                value={EnteredReferralCode}
+                onChange={(e) => setEnteredReferralCode(e.target.value)}
+                style={{ backgroundColor: "#302f2f" }}
+              />
+            </div>
+          </label>
         </div>
         <div id="address" className="text-muted my-3"></div>
         {/* Conditionally render the div based on pStatus */}
