@@ -40,8 +40,15 @@ const SwapFront = ({
 
   const chainId = chain?.id;
   console.log("chainId in SwapFront:", chainId);
-  const { contractAddress, ABI, NATIVE, HDT, explorer, WRAPPED } =
-    getConfig(chainId);
+  const {
+    contractAddress,
+    ABI,
+    NATIVE,
+    HDT,
+    explorer,
+    WRAPPED,
+    provideLiquidity,
+  } = getConfig(chainId);
 
   console.log("SwapFront top - ", parseFloat(slippageQuantity));
 
@@ -198,7 +205,7 @@ const SwapFront = ({
     <main>
       <a
         className={Style.lp}
-        href="https://app.uniswap.org/add/ETH/0xBabe35F94fE6076474F65771Df60d99cb097323A/3000?minPrice=19998.702000&maxPrice=79994.808000"
+        href={provideLiquidity}
         target="_blank"
         rel="noopener noreferrer"
       >

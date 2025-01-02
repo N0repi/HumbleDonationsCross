@@ -6,15 +6,6 @@ import images from "../../assets";
 
 // Define token details
 
-// Sonic
-// const tokenDetails = {
-//   address: "0x033b82aB3ba626cCCad412a2532897Af82890C72", // The contract address of the ERC-20 token
-//   symbol: "HDT", // The symbol of your token
-//   decimals: 18, // The decimals used by the token
-//   image:
-//     "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmYGjZoQAHzhqwJhFhxvpZ3ijEFZAgqWKNtg4RiyK7GBue", // URL of the token logo (must be HTTPS)
-// };
-
 // Arbitrum
 const tokenDetails = {
   address: "0xBabe35F94fE6076474F65771Df60d99cb097323A", // The contract address of the ERC-20 token

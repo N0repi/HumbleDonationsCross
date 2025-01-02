@@ -108,6 +108,8 @@ const addresses = {
     ReferralProjectContractAddress:
       "0x464e9D273dFaD273F491Abc8F7E934c61f858dC8",
     ReferralProjectSafe: "0x851F079ADB5A3961A789Eb8fDC98A8c328AC4651",
+    provideLiquidity:
+      "https://app.uniswap.org/explore/tokens/arbitrum/0xBabe35F94fE6076474F65771Df60d99cb097323A", // only works when wallet has already provided liquidity "https://app.uniswap.org/add/ETH/0xBabe35F94fE6076474F65771Df60d99cb097323A/3000?minPrice=19998.702000&maxPrice=79994.808000",
     urqlClient: urqlClients.arbitrum,
   },
   // Sonic
@@ -129,6 +131,8 @@ const addresses = {
     ReferralProjectContractAddress:
       "0xac37a4Be8AA876F33c68Cbb38667b57eDB3A1F8B",
     ReferralProjectSafe: "0x6CEEF947bfe8A6655f9EF0007d4dfB93A1d6359f",
+    provideLiquidity:
+      "https://equalizer.exchange/swap?fromToken=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&toToken=0xBabe35F94fE6076474F65771Df60d99cb097323A",
     urqlClient: urqlClients.sonic,
   },
   // Sepolia
@@ -137,7 +141,7 @@ const addresses = {
     ABI: SepoliaABI,
     NATIVE: NATIVE_ETH,
     WRAPPED: WRAPPED_SEPOLIA,
-    HDT: "0x9707Be4129F68B767aF550fe1c631BF1779623Cb",
+    HDT: "0xA420137668CffeA94d5d09E8C90a3E281c711828", // -> still need to 0x9707Be4129F68B767aF550fe1c631BF1779623Cb in some files
     explorer: SepoliaExplorer,
     ETHUSD: "0x694AA1769357215DE4FAC081bf1f309aDC325306",
     JPYUSD: "0x8A6af2B75F23831ADc973ce6288e5329F63D86c6",
