@@ -192,7 +192,7 @@ function ProjectsList({
           <div className={`${Style.projectBox} ${Style.glassBackground}`}>
             <h3 className={Style.titleStyle}>{project.title}</h3>
             <p className={Style.bodyStyle}>{project.body.slice(0, 200)}...</p>
-            <p className={Style.networkStyle}>Network: {project.network}</p>
+            {/* <p className={Style.networkStyle}>Network: {project.network}</p> */}
             <div className={Style.tagContainer}>
               {Array.isArray(project.tag) &&
                 project.tag.map((tag, index) => {
