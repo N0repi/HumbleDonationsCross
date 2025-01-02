@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { arbitrum } from "thirdweb/chains";
-import { sonicTestnet } from "../../../constants/thirdwebChains/sonicTestnet";
+import { sonicMainnet } from "../../../constants/thirdwebChains/sonicMainnet";
 import { useWallet } from "../../Wallet/WalletContext";
 import { getConfig } from "../../../utils/constants.js";
 

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { PayEmbed, lightTheme, darkTheme } from "thirdweb/react";
 import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { arbitrum } from "thirdweb/chains";
-import { sonicTestnet } from "../../../constants/thirdwebChains/sonicTestnet";
+import { sonicMainnet } from "../../../constants/thirdwebChains/sonicMainnet";
 
 import { supportedTokens } from "./SupportedTokens.json";
 

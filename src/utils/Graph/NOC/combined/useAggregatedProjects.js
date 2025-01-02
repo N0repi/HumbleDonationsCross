@@ -1,7 +1,6 @@
 // useAggregatedProjects.js
 
 import { useEffect, useState } from "react";
-import { GET_PROJECTS } from "../graphReactNOC";
 import { fetchFromBothSubgraphs } from "./fetchDataFromSubgraphs";
 
 export const useAggregatedProjects = (query, variables = {}) => {

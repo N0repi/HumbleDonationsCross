@@ -14,6 +14,9 @@
           },
           "11155111": {
             "tokenAddress": "0x9707Be4129F68B767aF550fe1c631BF1779623Cb"
+          },
+          "146": {
+            "tokenAddress": "0xBabe35F94fE6076474F65771Df60d99cb097323A"
           }
         }
       }
@@ -2785,7 +2788,14 @@
       "symbol": "USDC.e",
       "decimals": 6,
       "chainId": 42161,
-      "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+      "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+      "extensions": {
+        "bridgeInfo": {
+          "146": {
+            "tokenAddress": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894"
+          }
+        }
+      }
     },
     {
       "name": "Tether USD",
@@ -2809,20 +2819,36 @@
       }
     },
     {
-      "chainId": 64165,
+      "chainId": 146,
       "decimals": 18,
       "name": "Sonic",
       "address": "",
       "symbol": "S",
-      "logoURI": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/Qmasy6mWYuHkWd3icjicqWQshgFh2owwoCSMVK9oFvHJTZ"
+      "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/Qmasy6mWYuHkWd3icjicqWQshgFh2owwoCSMVK9oFvHJTZ"
     },
     {
-      "chainId": 64165,
-      "address": "0x591E027153ED4e536275984e1b7573367e11dac4",
+      "chainId": 146,
+      "address": "0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38",
       "name": "Wrapped Sonic",
-      "symbol": "WS",
+      "symbol": "wS",
       "decimals": 18,
-      "logoURI": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmVMAgmb3mxvruMPBKtkVMQMWtscR74bFgAe3kohoQTUF7"
+      "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmVMAgmb3mxvruMPBKtkVMQMWtscR74bFgAe3kohoQTUF7"
+    },
+    {
+      "chainId": 146,
+      "address": "0xddF26B42C1d903De8962d3F79a74a501420d5F19",
+      "name": "Equalizer on Sonic",
+      "symbol": "EQUAL",
+      "decimals": 18,
+      "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/bafybeid76e5sq6d4af3z3j73zvgcdbcelvcfocirmlqyzjxl4qkgkfzom4"
+    },
+    {
+      "chainId": 146,
+      "address": "0xE5DA20F15420aD15DE0fa650600aFc998bbE3955",
+      "name": "Beets Staked Sonic",
+      "symbol": "sTS",
+      "decimals": 18,
+      "img": "https://beethoven-assets.s3.eu-central-1.amazonaws.com/token-beets-staked-sonic.png"
     }
   ]
 }

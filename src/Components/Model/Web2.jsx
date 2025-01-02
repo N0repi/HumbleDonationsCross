@@ -11,7 +11,7 @@ import {
 } from "thirdweb/react";
 import { inAppWallet } from "thirdweb/wallets";
 import { arbitrum } from "thirdweb/chains";
-import { sonicTestnet } from "../../constants/thirdwebChains/sonicTestnet.ts";
+import { sonicMainnet } from "../../constants/thirdwebChains/sonicMainnet.ts";
 
 import { client } from "./thirdWebClient";
 import Style from "./Web2.module.css";
@@ -23,7 +23,7 @@ const wallets = [
     },
     // ** when Bundler & Paymaster are added to Thirdweb - uncomment **
     // accountAbstraction: {
-    //   chain: sonicTestnet, // the chain where your smart accounts will be or is deployed
+    //   chain: sonicMainnet, // the chain where your smart accounts will be or is deployed
     //   sponsorGas: true, // enable or disable sponsored transactions
     // },
     // ** when Bundler & Paymaster are added to Thirdweb - uncomment **

@@ -1,15 +1,15 @@
 {
   "abstractedTokenList": [
     {
-      "chainId": 64165,
-      "address": "0x033b82aB3ba626cCCad412a2532897Af82890C72",
+      "chainId": 146,
+      "address": "0xBabe35F94fE6076474F65771Df60d99cb097323A",
       "name": "Humble Donations Token",
       "symbol": "HDT",
       "decimals": 18,
       "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmYGjZoQAHzhqwJhFhxvpZ3ijEFZAgqWKNtg4RiyK7GBue"
     },
     {
-      "chainId": 64165,
+      "chainId": 146,
       "decimals": 18,
       "name": "Sonic",
       "address": "",
@@ -17,20 +17,20 @@
       "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/Qmasy6mWYuHkWd3icjicqWQshgFh2owwoCSMVK9oFvHJTZ"
     },
     {
-      "chainId": 64165,
-      "address": "0x591E027153ED4e536275984e1b7573367e11dac4",
+      "chainId": 146,
+      "address": "0x039e2fB66102314Ce7b64Ce5Ce3E5183bc94aD38",
       "name": "Wrapped Sonic",
-      "symbol": "WS",
+      "symbol": "wS",
       "decimals": 18,
       "img": "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/QmVMAgmb3mxvruMPBKtkVMQMWtscR74bFgAe3kohoQTUF7"
     },
     {
-      "chainId": 64165,
-      "address": "0x83582dcBE9A2897504C777E3E56344bdFAe610bf",
-      "name": "Tether USD",
-      "symbol": "USDT",
-      "decimals": 18,
-      "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+      "chainId": 146,
+      "address": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+      "name": "Bridged USDC",
+      "symbol": "USDC.e",
+      "decimals": 6,
+      "img": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
     }
   ]
 }

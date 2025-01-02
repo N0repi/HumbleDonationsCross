@@ -2,7 +2,7 @@
 import { createClient, cacheExchange, fetchExchange } from "@urql/core";
 
 export const clientSonic = createClient({
-  url: "https://graph.testnet.soniclabs.com/gql/subgraphs/name/N0repi/HumbleDonationsGraph",
+  url: "https://api.studio.thegraph.com/query/94844/humbledonationssonic/v0.0.1",
   exchanges: [cacheExchange, fetchExchange],
 });
 
@@ -20,4 +20,5 @@ export const clientArbitrum = createClient({
 export const urqlClients = {
   sonic: clientSonic,
   sepolia: clientSepolia,
+  arbitrum: clientArbitrum,
 };

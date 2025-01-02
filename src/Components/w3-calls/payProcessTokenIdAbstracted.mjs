@@ -102,6 +102,11 @@ async function calculateSlippage(
   const taxAmount = tokenQuantity * formattedTaxPercentage;
   console.log("Tax Amount:", taxAmount);
 
+  console.log("HDT address:", HDT_TOKEN);
+  if (tokenInput.address === HDT_TOKEN.address) {
+    console.log("HDT donation - no slippage required.", chainId);
+    return { slippageETH: 0, slippageHDT: 0 };
+  }
   let tokenInWETHquote;
 
   if (
@@ -115,27 +120,27 @@ async function calculateSlippage(
     );
   } else {
     if (
-      chainId === 64165 // Special handling for Sonic
+      chainId === 146 // Special handling for Sonic
     ) {
       console.log("Using Sonic-specific logic...");
       const slippageResult = await getQuoteSonic(
         tokenInput,
         WETH_TOKEN,
         toFixedWithoutScientificNotation(taxAmount, 18),
-        connectedSigner.provider,
+        provider,
         chainId
       );
       tokenInWETHquote = slippageResult;
     }
     console.log("Getting quote for tokenInput to WETH...");
-    console.log("WETH_TOKEN:", WETH_TOKEN);
-    tokenInWETHquote = await getQuote(
-      tokenInput,
-      WETH_TOKEN,
-      toFixedWithoutScientificNotation(taxAmount, 18),
-      provider,
-      chainId
-    );
+    // console.log("WETH_TOKEN:", WETH_TOKEN);
+    // tokenInWETHquote = await getQuote(
+    //   tokenInput,
+    //   WETH_TOKEN,
+    //   toFixedWithoutScientificNotation(taxAmount, 18),
+    //   provider,
+    //   chainId
+    // );
   }
   console.log("tokenInWETHquote:", tokenInWETHquote);
 

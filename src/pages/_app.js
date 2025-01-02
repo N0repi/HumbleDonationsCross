@@ -3,8 +3,8 @@
 import Head from "next/head";
 import { useEffect, useState, useRef } from "react";
 // wagmi
-import { sepolia, arbitrum, fantomSonicTestnet } from "wagmi/chains";
-import { sonicTestnet } from "../constants/wagmiChains/sonicTestnet";
+import { sepolia, arbitrum } from "wagmi/chains";
+import { sonicMainnet } from "../constants/wagmiChains/sonicMainnet";
 import { createConfig, configureChains, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 // wallets
@@ -58,7 +58,7 @@ const roboto = Roboto({
 global.explorer = explorer;
 
 const { chains, webSocketPublicClient, publicClient } = configureChains(
-  [arbitrum, sepolia, fantomSonicTestnet, sonicTestnet],
+  [arbitrum, sepolia, sonicMainnet],
   [publicProvider()]
 );
 

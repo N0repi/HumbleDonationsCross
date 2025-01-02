@@ -62,7 +62,7 @@ const URIrender = () => {
   const networks = {
     42161: { name: "Arbitrum", image: images.arbitrum },
     11155111: { name: "Sepolia", image: images.sepolia },
-    64165: { name: "Sonic", image: images.sonic },
+    146: { name: "Sonic", image: images.sonic },
   };
 
   const { contractAddress, ABI, NATIVE } = getConfig(chain?.id);

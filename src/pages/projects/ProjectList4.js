@@ -7,114 +7,183 @@ import { GET_PROJECTS_MINIMAL } from "../../utils/Graph/NOC/graphReactNOC.jsx";
 import Style from "./ProjectList4.module.css";
 import { useWallet } from "../../Components/Wallet/WalletContext.jsx";
 import { getConfig } from "../../utils/constants";
+import { fetchFromBothSubgraphs } from "../../utils/Graph/NOC/combined/fetchDataFromSubgraphs.js";
 
-function ProjectsList({ searchQuery, selectedTags, sortByNewest }) {
+// ProjectList4.js
+
+function ProjectsList({
+  sortByAll,
+  searchQuery,
+  selectedTags,
+  sortByNewest,
+  sortByArbitrum,
+  sortBySonic,
+  chainId,
+}) {
   const [projects, setProjects] = useState([]);
-  const urqlClient = useClient(); // Get the urql client to execute a manual re-fetch
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [{ data, fetching, error, operation }] = useQuery({
-    query: GET_PROJECTS_MINIMAL,
-  });
-
-  // Consolidate cache vs. network logs to ensure they only appear once
-  useEffect(() => {
-    if (operation?.context?.meta?.cacheOutcome === "hit") {
-      console.log("Data loaded from cache");
-    } else if (operation?.context?.meta?.cacheOutcome === "miss") {
-      console.log("Data fetched from network");
-    }
-  }, [operation]);
+  const { urqlClient } = getConfig(chainId);
 
   useEffect(() => {
-    if (data) {
-      const fetchedProjects = data.projects.map((project) => {
-        let projectData;
-        try {
-          projectData = JSON.parse(project.uri);
-        } catch (error) {
-          console.error("Failed to parse project URI JSON:", error);
-          projectData = {
-            title: project.projectTitle,
-            body: project.uri,
-            tag: [],
-          };
-        }
+    const fetchProjects = async () => {
+      setLoading(true);
+      let fetchedProjects = [];
 
-        return {
-          title: projectData.title,
-          body: projectData.body,
-          tag: projectData.tag,
-        };
-      });
-
-      // Default sort behavior - oldest to newest
-      if (sortByNewest) {
-        fetchedProjects.reverse();
-      }
-
-      setProjects(fetchedProjects);
-    }
-  }, [data, sortByNewest]);
-
-  // Manual re-fetch logic when a new project is added
-  useEffect(() => {
-    const newProjectAdded = localStorage.getItem("newProjectAdded");
-    if (newProjectAdded === "true") {
-      urqlClient
-        .executeQuery({ query: GET_PROJECTS_MINIMAL })
-        .toPromise()
-        .then((result) => {
-          if (result.data) {
-            const fetchedProjects = result.data.projects.map((project) => {
-              let projectData;
-              try {
-                projectData = JSON.parse(project.uri);
-              } catch (error) {
-                console.error("Failed to parse project URI JSON:", error);
-                projectData = {
-                  title: project.projectTitle,
-                  body: project.uri,
-                  tag: [],
-                };
-              }
-
-              return {
-                title: projectData.title,
-                body: projectData.body,
-                tag: projectData.tag,
+      try {
+        if (sortByAll) {
+          // Fetch from both subgraphs when "All" is selected
+          const results = await fetchFromBothSubgraphs(GET_PROJECTS_MINIMAL);
+          fetchedProjects = results.map((project) => {
+            let projectData;
+            try {
+              projectData = JSON.parse(project.uri);
+            } catch (error) {
+              console.error("Failed to parse project URI JSON:", error);
+              projectData = {
+                title: project.projectTitle,
+                body: project.uri,
+                tag: [],
               };
-            });
-
-            if (sortByNewest) {
-              fetchedProjects.reverse();
             }
 
-            setProjects(fetchedProjects);
-          }
-        });
+            return {
+              title: projectData.title,
+              body: projectData.body,
+              tag: projectData.tag,
+              network: project.network.toLowerCase(),
+            };
+          });
+        } else if (sortByArbitrum) {
+          // Fetch only from the Arbitrum subgraph
+          const { urqlClient: arbitrumClient } = getConfig(42161); // Arbitrum chainId
+          const result = await arbitrumClient
+            .query(GET_PROJECTS_MINIMAL, {})
+            .toPromise();
+          if (result.error) throw result.error;
 
-      localStorage.removeItem("newProjectAdded"); // Remove the flag after handling it
-    }
-  }, [urqlClient, sortByNewest]);
+          fetchedProjects = result.data.projects.map((project) => {
+            let projectData;
+            try {
+              projectData = JSON.parse(project.uri);
+            } catch (error) {
+              console.error("Failed to parse project URI JSON:", error);
+              projectData = {
+                title: project.projectTitle,
+                body: project.uri,
+                tag: [],
+              };
+            }
 
-  if (fetching) return <p>Loading...</p>;
+            return {
+              title: projectData.title,
+              body: projectData.body,
+              tag: projectData.tag,
+              network: "arbitrum",
+            };
+          });
+        } else if (sortBySonic) {
+          // Fetch only from the Sonic subgraph
+          const { urqlClient: sonicClient } = getConfig(146); // Sonic chainId
+          const result = await sonicClient
+            .query(GET_PROJECTS_MINIMAL, {})
+            .toPromise();
+          if (result.error) throw result.error;
+
+          fetchedProjects = result.data.projects.map((project) => {
+            let projectData;
+            try {
+              projectData = JSON.parse(project.uri);
+            } catch (error) {
+              console.error("Failed to parse project URI JSON:", error);
+              projectData = {
+                title: project.projectTitle,
+                body: project.uri,
+                tag: [],
+              };
+            }
+
+            return {
+              title: projectData.title,
+              body: projectData.body,
+              tag: projectData.tag,
+              network: "sonic",
+            };
+          });
+        } else if (urqlClient) {
+          // Default fetch using the specified chain's urqlClient
+          const result = await urqlClient
+            .query(GET_PROJECTS_MINIMAL, {})
+            .toPromise();
+          if (result.error) throw result.error;
+
+          fetchedProjects = result.data.projects.map((project) => {
+            let projectData;
+            try {
+              projectData = JSON.parse(project.uri);
+            } catch (error) {
+              console.error("Failed to parse project URI JSON:", error);
+              projectData = {
+                title: project.projectTitle,
+                body: project.uri,
+                tag: [],
+              };
+            }
+
+            return {
+              title: projectData.title,
+              body: projectData.body,
+              tag: projectData.tag,
+              network:
+                chainId === 42161
+                  ? "arbitrum"
+                  : chainId === 146
+                  ? "sonic"
+                  : "unknown",
+            };
+          });
+        }
+
+        // Sort by newest if specified
+        if (sortByNewest) {
+          fetchedProjects.reverse();
+        }
+
+        setProjects(fetchedProjects);
+      } catch (fetchError) {
+        console.error("Error fetching projects:", fetchError);
+        setError(fetchError);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, [
+    urqlClient,
+    chainId,
+    sortByAll,
+    sortByNewest,
+    sortByArbitrum,
+    sortBySonic,
+  ]);
+
+  if (loading) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
 
-  // Filtering logic to filter Projects by multiple selected tags
+  // Filtering logic for search query and tags
   const filteredProjects = projects
     .filter((project) =>
       project.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    // If no tags are selected, show all projects
     .filter((project) => {
       if (selectedTags.length === 0) return true;
-      // Check if the project has at least one of the selected tags
       return (
         Array.isArray(project.tag) &&
         selectedTags.some((tag) => project.tag.includes(tag))
       );
     });
-  let totalTagWidth = 0;
 
   return (
     <div className={Style.gridLayout}>
@@ -123,31 +192,20 @@ function ProjectsList({ searchQuery, selectedTags, sortByNewest }) {
           <div className={`${Style.projectBox} ${Style.glassBackground}`}>
             <h3 className={Style.titleStyle}>{project.title}</h3>
             <p className={Style.bodyStyle}>{project.body.slice(0, 200)}...</p>
+            <p className={Style.networkStyle}>Network: {project.network}</p>
             <div className={Style.tagContainer}>
               {Array.isArray(project.tag) &&
                 project.tag.map((tag, index) => {
-                  const formattedTag = tag
-                    .replace(/\s+&\s+/g, "-and-")
-                    .replace(/\s+/g, "-");
-                  const marginLeft = index > 0 ? totalTagWidth + index * 1 : 0;
-
+                  const formattedTag = tag.replace(/\s+/g, "-");
                   return (
                     <div
                       key={index}
                       className={`${Style.tag} ${Style[formattedTag]}`}
-                      style={{ marginLeft }}
                     >
                       {tag}
                     </div>
                   );
                 })}
-
-              {Array.isArray(project.tag) && (
-                <div
-                  className={Style.tagPlaceholder}
-                  style={{ width: totalTagWidth }}
-                />
-              )}
             </div>
           </div>
         </Link>
@@ -158,24 +216,9 @@ function ProjectsList({ searchQuery, selectedTags, sortByNewest }) {
 
 const WrappedProjectsList = (props) => {
   const { chain } = useWallet();
-  const chainId = chain?.id; // chain?.id;
-  // const { chainId } = props;
+  const chainId = chain?.id;
 
-  // Dynamically get the urqlClient for the specified chainId
-  const { urqlClient } = getConfig(chainId);
-
-  if (!urqlClient) {
-    console.error(`No urqlClient found for chainId: ${chainId}`);
-    return <p>Client configuration error. Please check your setup.</p>;
-  }
-
-  console.log("Using urqlClient for chainId:", chainId);
-
-  return (
-    <Provider value={urqlClient}>
-      <ProjectsList {...props} />
-    </Provider>
-  );
+  return <ProjectsList {...props} chainId={chainId} />;
 };
 
 export default WrappedProjectsList;

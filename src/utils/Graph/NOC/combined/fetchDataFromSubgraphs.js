@@ -3,24 +3,25 @@
 import { urqlClients } from "../urqlClientNOC";
 
 export const fetchFromBothSubgraphs = async (query, variables = {}) => {
-  const { sonic, sepolia } = urqlClients;
+  const { arbitrum, sonic, sepolia } = urqlClients;
 
-  const [sonicResult, sepoliaResult] = await Promise.all([
+  const [arbitrumResult, sonicResult] = await Promise.all([
+    arbitrum.query(query, variables).toPromise(),
     sonic.query(query, variables).toPromise(),
     sepolia.query(query, variables).toPromise(),
   ]);
 
-  if (sonicResult.error || sepoliaResult.error) {
+  if (arbitrumResult.error || sonicResult.error) {
     console.error(
       "Error fetching data:",
-      sonicResult.error,
-      sepoliaResult.error
+      arbitrumResult.error,
+      sonicResult.error
     );
-    return { error: sonicResult.error || sepoliaResult.error };
+    return { error: arbitrumResult.error || sonicResult.error };
   }
 
   return [
+    ...(arbitrumResult.data?.projects || []),
     ...(sonicResult.data?.projects || []),
-    ...(sepoliaResult.data?.projects || []),
   ];
 };

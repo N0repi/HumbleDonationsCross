@@ -92,6 +92,12 @@ module.exports = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "beethoven-assets.s3.eu-central-1.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

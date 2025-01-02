@@ -39,8 +39,9 @@ export default function Home() {
     "Web3",
   ]);
   const [sortByNewest, setSortByNewest] = useState(false);
-  const [sortBySepolia, setSortBySepolia] = useState(false);
+  const [sortByArbitrum, setSortByArbitrum] = useState(false);
   const [sortBySonic, setSortBySonic] = useState(false);
+  const [sortByAll, setSortByAll] = useState(false);
   const [showSortOptions, setShowSortOptions] = useState(false);
 
   const handleSortClick = () => {
@@ -57,14 +58,22 @@ export default function Home() {
     setShowSortOptions(false);
   };
 
-  const handleSortBySepolia = () => {
-    setSortBySepolia(!sortBySepolia);
+  const handleSortByArbitrum = () => {
+    setSortByArbitrum(!sortByArbitrum);
     setSortBySonic(false);
+    setSortByAll(false);
   };
 
   const handleSortBySonic = () => {
+    setSortByArbitrum(false);
     setSortBySonic(!sortBySonic);
-    setSortBySepolia(false);
+    setSortByAll(false);
+  };
+
+  const handleSortByAll = () => {
+    setSortByArbitrum(false);
+    setSortBySonic(false);
+    setSortByAll(!sortByAll);
   };
 
   let timeoutId;
@@ -139,9 +148,10 @@ export default function Home() {
               </button>
               {showSortOptions && (
                 <SortDropdown
+                  onAll={handleSortByAll}
                   onNewest={handleSortByNewest}
                   onOldest={handleSortByOldest}
-                  onSepolia={handleSortBySepolia}
+                  onArbitrum={handleSortByArbitrum}
                   onSonic={handleSortBySonic}
                   onClose={() => setShowSortOptions(false)}
                 />
@@ -164,9 +174,10 @@ export default function Home() {
             </button>
             {showSortOptions && (
               <SortDropdown
+                onAll={handleSortByAll}
                 onNewest={handleSortByNewest}
                 onOldest={handleSortByOldest}
-                onSepolia={handleSortBySepolia}
+                onArbitrum={handleSortByArbitrum}
                 onSonic={handleSortBySonic}
                 onClose={() => setShowSortOptions(false)}
               />
@@ -202,10 +213,11 @@ export default function Home() {
         <h1 className={Style.fundable}>Projects</h1>
         <div>
           <WrappedProjectsList
+            sortByAll={sortByAll}
             searchQuery={searchQuery}
             selectedTags={selectedTags}
             sortByNewest={sortByNewest}
-            sortBySepolia={sortBySepolia}
+            sortByArbitrum={sortByArbitrum}
             sortBySonic={sortBySonic}
           />
         </div>

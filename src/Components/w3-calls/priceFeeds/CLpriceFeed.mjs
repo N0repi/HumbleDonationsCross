@@ -6,7 +6,7 @@ import { getConfig } from "../../../utils/constants.js";
 
 // Function to dynamically choose the provider based on the chainId
 function getProvider(chainId) {
-  if (chainId === 64165) {
+  if (chainId === 146) {
     // Use Fantom Opera's public RPC for Sonic
     return new ethers.JsonRpcProvider("https://fantom-rpc.publicnode.com");
   } else {

@@ -78,6 +78,11 @@ async function calculateSlippage(
   const taxAmount = tokenQuantity * formattedTaxPercentage; // eg 0.001 (in) * 0.015 = 0.000015
   console.log("Tax Amount:", taxAmount); // 0.000015
 
+  console.log("HDT address:", HDT_TOKEN);
+  if (tokenInput.address === HDT_TOKEN.address) {
+    console.log("HDT donation - no slippage required.", chainId);
+    return { slippageETH: 0, slippageHDT: 0 }; // Return taxAmount directly for HDT
+  }
   // Skip the call to `getQuote` if tokenInput is WETH or ETH
   let tokenInWETHquote;
   if (
@@ -91,8 +96,9 @@ async function calculateSlippage(
     ); // Use taxAmount directly
   } else {
     if (
-      chainId === 64165 // Special handling for Sonic
+      chainId === 146 // Special handling for Sonic
     ) {
+      console.log("calculateSlippage Sonic - chainID:", chainId);
       console.log("Using Sonic-specific logic...");
       const slippageResult = await getQuoteSonic(
         tokenInput,
@@ -103,14 +109,14 @@ async function calculateSlippage(
       );
       tokenInWETHquote = slippageResult;
     }
-    console.log("Getting quote for tokenInput to WETH...");
-    tokenInWETHquote = await getQuote(
-      tokenInput,
-      WETH_TOKEN,
-      toFixedWithoutScientificNotation(taxAmount, 18),
-      connectedSigner.provider,
-      chainId
-    );
+    // console.log("Getting quote for tokenInput to WETH...");
+    // tokenInWETHquote = await getQuoteSonic(
+    //   WETH_TOKEN,
+    //   HDT_TOKEN,
+    //   toFixedWithoutScientificNotation(splitHDT, 18),
+    //   connectedSigner.provider,
+    //   chainId
+    // );
   }
   console.log("tokenInWETHquote:", tokenInWETHquote);
 
@@ -292,7 +298,7 @@ async function donateToken(
     slippageETH, // works if 0 | I think I need more liquidity to use amountOutMinimumETHParsed
     slippageHDT,
     proof
-    // { gasLimit: 1000000 }
+    // { gasLimit: 100000000 }
     // #@
   );
   await donateTx.wait();

@@ -7,7 +7,7 @@ import { useSwitchNetwork } from "wagmi";
 import { useSwitchActiveWalletChain } from "thirdweb/react";
 import { useWallet } from "../../Components/Wallet/WalletContext";
 import { arbitrum, sepolia } from "thirdweb/chains";
-import { sonicTestnet } from "../../constants/thirdwebChains/sonicTestnet.ts";
+import { sonicMainnet } from "../../constants/thirdwebChains/sonicMainnet";
 
 import Style from "./NetworkSwitcher.module.css";
 
@@ -22,7 +22,7 @@ const NetworkSwitcher = () => {
   const networks = {
     42161: { name: "Arbitrum", image: images.arbitrum, chain: arbitrum },
     11155111: { name: "Sepolia", image: images.sepolia, chain: sepolia },
-    64165: { name: "Sonic", image: images.sonic, chain: sonicTestnet },
+    146: { name: "Sonic", image: images.sonic, chain: sonicMainnet },
   };
 
   const wagmiSwitch = useSwitchNetwork();
@@ -45,6 +45,7 @@ const NetworkSwitcher = () => {
           console.error("Invalid chain object for Thirdweb.");
           return;
         }
+
         await thirdwebSwitch(chain); // Call the function with the chain object
       } else if (walletType === "wagmi") {
         if (!wagmiSwitch.switchNetwork) {

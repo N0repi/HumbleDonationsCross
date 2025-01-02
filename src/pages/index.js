@@ -7,7 +7,8 @@ import Image from "next/image";
 import Style from "./index.module.css";
 import WrappedRecentDonations from "../Components/trending/RecentlyDonated";
 import images from "../assets";
-import addSonic from "../Components/addTokenChain/addChain";
+import addArbitrum from "../Components/addTokenChain/addChainArbitrum";
+import addSonic from "../Components/addTokenChain/addChainSonic";
 import addTokenToMetaMask from "../Components/addTokenChain/addToken";
 
 export default function Home({ Component, pageProps }) {
@@ -67,8 +68,13 @@ export default function Home({ Component, pageProps }) {
                             target="_blank"
                             rel="noopener noreferrer"
                         > */}
-              <button onClick={addSonic}>Add Arbitrum to your wallet</button>
+              <button onClick={addArbitrum}>Add Arbitrum to your wallet</button>
+
               {/* </a> */}
+            </div>
+            <div className={Style.connectButton}>
+              {" "}
+              <button onClick={addSonic}>Add Sonic to your wallet</button>
             </div>
             <button onClick={addTokenToMetaMask}>
               <div className={Style.addToWallet}>
