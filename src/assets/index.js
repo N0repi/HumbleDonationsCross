@@ -61,6 +61,7 @@ import sonic from "./networks/sonic.svg";
 
 import bgMoreAbstractBetter from "./indexBackground/bgMoreAbstractBetter.png";
 import bgEven from "./indexBackground/bgEven.png";
+import bgUneven from "./indexBackground/bgUneven.png";
 
 export default {
   search,
@@ -105,4 +106,5 @@ export default {
   sonic,
   bgMoreAbstractBetter,
   bgEven,
+  bgUneven,
 };

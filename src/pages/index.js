@@ -36,6 +36,9 @@ export default function Home({ Component, pageProps }) {
               funds <br />
               the WETH rewards pool and reduces the supply of HDT.
             </p>
+            <p className={Style.description}>
+              The first application to write webpages on-chain.
+            </p>
             <br />
             <a
               className={Style.descriptionLink}

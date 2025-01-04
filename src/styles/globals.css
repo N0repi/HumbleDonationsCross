@@ -62,7 +62,7 @@
   background-size: cover; /* Ensure the entire container is filled */
   background-repeat: no-repeat; /* Prevent repetition */
   background-position: center; /* Center the image */
-  background-image: url("../assets/indexBackground/bgMoreAbstractBetter.png");
+  background-image: url("../assets/indexBackground/bgUneven.png");
   /* bgMoreAbstractBetter */
   /* bgEven */
 }
