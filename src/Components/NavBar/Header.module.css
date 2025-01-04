@@ -145,6 +145,51 @@
   }
 }
 
+.dropdownContainer {
+  position: relative;
+  display: flex; /* Aligns with the navbar flex layout */
+  align-items: center; /* Vertical alignment */
+}
+
+.dropdownButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem; /* Match the font-size of .link */
+  padding: 2rem; /* Match the padding of .link */
+  text-shadow: 1px 1px 3px #1e1e1e; /* Match the text-shadow of .link */
+  display: flex;
+  align-items: center; /* Aligns text vertically */
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(
+    100% + 5px
+  ); /* Position directly below the button with slight spacing */
+  left: 50%; /* Align horizontally with the button */
+  transform: translateX(-50%); /* Center-align the dropdown */
+  background: white;
+  background-color: #1e1e1e;
+  border: 1.25px solid #444244;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.dropdownItem {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #444244;
+}
+
 @media only screen and (max-width: 900px) {
   .parent {
     width: 95%;
@@ -165,6 +210,37 @@
   }
   .hideOnMobile {
     display: none;
+  }
+  .dropdown {
+    align-items: center; /* Vertical alignment */
+    justify-content: center;
+    position: fixed;
+    width: 15rem;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Offset by 50% to center */
+    background: white;
+    background-color: #1e1e1e;
+    border: 1.25px solid #444244;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+  .dropdownItem {
+    font-size: 1.2rem;
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    padding: 0.75rem 1.25rem;
+    text-decoration: none; /* Remove underline from links */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Ensure full width for centering */
+    text-align: center;
+    background: none; /* Remove button default background */
+    border: none; /* Remove button default border */
+    outline: none; /* Remove focus outline */
   }
 }
 

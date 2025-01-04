@@ -31,6 +31,7 @@ export default function Head() {
   const [openAirdropModal, setOpenAirdropModal] = useState(false);
   const [openWalletModal, setOpenWalletModal] = useState(false);
   const [activeTab, setActiveTab] = useState("/");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
   const router = useRouter();
 
   useEffect(() => {
@@ -54,6 +55,14 @@ export default function Head() {
 
   const handleInAppWalletClick = () => {
     setOpenWalletModal(true);
+  };
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -105,40 +114,45 @@ export default function Head() {
             Swap
           </a>
         </Link>
-        <Link legacyBehavior href="/stake">
-          <a
-            className={`${Style.link} ${
-              activeTab === "/stake" ? Style.activeTab : ""
-            }`}
-          >
-            Stake
-          </a>
-        </Link>
-
-        <a
-          href={snapshotURL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${Style.link} ${Style.hideOnMobile} ${
-            activeTab === "/Governance" ? Style.activeTab : ""
-          }`}
-        >
-          Governance
-        </a>
-      </div>
-
-      <div className={`${Style.right}`}>
-        <div className={`${Style.airdrop} ${Style.hideOnMobile}`}>
+        <div className={Style.dropdownContainer}>
           <button
-            onClick={() => setOpenAirdropModal(true)}
-            className={Style.airdropText}
+            className={`${Style.link} ${Style.dropdownButton} ${Style.link} ${
+              activeTab === "Incentives" ? Style.activeTab : ""
+            }`}
+            onClick={handleDropdownToggle}
           >
-            Airdrop
+            Incentives
           </button>
-          {openAirdropModal && (
-            <Airdrop setOpenAirdropModal={setOpenAirdropModal} />
+          {isDropdownOpen && (
+            <div className={Style.dropdown}>
+              <a
+                className={Style.dropdownItem}
+                href="https://docs.humbledonations.com/Referral"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {" "}
+                Referral Program
+              </a>
+              <button
+                className={Style.dropdownItem}
+                onClick={() => {
+                  setOpenAirdropModal(true);
+                  closeDropdown();
+                }}
+              >
+                Airdrop
+              </button>
+              <Link legacyBehavior href="/stake">
+                <a className={Style.dropdownItem} onClick={closeDropdown}>
+                  Stake
+                </a>
+              </Link>
+            </div>
           )}
         </div>
+      </div>
+      <div className={`${Style.right}`}>
         <div>
           <a
             className={`${Style.link} ${

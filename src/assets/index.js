@@ -59,6 +59,9 @@ import sepolia from "./networks/sepolia.png";
 
 import sonic from "./networks/sonic.svg";
 
+import bgMoreAbstractBetter from "./indexBackground/bgMoreAbstractBetter.png";
+import bgEven from "./indexBackground/bgEven.png";
+
 export default {
   search,
   etherlogo,
@@ -100,4 +103,6 @@ export default {
   arbitrumsvg,
   sepolia,
   sonic,
+  bgMoreAbstractBetter,
+  bgEven,
 };

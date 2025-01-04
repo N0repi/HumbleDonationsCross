@@ -211,107 +211,115 @@ const SwapFront = ({
       >
         Provide Liquidity
       </a>
-      <div className={Style.SwapFrontWrapper}>
-        <div className={Style.SwapFront}>
-          <div
-            className={`${Style.SwapFront_box} ${expand ? Style.Expanded : ""}`}
-          >
-            <div className={Style.SwapFront_box_heading}>
-              <div></div>{" "}
-              <div className={Style.SwapFront_box_heading_img}>
-                <Image
-                  src={images.filledGrad}
-                  alt="image"
-                  width={45}
-                  height={45}
-                  onClick={() => setOpenSetting(true)}
-                />
-              </div>
-            </div>
-
-            <div className={Style.SwapFront_box_input}>
-              <input
-                type="text"
-                placeholder="0"
-                value={tokenQuantity}
-                onChange={handleQuantityChange}
-              />
-
-              <button onClick={() => setOpenToken(true)}>
-                <Image
-                  src={TokenOne.image || images.probablyBest}
-                  width={25}
-                  height={25}
-                  alt="HDTpurpleFullShaded"
-                />
-                {TokenOne.symbol || "ETH"}
-              </button>
-            </div>
-
-            <div className={Style.SwapFront_box_input}>
-              <input
-                type="text"
-                placeholder="0"
-                value={quoteValue}
-                onChange={handleQuantityChange}
-              />
-
-              <button onClick={() => setOpenTokensTwo(true)}>
-                <Image
-                  src={TokenTwo.image || images.probablyBest}
-                  width={25}
-                  height={25}
-                  alt="HDTpurpleFullShaded"
-                />
-                {TokenTwo.symbol || "HDT"}
-              </button>
-            </div>
-            <div className={Style.balanceBar}>
-              <div className={Style.SwapFront_box_balance}>
-                <p>Quote: {quoteValue ? quoteValue : "Fetching quote..."}</p>
-              </div>
-            </div>
-
-            <div className={Style.buttonBar}>
-              <button
-                className={`${Style.SwapFront_box_btn} ${
-                  expand ? Style.MoveBtn : ""
-                }`}
-                onClick={handleSwapClick}
-              >
-                Swap
-              </button>
-            </div>
-          </div>
-
-          {openSetting && (
-            <TokenSwapFront
-              setOpenSetting={setOpenSetting}
-              accounts={accounts}
-              tokenData={tokenData}
-              tokenQuantity={tokenQuantity}
-              setTokenQuantity={setTokenQuantity}
-              currency={currency}
-              setSlippageValue={setSlippageQuantity}
-            />
-          )}
-
-          {openToken && (
-            <SearchToken
-              openToken={setOpenToken}
-              tokens={setTokenOne}
-              tokenData={tokenData}
-            />
-          )}
-          {openTokensTwo && (
-            <SearchToken
-              openToken={setOpenTokensTwo}
-              tokens={setTokenTwo}
-              tokenData={tokenData}
-            />
-          )}
+      {chainId === 146 ? (
+        <div className={Style.unsupportedNetwork}>
+          <p>Swap is not yet supported on this network</p>
         </div>
-      </div>
+      ) : (
+        <div className={Style.SwapFrontWrapper}>
+          <div className={Style.SwapFront}>
+            <div
+              className={`${Style.SwapFront_box} ${
+                expand ? Style.Expanded : ""
+              }`}
+            >
+              <div className={Style.SwapFront_box_heading}>
+                <div></div>{" "}
+                <div className={Style.SwapFront_box_heading_img}>
+                  <Image
+                    src={images.filledGrad}
+                    alt="image"
+                    width={45}
+                    height={45}
+                    onClick={() => setOpenSetting(true)}
+                  />
+                </div>
+              </div>
+
+              <div className={Style.SwapFront_box_input}>
+                <input
+                  type="text"
+                  placeholder="0"
+                  value={tokenQuantity}
+                  onChange={handleQuantityChange}
+                />
+
+                <button onClick={() => setOpenToken(true)}>
+                  <Image
+                    src={TokenOne.image || images.probablyBest}
+                    width={25}
+                    height={25}
+                    alt="HDTpurpleFullShaded"
+                  />
+                  {TokenOne.symbol || "ETH"}
+                </button>
+              </div>
+
+              <div className={Style.SwapFront_box_input}>
+                <input
+                  type="text"
+                  placeholder="0"
+                  value={quoteValue}
+                  onChange={handleQuantityChange}
+                />
+
+                <button onClick={() => setOpenTokensTwo(true)}>
+                  <Image
+                    src={TokenTwo.image || images.probablyBest}
+                    width={25}
+                    height={25}
+                    alt="HDTpurpleFullShaded"
+                  />
+                  {TokenTwo.symbol || "HDT"}
+                </button>
+              </div>
+              <div className={Style.balanceBar}>
+                <div className={Style.SwapFront_box_balance}>
+                  <p>Quote: {quoteValue ? quoteValue : "Fetching quote..."}</p>
+                </div>
+              </div>
+
+              <div className={Style.buttonBar}>
+                <button
+                  className={`${Style.SwapFront_box_btn} ${
+                    expand ? Style.MoveBtn : ""
+                  }`}
+                  onClick={handleSwapClick}
+                >
+                  Swap
+                </button>
+              </div>
+            </div>
+
+            {openSetting && (
+              <TokenSwapFront
+                setOpenSetting={setOpenSetting}
+                accounts={accounts}
+                tokenData={tokenData}
+                tokenQuantity={tokenQuantity}
+                setTokenQuantity={setTokenQuantity}
+                currency={currency}
+                setSlippageValue={setSlippageQuantity}
+              />
+            )}
+
+            {openToken && (
+              <SearchToken
+                openToken={setOpenToken}
+                tokens={setTokenOne}
+                tokenData={tokenData}
+              />
+            )}
+            {openTokensTwo && (
+              <SearchToken
+                openToken={setOpenTokensTwo}
+                tokens={setTokenTwo}
+                tokenData={tokenData}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 };
