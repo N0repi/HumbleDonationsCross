@@ -20,17 +20,7 @@ import { getConfig } from "../../../../utils/constants.js";
 import { useWallet } from "../../../Wallet/WalletContext";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 
-// async function getConnectedProvider(thirdwebActiveAccount) {
-//     if (thirdwebActiveAccount && thirdwebActiveAccount.address) {
-//         const provider = ethers6Adapter.provider.toEthers({ client: client, chain: sepolia })
-//         return provider
-//     } else {
-//         const provider = new ethers.BrowserProvider(window.Sonic)
-//         await window.Sonic.request({ method: "eth_requestAccounts" })
-//         return provider
-//     }
-// }
-
+// Uniswap: Arbitrum, Sepolia
 export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
   console.log("quoteSwap chainId", chainId);
   const { WRAPPED, NATIVE, uniQuoter, uniFactory } = getConfig(chainId);
@@ -166,4 +156,85 @@ export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
     `Best quote found for fee ${bestQuote.fee}: ${bestQuote.amountOut}`
   );
   return bestQuote.amountOut;
+}
+
+// Equalizer: Sonic
+function toFixedWithoutScientificNotation(num, decimals) {
+  return Number(num).toFixed(decimals);
+}
+export async function getQuoteSonic(
+  tokenIn,
+  tokenOut,
+  amountIn,
+  connectedSigner,
+  chainId
+) {
+  console.log("quoteSwap chainId", chainId);
+  const { WRAPPED, NATIVE } = getConfig(chainId);
+
+  if (!WRAPPED) {
+    throw new Error(`WRAPPED address not configured for chainId: ${chainId}`);
+  }
+
+  console.log("chainId passed to getQuote:", chainId);
+
+  // Replace native currency with WRAPPED
+  if (tokenIn.name === NATIVE.name) {
+    tokenIn = WRAPPED;
+  }
+  if (tokenOut.name === NATIVE.name) {
+    tokenIn = WRAPPED;
+  }
+
+  console.log("tokenIn:", tokenIn);
+  console.log("Sonic quote amountIn (raw):", amountIn);
+
+  // Ensure amountIn is a fixed-point string without scientific notation
+  const amountInStr = toFixedWithoutScientificNotation(
+    amountIn,
+    tokenIn.decimals
+  );
+  console.log("Sonic quote amountIn (fixed):", amountInStr);
+
+  // Convert amountIn to wei
+  const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
+
+  console.log("Sonic quote amountIn (wei):", amountInWei);
+
+  const routerAddress = "0xcC6169aA1E879d3a4227536671F85afdb2d23fAD";
+
+  let equalizerRoute;
+  if (tokenIn.name == WRAPPED.name || tokenIn.name == NATIVE.name) {
+    equalizerRoute = [
+      {
+        from: tokenIn.address,
+        to: tokenOut.address,
+        stable: false, // ** Change in the future when more than one stablecoin is supported
+      },
+    ];
+  } else {
+    equalizerRoute = [
+      { from: tokenIn.address, to: WRAPPED.address, stable: false },
+      { from: WRAPPED.address, to: tokenOut.address, stable: false },
+    ];
+  }
+
+  const abi = [
+    "function getAmountsOut(uint amountIn, (address from, address to, bool stable)[] routes) external view returns (uint[] memory)",
+  ];
+  const router = new ethers.Contract(routerAddress, abi, connectedSigner);
+
+  try {
+    // Call the router's getAmountsOut function
+    const amountsOut = await router.getAmountsOut(amountInWei, equalizerRoute);
+    console.log("Equalizer output amounts:", amountsOut);
+
+    const quotedAmountWei = amountsOut[amountsOut.length - 1];
+    console.log(" Equalizer quotedAmountWei:", quotedAmountWei);
+
+    console.log("Equalizer quote:", quotedAmountWei);
+    return quotedAmountWei; // The final output token amount
+  } catch (error) {
+    console.error("Error getting amounts out:", error);
+  }
 }

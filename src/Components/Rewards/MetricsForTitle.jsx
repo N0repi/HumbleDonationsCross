@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { myTokenList } from "../../Components/SearchToken/tokenListNoDupes.json";
 import {
+  getQuoteSonicUSD,
   getINtoUSD,
   getINtoJPY,
 } from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
@@ -31,7 +32,7 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
     if (data) {
       try {
         // Get chain-specific configuration
-        const { NATIVE } = getConfig(chainId);
+        const { WRAPPED, NATIVE } = getConfig(chainId);
 
         // Group donations by token (erc20Token) and calculate total amounts
         const tokenDonationMap = data.donations.reduce((acc, donation) => {
@@ -125,12 +126,26 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
               nonZeroBalances.map(async (token) => {
                 console.log("Token passed to getINtoUSD:", token);
                 try {
-                  const balanceInUSD = await getINtoUSD(
-                    token,
-                    token.balance.toString(),
-                    provider,
-                    chainId
-                  );
+                  let balanceInUSD;
+                  console.log("Metrics chainId:", chainId);
+                  if (chainId == 146) {
+                    balanceInUSD = await getQuoteSonicUSD(
+                      token,
+                      token.balance,
+                      provider,
+                      chainId,
+                      WRAPPED,
+                      NATIVE
+                    );
+                    console.log("Metrics Sonic balanceInUSD:", balanceInUSD);
+                  } else {
+                    balanceInUSD = await getINtoUSD(
+                      token,
+                      token.balance.toString(),
+                      provider,
+                      chainId
+                    );
+                  }
                   console.log(
                     `MetricsUSD - USD value for ${token.name}:`,
                     balanceInUSD
@@ -141,10 +156,7 @@ const GetTokenBalance = ({ tokenId, chainId, provider }) => {
                     `Error converting balance to USD for ${token.name}:`,
                     error
                   );
-                  console.log(
-                    `MetricsJPY - JPY value for ${token.name}:`,
-                    balanceInJPY
-                  );
+
                   return { ...token, balanceInUSD: 0 };
                 }
               })
@@ -229,7 +241,7 @@ const WrappedGetTokenBalance = (props) => {
   const { chainId } = props;
 
   // Dynamically get the urqlClient for the specified chainId
-  const { urqlClient } = getConfig(chainId);
+  const { urqlClient, WRAPPED, NATIVE } = getConfig(chainId);
 
   return (
     <Provider value={urqlClient}>

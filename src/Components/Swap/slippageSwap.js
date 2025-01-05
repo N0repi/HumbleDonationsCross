@@ -15,7 +15,155 @@ import {
 
 // Example setup for Uniswap
 
-export default async function getAmountOutWithSlippage(
+function toFixedWithoutScientificNotation(num, decimals) {
+  return Number(num).toFixed(decimals);
+}
+
+// export default async function getAmountOutMinimum(
+//   tokenIn,
+//   tokenOut,
+//   amountIn,
+//   poolFee,
+//   slippagePercentage, // 0.005%
+//   connectedSigner,
+//   uniQuoter,
+//   chainId
+// ) {
+//   if (chainId == 146) {
+//     console.log("getting slippage on Sonic...");
+//     const callSonic = await slippageEqualizer(
+//       tokenIn,
+//       tokenOut,
+//       amountIn,
+//       slippagePercentage, // 0.005%
+//       connectedSigner
+//     );
+//     return callSonic;
+//   } else {
+//     console.log("getting slippage on Arbitrum/Sepolia...");
+//     const callSlippage = await getAmountOutWithSlippageUniswap(
+//       tokenIn,
+//       tokenOut,
+//       amountIn,
+//       poolFee,
+//       slippagePercentage, // 0.005%
+//       connectedSigner,
+//       uniQuoter
+//     );
+//     return callSlippage;
+//   }
+// }
+
+export async function slippageEqualizer(
+  tokenIn,
+  tokenOut,
+  amountIn,
+  slippagePercentage,
+  connectedSigner,
+  WRAPPED,
+  NATIVE
+) {
+  console.log("Sonic slippage amountIn (raw):", amountIn);
+
+  // Ensure amountIn is a fixed-point string without scientific notation
+  const amountInStr = toFixedWithoutScientificNotation(
+    amountIn,
+    tokenIn.decimals
+  );
+  console.log("Sonic slippage amountIn (fixed):", amountInStr);
+
+  // Convert amountIn to wei
+  // const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
+
+  // console.log("Sonic slippage amountIn (wei):", amountInWei);
+
+  try {
+    const EqualizerQuote = await getQuoteSonic(
+      tokenIn,
+      tokenOut,
+      amountIn,
+      connectedSigner,
+      WRAPPED,
+      NATIVE
+    );
+
+    const slippageBuffer =
+      (BigInt(EqualizerQuote) * BigInt(slippagePercentage * 10000)) /
+      BigInt(10000);
+    const amountOutMinimum = BigInt(EqualizerQuote) - slippageBuffer;
+
+    return amountOutMinimum; // The final output token amount
+  } catch (error) {
+    console.error("Error getting amounts out:", error);
+  }
+}
+
+export async function getQuoteSonic(
+  tokenIn,
+  tokenOut,
+  amountIn,
+  connectedSigner,
+  WRAPPED,
+  NATIVE
+) {
+  console.log("Sonic quote amountIn (raw):", amountIn);
+
+  // Ensure amountIn is a fixed-point string without scientific notation
+  // const amountInStr = toFixedWithoutScientificNotation(
+  //   amountIn,
+  //   tokenIn.decimals
+  // );
+  // console.log("Sonic quote amountIn (fixed):", amountInStr);
+
+  // // Convert amountIn to wei
+  // const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
+
+  // console.log("Sonic quote amountIn (wei):", amountInWei);
+
+  const routerAddress = "0xcC6169aA1E879d3a4227536671F85afdb2d23fAD";
+
+  console.log("WRAPPED:", WRAPPED);
+  console.log("NATIVE:", NATIVE);
+  let equalizerRoute;
+  if (tokenIn.name == WRAPPED.name || tokenIn.name == NATIVE.name) {
+    equalizerRoute = [
+      {
+        from: tokenIn.address,
+        to: tokenOut.address,
+        stable: false, // ** Change in the future when more than one stablecoin is supported
+      },
+    ];
+  } else {
+    equalizerRoute = [
+      { from: tokenIn.address, to: WRAPPED.address, stable: false },
+      { from: WRAPPED.address, to: tokenOut.address, stable: false },
+    ];
+  }
+  // const routes = [
+  //   { from: tokenIn.address, to: tokenOut.address, stable: false },
+  // ];
+
+  const abi = [
+    "function getAmountsOut(uint amountIn, (address from, address to, bool stable)[] routes) external view returns (uint[] memory)",
+  ];
+  const router = new ethers.Contract(routerAddress, abi, connectedSigner);
+
+  try {
+    // Call the router's getAmountsOut function
+    const amountsOut = await router.getAmountsOut(amountIn, equalizerRoute);
+    console.log("Output amounts:", amountsOut);
+
+    const quotedAmountWei = amountsOut[amountsOut.length - 1];
+    console.log("quotedAmountWei:", quotedAmountWei);
+
+    return quotedAmountWei; // The final output token amount
+  } catch (error) {
+    console.error("Error getting amounts out:", error);
+  }
+}
+
+// Uniswap
+export async function getAmountOutWithSlippageUniswap(
   tokenIn,
   tokenOut,
   amountIn,
@@ -43,12 +191,6 @@ export default async function getAmountOutWithSlippage(
   const amountInStr = amountIn.toString();
 
   try {
-    // if (tokenIn === "0x0000000000000000000000000000000000000000") {
-    //   console.log("Replacing ETH address with WETH address for tokenIn.");
-    //   console.log("slippageSwap.js  -  WRAPPED log  - ", WRAPPED);
-    //   tokenIn = WRAPPED;
-    // }
-
     const params = {
       tokenIn: tokenIn,
       tokenOut: tokenOut,

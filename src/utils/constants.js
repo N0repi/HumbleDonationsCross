@@ -39,6 +39,11 @@ const SepoliaABI = HumbleDonationsSepolia.abi;
 import HumbleDonationsSonic from "../../artifacts/contracts/a_HumbleDonations/Sonic/HumbleDonationsSonic.sol/HumbleDonationsSonic.json";
 const SonicABI = HumbleDonationsSonic.abi;
 
+import SwapRouter02 from "../Components/Swap/ABIs/SwapRouter02.json";
+const uniswapSwapRouter02 = SwapRouter02;
+
+import SolidlyExtendedRouter03 from "../../artifacts/contracts/SolidlyExtendedRouter03.sol/SolidlyExtendedRouter03.json";
+const equalizerRouterV3 = SolidlyExtendedRouter03;
 // Addressess
 export const SepoliaContractAddress =
   "0x977428b2547A247848E2DD736B760c80da192b06";
@@ -53,14 +58,17 @@ import abstractedTokenListSonic from "../Components/ThirdWeb/Connected/abstracte
 // ---GraphQL Clients---
 import { clientArbitrum, urqlClients } from "./Graph/NOC/urqlClientNOC";
 // ---GraphQL Clients---
-
+import etherlogo from "../assets/etherlogo.png";
 const NATIVE_ETH = {
   name: "Ethereum",
   symbol: "ETH",
+  img: etherlogo,
 };
+
 const NATIVE_SONIC = {
   name: "Sonic",
   symbol: "S",
+  img: "https://maroon-blank-stoat-172.mypinata.cloud/ipfs/Qmasy6mWYuHkWd3icjicqWQshgFh2owwoCSMVK9oFvHJTZ",
 };
 
 const WRAPPED_ARBITRUM = {
@@ -103,6 +111,7 @@ const addresses = {
     uniQuoter: "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
     uniFactory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
     uniSwapRouter: "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45",
+    roterABI: uniswapSwapRouter02,
     Multicall: "0xFade011AaDCC05b373C2A679E73980d12095A1fc",
     abstractedTokenList: abstractedTokenListArbitrum.abstractedTokenList,
     ReferralProjectContractAddress:
@@ -124,7 +133,8 @@ const addresses = {
     JPYUSD: "0x8A6af2B75F23831ADc973ce6288e5329F63D86c6",
     uniQuoter: "0x96F1EDa317935F2E86e7c3550F0bdCDBe5e14A9e",
     uniFactory: "0xBb5F17b4b598641AD1D946E3C2cEf23Fb96249D4",
-    uniSwapRouter: "0xE67701aac6D40d34c43367D90FdeaE0095dc28Ba",
+    uniSwapRouter: "0xcC6169aA1E879d3a4227536671F85afdb2d23fAD", // on Sonic testnet -> replacing w/ router - 0xE67701aac6D40d34c43367D90FdeaE0095dc28Ba
+    routerABI: equalizerRouterV3,
     Multicall: "0x0F8B66114823D6ceb5cc9617F7EA46964b9c76cB",
     router: "0xcC6169aA1E879d3a4227536671F85afdb2d23fAD",
     abstractedTokenList: abstractedTokenListSonic.abstractedTokenList,

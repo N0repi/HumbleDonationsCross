@@ -138,6 +138,158 @@ export async function getQuote(tokenIn, amountIn, provider, chainId) {
   return bestQuote.amountOut;
 }
 
+// Equalizer: Sonic
+function toFixedWithoutScientificNotation(num, decimals) {
+  return Number(num).toFixed(decimals);
+}
+export async function getQuoteSonicUSD(
+  tokenIn,
+  amountIn,
+  connectedSigner,
+  chainId,
+  WRAPPED,
+  NATIVE
+) {
+  const USDC_e = {
+    name: "Bridged USDC",
+    address: "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+    symbol: "USDC.e",
+    decimals: 6,
+    chainId: 146,
+    img: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+  };
+
+  // // Replace native currency with WRAPPED
+  // if (tokenIn.name === NATIVE.name) {
+  //   tokenIn = WRAPPED;
+  // }
+
+  console.log("tokenIn:", tokenIn);
+  // console.log("Sonic quote amountIn (raw):", amountIn);
+
+  // Ensure amountIn is a fixed-point string without scientific notation
+  const amountInStr = toFixedWithoutScientificNotation(
+    amountIn,
+    tokenIn.decimals
+  );
+  // console.log("Sonic quote amountIn (fixed):", amountInStr);
+
+  // Convert amountIn to wei
+  const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
+
+  // console.log("Sonic quote amountIn (wei):", amountInWei);
+
+  const routerAddress = "0xcC6169aA1E879d3a4227536671F85afdb2d23fAD";
+
+  let equalizerRoute;
+  if (tokenIn.name == WRAPPED.name || tokenIn.name == NATIVE.name) {
+    equalizerRoute = [
+      {
+        from: WRAPPED.address,
+        to: USDC_e.address,
+        stable: false, // ** Change in the future when more than one stablecoin is supported
+      },
+    ];
+  } else {
+    equalizerRoute = [
+      { from: tokenIn.address, to: WRAPPED.address, stable: false },
+      { from: WRAPPED.address, to: USDC_e.address, stable: false },
+    ];
+  }
+
+  const abi = [
+    "function getAmountsOut(uint amountIn, (address from, address to, bool stable)[] routes) external view returns (uint[] memory)",
+  ];
+  const router = new ethers.Contract(routerAddress, abi, connectedSigner);
+
+  try {
+    // Call the router's getAmountsOut function
+    const amountsOut = await router.getAmountsOut(amountInWei, equalizerRoute);
+    // console.log("Output amounts:", amountsOut);
+
+    const quotedAmountWei = amountsOut[amountsOut.length - 1];
+
+    const quotedAmount = ethers.formatUnits(quotedAmountWei, USDC_e.decimals);
+
+    return quotedAmount; // The final output token amount
+  } catch (error) {
+    console.error("Error getting amounts out:", error);
+  }
+}
+
+// Needs some work - output is way too high
+export async function getInUSDQuoteSonic(
+  tokenIn,
+  amountIn,
+  connectedSigner,
+  chainId,
+  WRAPPED,
+  NATIVE
+) {
+  const USDC_e = {
+    name: "Bridged USDC",
+    address: "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+    symbol: "USDC.e",
+    decimals: 6,
+    chainId: 146,
+    img: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+  };
+
+  console.log("tokenIn:", tokenIn);
+  // console.log("Sonic quote amountIn (raw):", amountIn);
+
+  // Ensure amountIn is a fixed-point string without scientific notation
+  const amountInStr = toFixedWithoutScientificNotation(
+    amountIn,
+    tokenIn.decimals
+  );
+  // console.log("Sonic quote amountIn (fixed):", amountInStr);
+
+  // Convert amountIn to wei
+  const amountInWei = ethers.parseUnits(amountInStr, tokenIn.decimals);
+
+  // console.log("Sonic quote amountIn (wei):", amountInWei);
+
+  const routerAddress = "0xcC6169aA1E879d3a4227536671F85afdb2d23fAD";
+
+  let equalizerRoute;
+  if (tokenIn.name == WRAPPED.name || tokenIn.name == NATIVE.name) {
+    equalizerRoute = [
+      {
+        from: USDC_e.address,
+        to: WRAPPED.address,
+        stable: false, // ** Change in the future when more than one stablecoin is supported
+      },
+    ];
+  } else {
+    equalizerRoute = [
+      { from: USDC_e.address, to: WRAPPED.address, stable: false },
+      { from: WRAPPED.address, to: tokenIn.address, stable: false },
+    ];
+  }
+
+  const abi = [
+    "function getAmountsOut(uint amountIn, (address from, address to, bool stable)[] routes) external view returns (uint[] memory)",
+  ];
+  const router = new ethers.Contract(routerAddress, abi, connectedSigner);
+
+  try {
+    // Call the router's getAmountsOut function
+    const amountsOut = await router.getAmountsOut(amountInWei, equalizerRoute);
+    // console.log("Output amounts:", amountsOut);
+
+    const quotedAmountWei = amountsOut[amountsOut.length - 1];
+
+    console.log("quotedAmountWei", quotedAmountWei);
+    const quotedAmount = ethers.formatUnits(quotedAmountWei, WRAPPED.decimals);
+    console.log("quotedAmount", quotedAmount);
+
+    return quotedAmount; // The final output token amount
+  } catch (error) {
+    console.error("Error getting amounts out:", error);
+  }
+}
+
 export async function getINtoUSD(tokenIn, amountIn, provider, chainId) {
   console.log("getINtoUSD log - :", tokenIn, amountIn);
   try {

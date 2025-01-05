@@ -13,9 +13,17 @@ import CurrencyContext from "../LanguageToggle/CurrencyContext.jsx";
 import { client } from "../Model/thirdWebClient";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import { approveToken, Payable, swapNativeToken } from "./SwapLogic";
-// import { getQuote } from "../w3-calls/priceFeeds/dynamic/quoteToQuote.mjs";
-// import { getQuote } from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
-import { getQuote } from "../w3-calls/priceFeeds/dynamic/quoteSwap.mjs";
+// Token Balance Logic
+import conditionalBalance from "../w3-calls/useBalanceBothNoCond";
+import {
+  getQuote,
+  getQuoteSonic,
+} from "../w3-calls/priceFeeds/dynamic/quoteSwap.mjs";
+
+import {
+  getQuoteSonicUSD,
+  getINtoUSD,
+} from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
 import { arbitrum } from "thirdweb/chains";
 
 const SwapFront = ({
@@ -36,6 +44,7 @@ const SwapFront = ({
   const [expand, setExpand] = useState(false);
   const [currency, setCurrency] = useState("USD");
   const [quoteValue, setQuoteValue] = useState("");
+  const [usdQuote, setUSDquote] = useState("");
   const [slippageQuantity, setSlippageQuantity] = useState("0.10");
 
   const chainId = chain?.id;
@@ -54,7 +63,7 @@ const SwapFront = ({
 
   const [TokenOne, setTokenOne] = useState({
     name: NATIVE.name,
-    image: "/etherlogo.png",
+    image: NATIVE.img,
     symbol: NATIVE.symbol,
     address: "0x0000000000000000000000000000000000000000",
     decimals: 18,
@@ -185,14 +194,29 @@ const SwapFront = ({
     const fetchQuote = async () => {
       try {
         const connectedSigner = await getConnectedSigner();
-        const quote = await getQuote(
-          TokenOne,
-          TokenTwo,
-          tokenQuantity,
-          connectedSigner,
-          chain?.id
-        );
-        setQuoteValue(quote);
+        if (chainId == 146) {
+          const sonicQuote = await getQuoteSonic(
+            TokenOne,
+            TokenTwo,
+            tokenQuantity,
+            connectedSigner,
+            chain?.id
+          );
+          const parsedSonicQuote = ethers.formatUnits(
+            sonicQuote,
+            TokenTwo.decimals
+          );
+          setQuoteValue(parsedSonicQuote);
+        } else {
+          const quote = await getQuote(
+            TokenOne,
+            TokenTwo,
+            tokenQuantity,
+            connectedSigner,
+            chain?.id
+          );
+          setQuoteValue(quote);
+        }
       } catch (error) {
         console.error("Error fetching quote:", error);
       }
@@ -200,6 +224,51 @@ const SwapFront = ({
 
     fetchQuote();
   }, [tokenQuantity, TokenOne, TokenTwo]);
+  const { selectedCurrency } = useContext(CurrencyContext);
+  useEffect(() => {
+    const fetchValue = async () => {
+      let value = 0;
+      try {
+        const chainId = chain?.id ?? 42161;
+        const provider = await getConnectedSigner(thirdwebActiveAccount);
+        if (selectedCurrency === "USD") {
+          if (chainId == 146) {
+            value = await getQuoteSonicUSD(
+              TokenOne,
+              tokenQuantity,
+              provider,
+              chainId,
+              WRAPPED,
+              NATIVE
+            );
+            console.log("value:", value);
+          } else {
+            console.log("DonateBox getIntoUSD chainId:", chain?.id, chainId);
+            value = await getINtoUSD(
+              TokenOne,
+              tokenQuantity,
+              provider,
+              chainId
+            );
+          }
+          const concatValue = "$" + value;
+          setUsdValue(concatValue);
+        } else if (selectedCurrency === "JPY") {
+          value = await getINtoJPY(TokenOne, tokenQuantity, provider, chainId);
+          setJpyValue(value);
+        }
+      } catch (error) {
+        console.error("Error fetching value:", error);
+      }
+    };
+
+    if (TokenOne && tokenQuantity) {
+      fetchValue();
+    }
+  }, [TokenOne, tokenQuantity, selectedCurrency, thirdwebActiveAccount]);
+
+  const balance = parseFloat(conditionalBalance(TokenOne, chain)).toFixed(3);
+  const balanceMax = conditionalBalance(TokenOne, chain);
 
   return (
     <main>
@@ -211,7 +280,7 @@ const SwapFront = ({
       >
         Provide Liquidity
       </a>
-      {chainId === 146 ? (
+      {chainId === 116 ? (
         <div className={Style.unsupportedNetwork}>
           <p>Swap is not yet supported on this network</p>
         </div>
@@ -275,7 +344,21 @@ const SwapFront = ({
               </div>
               <div className={Style.balanceBar}>
                 <div className={Style.SwapFront_box_balance}>
-                  <p>Quote: {quoteValue ? quoteValue : "Fetching quote..."}</p>
+                  <div className={Style.nestedBalanceBar}>
+                    {selectedCurrency === "USD"
+                      ? usdValue !== null
+                        ? usdValue
+                        : "Fetching quote..."
+                      : jpyValue !== null
+                      ? jpyValue
+                      : "Fetching quote..."}{" "}
+                    {/* change to jpyValue for price in JPY */}
+                  </div>
+                </div>
+                <div className={Style.balanceBar}>
+                  <div className={Style.nestedBalanceBar}>
+                    Balance: {balance}
+                  </div>
                 </div>
               </div>
 

@@ -103,22 +103,35 @@
   justify-content: space-between;
   gap: 0.1rem;
   line-height: 0;
-  width: 6.5rem;
-  background-color: #1e1e1e;
+  width: 7rem;
+  background-color: #1e1e1e4a;
   padding: 1rem;
   font-weight: 700;
   font-size: 1.2rem;
-  /* border: 1.25px solid #860771; */ /*border around token */
+  /* border: 1.25px solid #e44bca; */
   border-radius: 2rem;
 }
 
 /* Parent of .SwapFront_box_balance */
 .balanceBar {
+  margin-right: 0.8rem;
+  color: #e44bca;
   margin-top: 0.1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-right: 1.5rem;
+}
+
+.nestedBalanceBar {
+  color: #e44bca;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* padding: 0.6rem;
+  background-color: #1e1e1e1a;
+  border-radius: 2rem; */
 }
 
 /* Parent of .maxButton */
@@ -168,7 +181,7 @@
   align-items: center;
   display: flex;
   justify-content: center;
-  background-color: #1e1e1e;
+  background-color: #1e1e1e7a;
   margin-top: 1rem;
   padding: 1rem;
   border: 1.5px solid #e44bca;

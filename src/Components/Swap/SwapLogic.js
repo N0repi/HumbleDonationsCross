@@ -1,8 +1,18 @@
+// SwapLogic.js
+
 import { ethers } from "ethers";
 import erc20ABI from "./ABIs/erc20.json" assert { type: "json" };
-import getAmountOutWithSlippage from "./slippageSwap.js";
+import {
+  slippageEqualizer,
+  getAmountOutWithSlippageUniswap,
+} from "./slippageSwap.js";
 import { getConfig } from "../../utils/constants.js";
+
+// Arbitrum
 import SwapRouter02 from "./ABIs/SwapRouter02.json" assert { type: "json" };
+
+// Sonic
+// import SolidlyExtendedRouter03 from "../../../artifacts/contracts/SolidlyExtendedRouter03.sol/SolidlyExtendedRouter03.json" assert { type: "json" };
 
 import { useWallet } from "../Wallet/WalletContext";
 
@@ -12,7 +22,9 @@ export async function approveToken(
   connectedSigner,
   chainId
 ) {
-  const { uniSwapRouter, swapRouterAbi, NATIVE, explorer, WRAPPED } =
+  // **
+  // added routerABI which is Uniswap SwapRouter02 and Equalizer RouterV3
+  const { uniSwapRouter, swapRouterAbi, NATIVE, explorer, WRAPPED, roterABI } =
     getConfig(chainId);
 
   const erc20Contract = new ethers.Contract(
@@ -25,12 +37,12 @@ export async function approveToken(
     tokenQuantity.toString(),
     tokenInput.decimals
   );
-  const currentAllowance = await erc20Contract.allowance(
-    connectedSigner.address,
-    uniSwapRouter
-  );
 
   // Reset approval to zero before updating for tokens like USDT
+  // const currentAllowance = await erc20Contract.allowance(
+  //   connectedSigner.address,
+  //   uniSwapRouter
+  // );
   // if (currentAllowance > 0) {
   //   const resetTx = await erc20Contract.approve(uniSwapRouter, 0);
   //   await resetTx.wait();
@@ -48,7 +60,7 @@ export async function approveToken(
   return { transactionHashApproval };
 }
 
-async function swapTokens(
+async function swapTokensUniswap(
   tokenIn,
   tokenOut,
   amountIn,
@@ -65,29 +77,22 @@ async function swapTokens(
 
   console.log("swapTokens:", chainId);
 
-  const poolFee = 3000; // Example fee tier, adjust as needed
-  // console.log("-----calcSlippage params-----");
-  // console.log("Parameter: tokenIn.address", tokenIn.address);
-  // console.log("Parameter: tokenOut.address", tokenOut.address);
-  // console.log("Parameter: amountIn", amountIn);
-  // console.log("Parameter: poolFee", poolFee);
-  // console.log("Parameter: slippage", slippage);
-  // console.log("Parameter: connectedSigner", connectedSigner);
-  // console.log("Parameter: uniQuoter", uniQuoter);
-  // console.log("Parameter: WRAPPED", WRAPPED);
+  const poolFee = 3000;
+
   console.log("before if statement:", tokenOut.address);
   if (tokenOut.address == "") {
     const wrappedTokenOut = WRAPPED.address;
 
     console.log("wrappedTokenOut:", wrappedTokenOut);
-    const calcSlippage = await getAmountOutWithSlippage(
+    const calcSlippage = await getAmountOutWithSlippageUniswap(
       tokenIn.address,
       wrappedTokenOut,
       amountIn,
       poolFee,
       slippage,
       connectedSigner,
-      uniQuoter
+      uniQuoter,
+      chainId
     );
 
     console.log("uniSwapRouter  -  ", uniSwapRouter);
@@ -116,7 +121,7 @@ async function swapTokens(
     console.log(`Swap Hash: ${explorer}tx/${swapTx.hash}`);
     return swapTx.hash;
   } else {
-    const calcSlippage = await getAmountOutWithSlippage(
+    const calcSlippage = await getAmountOutWithSlippageUniswap(
       tokenIn.address,
       tokenOut.address,
       amountIn,
@@ -153,6 +158,7 @@ async function swapTokens(
   }
 }
 
+// Also need to change to fucntion name to Uniswap ->>> make Sonic function
 export async function swapNativeToken(
   amountIn,
   tokenOut,
@@ -166,7 +172,7 @@ export async function swapNativeToken(
   const amountInEthers = ethers.parseEther(amountIn); // Convert input to Ether format
   console.log("amountInEthers:", amountInEthers);
 
-  const calcSlippage = await getAmountOutWithSlippage(
+  const calcSlippage = await getAmountOutWithSlippageUniswap(
     WRAPPED.address, // Native token as WRAPPED
     tokenOut.address,
     amountInEthers.toString(),
@@ -211,6 +217,105 @@ export async function swapNativeToken(
   };
 }
 
+async function swapTokensEqualizer(
+  explorer,
+  router,
+  routerABI,
+  tokenIn,
+  tokenOut,
+  amountIn,
+  slippage,
+  connectedSigner,
+  chainId,
+  WRAPPED,
+  NATIVE
+) {
+  console.log("amountIn - swapTokensEqualizer:", amountIn); // logs 1000000000000000000n
+
+  console.log("swapTokensEqualizer chainId:", chainId);
+
+  console.log("tokenIn:", tokenIn);
+  console.log("tokenOut:", tokenOut);
+  const calcSlippage = await slippageEqualizer(
+    tokenIn,
+    tokenOut,
+    amountIn,
+    slippage,
+    connectedSigner,
+    WRAPPED,
+    NATIVE
+  );
+
+  console.log("calcSlippage Sonic swap:", calcSlippage);
+
+  const swapRouter = new ethers.Contract(
+    router,
+    routerABI.abi,
+    connectedSigner
+  );
+
+  // Router
+  /*
+  from: WETH,
+  to: HDT,
+  stable: false
+  */
+
+  // PARAMS
+  /*
+  amountIn,
+  slippageWETH,
+  routesToWETH,
+  address(this),
+  deadline 
+  */
+
+  // Soidity
+  /*
+  uint amountIn,
+  uint amountOutMin,
+  Route[] calldata routes,
+  address to,
+  uint deadline
+  */
+
+  let equalizerRoute;
+  if (tokenIn.name == WRAPPED.name || tokenIn.name == NATIVE.name) {
+    equalizerRoute = [
+      {
+        from: tokenIn.address,
+        to: tokenOut.address,
+        stable: false, // ** Change in the future when more than one stablecoin is supported
+      },
+    ];
+  } else {
+    equalizerRoute = [
+      { from: tokenIn.address, to: WRAPPED.address, stable: false },
+      { from: WRAPPED.address, to: tokenOut.address, stable: false },
+    ];
+  }
+
+  const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
+  console.log("amountIn -", amountIn);
+  console.log("calcSlippage -", calcSlippage);
+
+  console.log("connectedSigner.address:", connectedSigner.address);
+
+  const swapTx = await swapRouter.swapExactTokensForTokens(
+    amountIn, // amountIn
+    calcSlippage, // amountOutMin
+    equalizerRoute, // routes
+    connectedSigner.address, // to
+    deadline, // deadline,
+    {
+      gasLimit: 1000000,
+    }
+  );
+  await swapTx.wait();
+  console.log(`Swap Hash: ${explorer}tx/${swapTx.hash}`);
+  return swapTx.hash;
+}
+
 export async function Payable(
   tokenQuantity,
   tokenIn,
@@ -220,7 +325,8 @@ export async function Payable(
   slippage,
   chainId
 ) {
-  const { uniSwapRouter, explorer } = getConfig(chainId);
+  const { uniSwapRouter, explorer, routerABI, router, WRAPPED, NATIVE } =
+    getConfig(chainId);
 
   console.log("-----Payable chainId-----", chainId);
 
@@ -228,17 +334,37 @@ export async function Payable(
     tokenQuantity.toString(),
     tokenIn.decimals
   );
-
-  // Swap tokens
-  const transactionHashConfirmation = await swapTokens(
-    tokenIn,
-    tokenOut,
-    amountIn,
-    connectedSigner,
-    recipientAddress,
-    slippage,
-    chainId
-  );
+  if (chainId == 146) {
+    // Swap tokens Sonic
+    console.log("Payable chain after if:", chainId);
+    const transactionHashConfirmation = await swapTokensEqualizer(
+      explorer,
+      router,
+      routerABI,
+      tokenIn,
+      tokenOut,
+      amountIn,
+      slippage,
+      connectedSigner,
+      chainId,
+      WRAPPED,
+      NATIVE
+    );
+    return transactionHashConfirmation;
+  } else {
+    console.log("Payable chain after else:", chainId);
+    // Swap tokens Arbitrum/Sepolia
+    const transactionHashConfirmation = await swapTokensUniswap(
+      tokenIn,
+      tokenOut,
+      amountIn,
+      connectedSigner,
+      recipientAddress,
+      slippage,
+      chainId
+    );
+    return transactionHashConfirmation;
+  }
 
   return { transactionHashConfirmation };
 }

@@ -30,6 +30,8 @@ import conditionalBalance from "../w3-calls/useBalanceBothNoCond";
 
 // ForEx Rates
 import {
+  getQuoteSonicUSD,
+  getInUSDQuoteSonic,
   getINtoUSD,
   getUSDtoIN,
   getINtoJPY,
@@ -79,7 +81,8 @@ const DonateBox = ({
   const [currency, setCurrency] = useState("USD"); // State to track currency selection
 
   const chainId = chain?.id;
-  const { contractAddress, ABI, NATIVE, HDT, explorer } = getConfig(chainId);
+  const { contractAddress, ABI, WRAPPED, NATIVE, HDT, explorer } =
+    getConfig(chainId);
 
   // TOKEN 1
   const [TokenOne, setTokenOne] = useState({
@@ -222,17 +225,33 @@ const DonateBox = ({
 
   // Update handleFixedButtons function to handle USD or JPY based on the selected currency
   const handleFixedButtons = async (fixedAmountIn) => {
+    console.log(`handleFixedButtons chainId: ${chainId}`);
     try {
+      console.log();
       const provider = await getConnectedSigner(thirdwebActiveAccount);
       if (selectedCurrency === "USD") {
         // Call function for USD
-        // getUSDtoIN
-        const usdInHdt = await getUSDtoIN(
-          TokenOne,
-          fixedAmountIn,
-          provider,
-          chainId
-        );
+        let usdInHdt;
+        if (chainId == 146) {
+          // Needs some work - output is way too high
+          usdInHdt = await getInUSDQuoteSonic(
+            TokenOne,
+            fixedAmountIn,
+            provider,
+            chainId,
+            WRAPPED,
+            NATIVE
+          );
+        } else {
+          // getUSDtoIN
+          usdInHdt = await getUSDtoIN(
+            TokenOne,
+            fixedAmountIn,
+            provider,
+            chainId
+          );
+        }
+
         // simply removing if else does not make it dynamic
 
         setTokenQuantity(usdInHdt.toString());
@@ -279,8 +298,25 @@ const DonateBox = ({
         const chainId = chain?.id ?? 42161;
         const provider = await getConnectedSigner(thirdwebActiveAccount);
         if (selectedCurrency === "USD") {
-          console.log("DonateBox getIntoUSD chainId:", chain?.id, chainId);
-          value = await getINtoUSD(TokenOne, tokenQuantity, provider, chainId);
+          if (chainId == 146) {
+            value = await getQuoteSonicUSD(
+              TokenOne,
+              tokenQuantity,
+              provider,
+              chainId,
+              WRAPPED,
+              NATIVE
+            );
+            console.log("value:", value);
+          } else {
+            console.log("DonateBox getIntoUSD chainId:", chain?.id, chainId);
+            value = await getINtoUSD(
+              TokenOne,
+              tokenQuantity,
+              provider,
+              chainId
+            );
+          }
           setUsdValue(value);
         } else if (selectedCurrency === "JPY") {
           value = await getINtoJPY(TokenOne, tokenQuantity, provider, chainId);
