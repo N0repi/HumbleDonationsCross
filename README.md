@@ -1,48 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+I am open-sourcing this project. I originally built Humble Donations with the goal to help others gain alternative sources of capital and traction- so, it only seems right to open-source this repo.
 
-## Getting Started
+# Introduction
 
-First, run the development server:
+Humble Donations is a decentralized application which enables users to send and receive cryptocurrency donations in full.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The platform provides everyone with the ability to receive alternative, transparent forms of revenue through a simple user interface.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Humble Donations is the first platform to write webpages directly to the blockchain. A unique protocol when ensures ownership of dynamically written webpages.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Goal
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+**What's better than a crowdfunding website that takes 10% of donated contributions?**
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+**A website that that takes 0%.**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+**We simply want to the raise the bar to a higher standard.**
 
-## Learn More
+We want to contribute to a better, more ethical online experience by providing a donation-based application without revenue cuts, subscription fees, data collection, ads, and censorship.
 
-To learn more about Next.js, take a look at the following resources:
+We want an ecosystem for users, by users. Humble Donations is a reliable, innovative web application without compromise.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Web application
+- [Humble Donations](https://www.humbledonations.com/)
+- [Docs](https://docs.humbledonations.com/Introduction)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Chain Support
+The application is deployed on Sepolia, Arbitrum One, and Sonic. The platform is cross-chain compatible.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Wallet Support
+- The application supports account abstracted without gas sponsorship
+- Custom configuration for EOA wallets such as MetaMask, CoinBase Wallet, WalletConnect, and more.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# HumbleDonations
-# HumbleDonations
-# HumbleDonations
-# HumbleDonations
-# HumbleDonations
-# HumbleDonations
-# HumbleDonations
-# HumbleDonationsSonicMian
+## Humble Donations Token (HDT)
+HDT uses a liquity pool on UniswapV3 for Arbitrum One and Sepolia, while the liquidity pool for Sonic is held on Equalizer.
+
+The protocol contracts leverage DEX's for "auto-swaps" to maintain stable liquidity for HDT.
+
+
+## Communities
+[Discord](https://discord.com/invite/3mMBdjbtNX)
+
+## Contracts and Audits
+https://github.com/N0repi/HumbleDonationsAudit

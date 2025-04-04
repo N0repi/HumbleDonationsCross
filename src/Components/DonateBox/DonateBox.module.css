@@ -42,14 +42,17 @@
 /* entire component -> black box behind buttons  */
 .DonateBox_box {
   margin-top: -1rem; /* height of prop */
-  /* background-color: #1e1e1e; */
-  background-color: #1e1e1e;
+  background: rgba(175, 173, 173, 0.2); /* White with 20% opacity */
+
   padding: 1rem;
   /* border: 2px solid #313131; */
   border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   width: 30rem;
   height: 18rem;
-  box-shadow: 6px 6px 8px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px); /* Apply the blur effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
 }
 
 .Expanded {
@@ -135,7 +138,7 @@
   margin-top: 0.2rem;
   margin-left: 2rem;
   outline: 0;
-  background-color: #1e1e1e;
+  background-color: #1e1e1e7a;
   border: 1.25px solid #860771;
   color: #fff;
   font-size: 1rem;
@@ -164,18 +167,17 @@
 
 /* Donate button */
 .DonateBox_box_btn {
+  width: 100%;
+  flex-wrap: nowrap;
+  align-items: center;
   display: flex;
   justify-content: center;
-  background-color: #1e1e1e;
-  border: 0;
-  outline: 0;
-  width: 100%;
+  background-color: #1e1e1e7a;
   margin-top: 1rem;
   padding: 1rem;
-  border: 2px solid #860771;
+  border: 1.5px solid #e44bca;
   border-radius: 2rem;
   font-size: 1.2rem;
-  margin-right: 0.5rem;
   bottom: 0;
 }
 
