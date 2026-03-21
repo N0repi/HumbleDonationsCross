@@ -32,7 +32,6 @@ const wallets = [
 
 export default function Web2({ setOpenModel }) {
   const [siweActive, setSiweActive] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const activeAccount = useActiveAccount();
   const wallet = useActiveWallet();
   const activeChain = useActiveWalletChain();
@@ -58,24 +57,13 @@ export default function Web2({ setOpenModel }) {
     }
   }, [wallet, setOpenModel]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const getEmbedStyles = () => {
-    if (windowWidth <= 400) {
-      return { width: "20rem", height: "auto" };
-    } else if (windowWidth <= 600) {
-      return { width: "20rem", height: "auto" };
-    } else {
-      return { width: "100%", height: "auto" }; // Default size
-    }
-  };
+  const getEmbedStyles = () => ({
+    width: "100%",
+    maxWidth: "100%",
+    minWidth: 0,
+    height: "auto",
+    boxSizing: "border-box",
+  });
 
   return (
     <>

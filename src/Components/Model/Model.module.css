@@ -1,28 +1,44 @@
-/* Connect wallet modal */
+/* Connect wallet modal — centered, scrollable, no horizontal bleed */
 
 .Model {
   position: fixed;
   inset: 0;
-  background: rgba(7, 5, 15, 0.75);
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  min-height: 100dvh;
-  width: 100vw;
   z-index: 1111111111;
-  backdrop-filter: blur(8px);
-  padding: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100dvh;
+  min-height: 100vh;
+  padding: max(0.75rem, env(safe-area-inset-top, 0px))
+    max(0.75rem, env(safe-area-inset-right, 0px))
+    max(0.75rem, env(safe-area-inset-bottom, 0px))
+    max(0.75rem, env(safe-area-inset-left, 0px));
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(7, 5, 15, 0.75);
+  backdrop-filter: blur(8px);
 }
 
 .Model_box {
   position: relative;
-  width: min(22rem, 100%);
+  width: 100%;
+  max-width: 22rem;
+  margin: auto;
+  flex-shrink: 0;
+  max-height: none;
+  min-width: 0;
   background: var(--hd-surface-raised);
   padding: 1.5rem;
   border-radius: var(--hd-radius-lg);
   border: 1px solid var(--hd-glass-border);
   box-shadow: var(--hd-shadow), 0 0 60px var(--hd-accent-dim);
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .Model_box_heading {
@@ -38,6 +54,7 @@
   font-weight: 700;
   margin: 0 auto;
   color: var(--hd-text);
+  width: 100%;
 }
 
 .Model_box_heading_img {
@@ -50,6 +67,11 @@
 
 .Model_box_heading_img:hover {
   opacity: 1;
+}
+
+.Model_box_wallet {
+  width: 100%;
+  min-width: 0;
 }
 
 .Model_box_wallet p {
@@ -85,6 +107,7 @@
   color: var(--hd-text);
   font-weight: 600;
   cursor: pointer;
+  min-width: 0;
   transition:
     background 0.2s ease,
     border-color 0.2s ease;
@@ -93,6 +116,19 @@
 .Model_box_item:hover {
   background: var(--hd-accent-dim);
   border-color: var(--hd-accent-glow);
+}
+
+/* Thirdweb embed must stay inside the modal */
+.Web2Box {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 0.75rem;
+  overflow: hidden;
+}
+
+.Web2Box > * {
+  max-width: 100% !important;
 }
 
 .Model_box_para {
@@ -105,22 +141,35 @@
   border: 1px solid var(--hd-glass-border);
   border-radius: var(--hd-radius-md);
   background: rgba(0, 0, 0, 0.15);
+  word-wrap: break-word;
 }
 
 .Modal_box_item_name {
   margin-left: 0.75rem;
   color: var(--hd-text);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .images {
   width: 44px;
   height: 44px;
+  flex-shrink: 0;
   object-fit: contain;
 }
 
 @media only screen and (max-width: 35em) {
+  .Model {
+    align-items: flex-start;
+    padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+  }
+
   .Model_box {
-    padding: 1.25rem;
+    padding: 1.15rem;
+    width: 100%;
+    max-width: min(22rem, 100%);
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .Model_box_item {
