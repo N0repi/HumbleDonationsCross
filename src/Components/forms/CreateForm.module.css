@@ -2,12 +2,31 @@
 
 .Parent {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
+
+/* Block-level labels so fields span the same width as the form */
+.Parent > label {
+  display: block;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
 .addProjectContainer {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center-align the items */
-  /* Add spacing between button and mintRateContainer */
+  align-items: center;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
 }
 
 .AddProject {
@@ -16,9 +35,9 @@
   width: 7rem;
   background-color: var(--hd-accent);
   border-radius: 0.5rem;
-  border: 1px solid var(--hd-accent)9a;
+  border: 1px solid var(--hd-accent-glow);
   padding: 10px;
-  color: white;
+  color: var(--hd-text-inverse);
   font-weight: bold;
   transition: transform 1.2s ease;
 }
@@ -26,15 +45,18 @@
 .AddProject:hover {
   transform: scale(1.05);
   cursor: pointer;
-  color: white;
+  color: var(--hd-text-inverse);
 }
 
 .wrapper {
-  width: 50rem;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto 1.5rem;
   background-color: var(--hd-surface);
-  border-radius: 5px;
-  padding: 25px 25px 30px;
-  margin-bottom: 1.5rem;
+  border-radius: var(--hd-radius-md);
+  border: 1px solid var(--hd-glass-border);
+  padding: 1.35rem 1.5rem 1.5rem;
+  box-sizing: border-box;
 }
 
 .wrapper span {
@@ -75,14 +97,38 @@
 .optionalMediaContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.mediaWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.optionalMediaContainer > label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
 }
 
 .websiteWrapper {
-  width: 300px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   align-items: center;
-  margin-top: 1.5rem; /* Adjust margin as needed */
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+  box-sizing: border-box;
 }
 
 .websiteWrapper span {
@@ -128,10 +174,11 @@
 /* ... previous styles ... */
 
 .dropdownWrapper {
-  flex-grow: 1; /* Allow this element to grow and take available space */
-  margin-left: 3rem;
-
-  max-width: 20rem;
+  flex-grow: 1;
+  width: 100%;
+  max-width: 24rem;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .dropdownIcon {
@@ -318,10 +365,13 @@
     align-items: center;
   }
   .wrapper {
-    width: 20rem;
+    width: 100%;
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
     background-color: var(--hd-surface);
     border-radius: 5px;
-    padding: 25px 25px 30px;
+    padding: 1.15rem 1.15rem 1.25rem;
     margin-bottom: 1.5rem;
   }
 
@@ -360,17 +410,21 @@
     text-align: center;
   }
 
-  .optionalMediaContainer {
+.optionalMediaContainer {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Adjust the gap between items as needed */
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 50rem;
+    margin: 0 auto;
   }
 
   .websiteWrapper {
-    width: 300px;
+    width: 100%;
+    max-width: 100%;
     display: flex;
     align-items: center;
-    margin-top: 1.5rem; /* Adjust margin as needed */
+    margin-top: 0.75rem;
   }
 
   .websiteWrapper span {
@@ -418,10 +472,10 @@
   }
 
   .dropdownWrapper {
-    flex-grow: 1; /* Allow this element to grow and take available space */
-    margin-left: 3rem;
+    flex-grow: 1;
+    width: 100%;
+    max-width: 18rem;
+    margin: 0 auto 1.75rem;
     height: 15rem;
-    margin-bottom: 1.75rem;
-    max-width: 15rem;
   }
 }

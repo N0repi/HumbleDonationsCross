@@ -2,6 +2,7 @@
 
 import Head from "next/head";
 import CreateForm from "../Components/forms/CreateForm";
+import pageStyles from "./newproject.module.css";
 
 export default function CreateProject() {
   return (
@@ -49,18 +50,9 @@ export default function CreateProject() {
           content="https://humbledonations.com/HDT.png"
         />
       </Head>
-      <main>
-        <h2
-          className="text-primary text-center text-2xl font-bold mb-2"
-          style={{
-            textShadow: "1px 1px 3px #1e1e1e", // Example text shadow
-          }}
-        >
-          Add New Project
-        </h2>
-        <h2 className="text-primary text-center">
-          <CreateForm />
-        </h2>
+      <main className={pageStyles.main}>
+        <h1 className={pageStyles.pageTitle}>Add new project</h1>
+        <CreateForm />
       </main>
     </>
   );

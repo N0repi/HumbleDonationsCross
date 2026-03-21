@@ -299,14 +299,14 @@ export default function CreateForm() {
     const contractNFTOnChainPayable = new ethers.Contract(
       contractAddress,
       ABI,
-      provider
+      provider,
     );
 
     if (walletType == "thirdweb") {
       try {
         console.log(
           "thirdwebActiveAccount.address ",
-          thirdwebActiveAccount.address
+          thirdwebActiveAccount.address,
         );
 
         console.log("readRead == mintRate - ", dataRead);
@@ -371,13 +371,13 @@ export default function CreateForm() {
         [
           "function safeMint(address to, string memory uri, string memory projectTitle) external payable",
         ],
-        connectedWallet
+        connectedWallet,
       );
 
       const contractNFTOnChainPayable = new ethers.Contract(
         contractAddress,
         ABI,
-        provider
+        provider,
       );
 
       const txGetAfter = await contractNFTOnChainPayable.get_mintRate();
@@ -385,7 +385,7 @@ export default function CreateForm() {
       console.log("mintRate:", formatted_mintRate);
       console.log(
         "Returned mint rate:",
-        txGetAfter ? ethers.formatEther(txGetAfter) : "undefined"
+        txGetAfter ? ethers.formatEther(txGetAfter) : "undefined",
       );
 
       try {
@@ -399,16 +399,15 @@ export default function CreateForm() {
             value: txGetAfter,
             // changed from "0.0002" | added gasLimit
             // gasLimit: 10000000,
-          }
+          },
         );
 
         if (mintTokens?.hash) {
           setConfirmationHash(mintTokens.hash);
           await mintTokens.wait();
 
-          const owner = await contractNFTOnChainPayable.getOwnerByProjectTitle(
-            title
-          );
+          const owner =
+            await contractNFTOnChainPayable.getOwnerByProjectTitle(title);
           await fetchDataAndCreateProject(title, owner, metadata);
         }
       } catch (error) {
@@ -433,7 +432,7 @@ export default function CreateForm() {
         const contractNFTOnChainPayable = new ethers.Contract(
           contractAddress,
           ABI,
-          provider
+          provider,
         );
         const rate = await contractNFTOnChainPayable.get_mintRate();
         setMintRate(ethers.formatEther(rate));
@@ -443,7 +442,7 @@ export default function CreateForm() {
       if (walletType && mintRate !== null) {
         const provider = await getProvider();
         const userBalance = await provider.getBalance(
-          thirdwebActiveAccount?.address || wagmiAddress
+          thirdwebActiveAccount?.address || wagmiAddress,
         );
         const formattedBalance = ethers.formatEther(userBalance);
         setBalance(formattedBalance);
@@ -482,7 +481,6 @@ export default function CreateForm() {
         <div className={Style.wrapper}>
           <span>Title</span>
           <input
-            style={{ backgroundColor: "#302f2f" }}
             required
             type="text"
             onChange={handleTitleChange}
@@ -615,7 +613,7 @@ export default function CreateForm() {
                   <span
                     onClick={() => {
                       setTag((prevTags) =>
-                        prevTags.filter((tag) => tag !== selectedTag)
+                        prevTags.filter((tag) => tag !== selectedTag),
                       );
                     }}
                     className={Style.removeTag}
