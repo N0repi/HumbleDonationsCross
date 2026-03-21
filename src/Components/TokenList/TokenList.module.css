@@ -130,7 +130,7 @@
     padding: 0.5rem 1rem;
     font-weight: 900;
     line-height: 0;
-    color: #e44bca;
+    color: var(--hd-accent);
     font-size: 1rem;
     padding: 1.2rem;
     border-radius: 0.5rem;
@@ -258,12 +258,12 @@
 
 .TokenList_box_info p span {
     font-weight: 900;
-    color: #e44bca;
+    color: var(--hd-accent);
     margin-right: 0.5rem;
 }
 
 .TokenList_box_info_symbol {
-    background-color: #e44bca;
+    background-color: var(--hd-accent);
 
     padding: 0.5rem;
     border-radius: 0.5rem;

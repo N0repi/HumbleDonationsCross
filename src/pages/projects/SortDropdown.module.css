@@ -5,8 +5,8 @@
   top: 50%; /* Center vertically */
   left: 50%; /* Center horizontally */
   transform: translate(-50%, -50%); /* Offset by 50% to center */
-  background-color: #1e1e1e;
-  border: 1.25px solid #444244;
+  background-color: var(--hd-surface-raised);
+  border: 1.25px solid var(--hd-glass-border);
   border-radius: 0.5rem;
   z-index: 1000;
   display: flex;
@@ -28,7 +28,7 @@
 }
 
 .dropdownItem:hover {
-  background-color: #444244;
+  background-color: var(--hd-glass-border);
 }
 
 .closeButton {
@@ -43,5 +43,5 @@
 }
 
 .closeButton:hover {
-  background-color: #444244;
+  background-color: var(--hd-glass-border);
 }

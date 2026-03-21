@@ -1,136 +1,141 @@
-/* globals.css */
-
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+/* Design system — Humble Donations (2025 refresh) */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* styles/globals.css */
-
 :root {
-  --primary-color: #1d1d1d; /* Set your primary color here */
-  --secondary-color: #e44bca; /* Set your secondary color here */
-  --tertiary-color: white;
-  --background: radial-gradient(
-      closest-corner circle at 40% 70%,
-      #ffffff 0%,
-      #34c3e75a 0%,
-      transparent
-    ),
-    radial-gradient(
-      closest-corner circle at 80% 20%,
-      #ffffff 0%,
-      #e734345a 0%,
-      transparent
-    ),
-    radial-gradient(
-      closest-corner circle at 10% 10%,
-      #ffffff 0%,
-      #16a7574a 0%,
-      transparent
-    ),
-    linear-gradient(#ac34e7, #030713);
-  background: var(--background);
-
-  /*
-    --background: linear-gradient(
-         rgba(228, 75, 202, 1) 0%,  rgba(172, 52, 231, 1) 3%,
-        rgba(172, 52, 231, 1) 48%,
-        rgba(3, 7, 19, 1) 100%
-    );
-    */
+  --hd-accent: #e963d4;
+  --hd-accent-hover: #f080e0;
+  --hd-accent-dim: rgba(233, 99, 212, 0.22);
+  --hd-accent-glow: rgba(233, 99, 212, 0.35);
+  --hd-bg-deep: #07050f;
+  --hd-bg-mid: #120c1f;
+  --hd-surface: rgba(20, 16, 36, 0.82);
+  --hd-surface-raised: rgba(32, 26, 52, 0.92);
+  --hd-glass-border: rgba(255, 255, 255, 0.12);
+  --hd-glass-highlight: rgba(255, 255, 255, 0.06);
+  --hd-text: #f5f2fc;
+  --hd-text-muted: rgba(245, 242, 252, 0.58);
+  --hd-text-inverse: #0a0614;
+  --hd-danger: #f87171;
+  --hd-success: #4ade80;
+  --hd-radius-sm: 10px;
+  --hd-radius-md: 14px;
+  --hd-radius-lg: 20px;
+  --hd-radius-pill: 9999px;
+  --hd-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.55);
+  --hd-shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --hd-nav-pad-mobile: 5.5rem;
+  --primary-color: var(--hd-text-inverse);
+  --secondary-color: var(--hd-accent);
+  --tertiary-color: var(--hd-text);
+  --background: var(--hd-bg-deep);
 }
+
 ::selection {
-  background-color: #e44bca;
+  background-color: var(--hd-accent-dim);
+  color: var(--hd-text);
 }
-/* #background {
-    height: 100%;
-} */
 
-/* html, */
 .backgroundContainer {
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-  min-height: 100vh; /* Ensure container stretches to at least the viewport height */
-  /* height: 120vh;  */
-  background: var(--background) no-repeat center center; /* Set background */
-  background-size: cover; /* Ensure background covers the entire container */
+  box-shadow: inset 0 0 120px rgba(233, 99, 212, 0.05);
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--hd-bg-deep);
+  /* Veil over busy texture so content reads clearly */
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(7, 5, 15, 0.88) 0%,
+      rgba(7, 5, 15, 0.82) 45%,
+      rgba(7, 5, 15, 0.9) 100%
+    ),
+    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(233, 99, 212, 0.14), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 50%, rgba(99, 102, 241, 0.08), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(16, 185, 129, 0.06), transparent 45%),
+    url("../assets/indexBackground/bgUneven.png");
+  background-size: auto, auto, auto, auto, cover;
+  background-repeat: no-repeat;
+  background-position: center center;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden; /* Hide horizontal overflow */
-
-  background-size: cover; /* Ensure the entire container is filled */
-  background-repeat: no-repeat; /* Prevent repetition */
-  background-position: center; /* Center the image */
-  background-image: url("../assets/indexBackground/bgUneven.png");
-  /* bgMoreAbstractBetter */
-  /* bgEven */
+  overflow-x: hidden;
 }
 
-/* Adjust the body styles */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   padding: 0;
-  font-family: "Roboto", sans-serif;
-  color: var(--tertiary-color);
-  overflow-x: hidden; /* Hide horizontal overflow */
+  color: var(--hd-text);
+  overflow-x: hidden;
+  scrollbar-color: var(--hd-accent) var(--hd-bg-mid);
+}
 
-  /* Add the following styles for Firefox */
-  /* scrollbar-width: thin; */
-  scrollbar-color: #e44bca;
+body::-webkit-scrollbar {
+  width: 10px;
+}
 
-  &::-webkit-scrollbar {
-    width: 13px;
-  }
+body::-webkit-scrollbar-track {
+  background: var(--hd-bg-mid);
+}
 
-  &::-webkit-scrollbar-track {
-    background: var(--background);
-  }
+body::-webkit-scrollbar-thumb {
+  background: var(--hd-accent);
+  border-radius: var(--hd-radius-pill);
+}
 
-  &::-webkit-scrollbar-thumb {
-    background: #e44bca;
-    border-radius: 12px;
-  }
-  /* Handle on hover */
-  &::-webkit-scrollbar-thumb:hover {
-    background: #c741b1;
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--hd-accent-hover);
+}
+
+/* Main column: clears fixed mobile nav */
+.mainContent {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding-bottom: var(--hd-nav-pad-mobile);
+  padding-top: 0.5rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 651px) {
+  .mainContent {
+    padding-bottom: 1.5rem;
   }
 }
+
 .custom-textarea {
-  color: #1e1e1e; /* Set the color to your desired value */
+  color: var(--hd-text-inverse);
   text-align: top;
 }
 
-/* feedback styles */
-
 .error {
-  @apply border-2
-        border-red-500
-        bg-red-300
-        text-red-800
-        py-1 px-2
-        rounded-sm
-        block
-        max-w-fit
-        my-4 mx-auto;
+  @apply border-2 border-red-500 bg-red-950/80 text-red-200 py-2 px-3 rounded-lg block max-w-fit my-4 mx-auto;
 }
 
 @media only screen and (max-width: 65rem) {
   .backgroundContainer {
     width: 100%;
-    max-height: 80vh; /* Ensure container stretches to at least the viewport height */
-    background-image: url("../assets/indexBackground/mobileSizes/a00148.jpg");
+    background-image:
+      linear-gradient(180deg, rgba(7, 5, 15, 0.9) 0%, rgba(7, 5, 15, 0.85) 100%),
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(233, 99, 212, 0.12), transparent 50%),
+      url("../assets/indexBackground/mobileSizes/a00148.jpg");
+    background-size: auto, auto, cover;
   }
 }
+
 @media only screen and (max-width: 36rem) {
   .backgroundContainer {
-    background-image: url("../assets/indexBackground/mobileSizes/a00147.jpg");
-  }
-  body {
-    font-size: 0.7rem;
+    background-image:
+      linear-gradient(180deg, rgba(7, 5, 15, 0.92) 0%, rgba(7, 5, 15, 0.88) 100%),
+      radial-gradient(ellipse 100% 50% at 50% 0%, rgba(233, 99, 212, 0.1), transparent 50%),
+      url("../assets/indexBackground/mobileSizes/a00147.jpg");
+    background-size: auto, auto, cover;
   }
 }

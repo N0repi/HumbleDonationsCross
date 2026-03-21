@@ -1,13 +1,13 @@
-// pages/Swap.js
+// pages/swap.jsx
 import React from "react";
-import SwapFront from "../Components/Swap/SwapFront.jsx"; // Update the path as necessary
+import SwapFront from "../Components/Swap/SwapFront.jsx";
 
-const swap = () => {
+const SwapPage = () => {
   return (
-    <main>
-      <SwapFront />;
+    <main className="swap-page">
+      <SwapFront />
     </main>
   );
 };
 
-export default swap;
+export default SwapPage;

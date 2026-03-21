@@ -1,138 +1,138 @@
-/* Model.module.css */
+/* Connect wallet modal */
 
 .Model {
-    position: fixed;
-    inset: 0% 0% 0% 0%;
-    background-color: #1e1e1e5a;
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    z-index: 1111111111;
-    backdrop-filter: blur(2px);
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 5, 15, 0.75);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  width: 100vw;
+  z-index: 1111111111;
+  backdrop-filter: blur(8px);
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .Model_box {
-    position: relative;
-    background-color: #1e1e1e;
-    opacity: 92%;
-    padding: 2rem;
-    border-radius: 1rem;
-    -webkit-box-shadow: 0px 0px 36px 10px rgba(228, 75, 203, 0.86);
-    -moz-box-shadow: 0px 0px 36px 10px rgba(228, 75, 203, 0.86);
-    box-shadow: 0px 0px 36px 10px rgba(228, 75, 203, 0.86);
+  position: relative;
+  width: min(22rem, 100%);
+  background: var(--hd-surface-raised);
+  padding: 1.5rem;
+  border-radius: var(--hd-radius-lg);
+  border: 1px solid var(--hd-glass-border);
+  box-shadow: var(--hd-shadow), 0 0 60px var(--hd-accent-dim);
 }
 
-/* fade attempt */
-
 .Model_box_heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .Model_box_heading p {
-    text-align: center;
-    font-size: 1.2rem;
-    margin: 0 auto;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 auto;
+  color: var(--hd-text);
 }
 
 .Model_box_heading_img {
-    opacity: 80%;
+  opacity: 0.85;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: var(--hd-radius-sm);
+  transition: opacity 0.2s ease;
 }
 
-/* pink wallet buttons */
+.Model_box_heading_img:hover {
+  opacity: 1;
+}
+
 .Model_box_wallet p {
-    margin-bottom: 0.5rem;
-    background-color: #e44bca;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    color: #1e1e1e;
-    font-weight: 700;
-    cursor: pointer;
-    width: 10rem;
+  margin-bottom: 0.5rem;
+  background: var(--hd-accent);
+  padding: 0.85rem 1rem;
+  border-radius: var(--hd-radius-md);
+  color: var(--hd-text-inverse);
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  transition: filter 0.2s ease;
+}
+
+.Model_box_wallet p:hover {
+  filter: brightness(1.08);
 }
 
 .Model_box_wallet p:last-child {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
-/* wallet images */
 .Model_box_item {
-    display: flex;
-    align-items: center;
-    /* Added from p tag style */
-    margin-bottom: 0.5rem;
-    background-color: #1e1e1e;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    /* border: 2px solid #e44bca; */
-    color: #1e1e1e;
-    font-weight: 700;
-    cursor: pointer;
-
-    /* Added from p tag style */
-    transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--hd-radius-md);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--hd-glass-border);
+  color: var(--hd-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .Model_box_item:hover {
-    background-color: #e44bca;
+  background: var(--hd-accent-dim);
+  border-color: var(--hd-accent-glow);
 }
 
 .Model_box_para {
-    text-align: center;
-    margin-top: 1rem;
-    padding: 1rem;
-    line-height: 1.2;
-    border: 1px solid #e65dd1;
-    border-radius: 0.5rem;
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.85rem;
+  line-height: 1.45;
+  font-size: 0.85rem;
+  color: var(--hd-text-muted);
+  border: 1px solid var(--hd-glass-border);
+  border-radius: var(--hd-radius-md);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .Modal_box_item_name {
-    margin-left: 0.8rem;
+  margin-left: 0.75rem;
+  color: var(--hd-text);
 }
 
 .images {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
 }
-/* 39:26 */
 
 @media only screen and (max-width: 35em) {
-    .Model_box {
-        -webkit-box-shadow: 0px 0px 30px 7px rgba(228, 75, 203, 0.86);
-        -moz-box-shadow: 0px 0px 30px 7px rgba(228, 75, 203, 0.86);
-        box-shadow: 0px 0px 30px 7px rgba(228, 75, 203, 0.86);
-    }
-    .Model_box_item {
-        background-color: #1e1e1e;
-        color: white;
-        opacity: 98%;
-        padding: 0.5rem;
-        font-size: 1rem;
-    }
-    .Modal_box_item_name {
-        margin-left: 0.8rem;
-    }
-    .Model_box_item:hover {
-        background-color: #860771;
-    }
-    .Model_box_wallet p:last-child {
-        margin-bottom: 1rem;
-    }
-    .Model_box_para {
-        margin-top: 0.5rem;
-        font-size: 0.8rem;
-    }
-    .images {
-        width: 30px;
-        height: 30px;
-    }
+  .Model_box {
+    padding: 1.25rem;
+  }
 
-    .Web2Box {
-        width: 80%;
-        height: 80%;
-    }
+  .Model_box_item {
+    font-size: 0.95rem;
+  }
+
+  .Model_box_para {
+    font-size: 0.8rem;
+  }
+
+  .images {
+    width: 36px;
+    height: 36px;
+  }
 }

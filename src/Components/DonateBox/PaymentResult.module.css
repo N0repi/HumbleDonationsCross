@@ -7,14 +7,14 @@
     padding: 10px;
     z-index: 9999;
     text-align: center;
-    color: #ffffff9a;
+    color: var(--hd-text)fff9a;
 }
 .transactionPos:hover {
-    color: #ffffff;
+    color: var(--hd-text)fff;
 }
 
 .transactionPos:hover .progressBar {
-    background-color: #e44bca;
+    background-color: var(--hd-accent);
     transition: 1s ease;
 }
 
@@ -41,7 +41,7 @@
 
 .progressBar {
     height: 7px;
-    background-color: #e44bca9a;
+    background-color: var(--hd-accent)9a;
     border: 0.15px solid #8080805a;
     border-radius: 4rem;
     position: absolute;

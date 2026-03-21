@@ -46,10 +46,10 @@
 .AirdropHeader p {
     text-align: center;
     margin-bottom: 0.5rem;
-    background-color: #e44bca;
+    background-color: var(--hd-accent);
     padding: 0.5rem;
     border-radius: 0.5rem;
-    color: #1e1e1e;
+    color: var(--hd-text-inverse);
     font-weight: 700;
     font-size: 1.3rem;
     width: 10rem;
@@ -60,7 +60,7 @@
     margin-top: 1rem;
     font-weight: 550;
     font-size: 1.2rem;
-    color: #1e1e1e;
+    color: var(--hd-text-muted);
 }
 .Model_box_item {
     display: flex;
@@ -68,10 +68,10 @@
     margin-bottom: 1rem;
     /* Added from p tag style */
 
-    background-color: #1e1e1e5a;
+    background-color: rgba(0,0,0,0.25);
     padding: 0.8rem;
     border-radius: 0.5rem;
-    /* border: 2px solid #e44bca; */
+    /* border: 2px solid var(--hd-accent); */
 
     font-weight: 500;
 
@@ -93,15 +93,15 @@
     justify-content: center;
     text-align: center;
 
-    background-color: #e44bca;
+    background-color: var(--hd-accent);
     border-radius: 0.5rem;
     padding: 0.9rem;
-    color: #1e1e1e;
+    color: var(--hd-text-inverse);
     font-weight: bold;
 }
 
 .EligibleHeader {
-    color: #1e1e1e;
+    color: var(--hd-text);
     text-align: center;
 }
 .link {

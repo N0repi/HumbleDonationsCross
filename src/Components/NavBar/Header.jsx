@@ -66,7 +66,7 @@ export default function Head() {
   };
 
   return (
-    <nav className={Style.parent}>
+    <nav className={Style.parent} aria-label="Main navigation">
       <div className={Style.left}>
         <div className={Style.HDTlogo}>
           <Link legacyBehavior href="/">
@@ -155,18 +155,17 @@ export default function Head() {
       <div className={`${Style.right}`}>
         <div>
           <a
-            className={`${Style.link} ${
-              activeTab === "/docs" ? Style.activeTab : ""
-            }`}
+            className={Style.docLink}
             href="https://docs.humbledonations.com/Introduction"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Documentation"
           >
             <Image
               src={images.docLessBottomWork}
-              alt="document"
-              width={26}
-              height={26}
+              alt=""
+              width={22}
+              height={22}
             />
           </a>
         </div>

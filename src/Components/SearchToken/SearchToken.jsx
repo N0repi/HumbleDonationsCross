@@ -18,16 +18,12 @@ const ARBITRUM_MULTICALL_ADDRESS = "0xFade011AaDCC05b373C2A679E73980d12095A1fc";
 
 const ABI = TokenListMulticall.abi;
 
-const fetchBalances = async (provider, chainId, userAddress) => {
-  const { Multicall } = getConfig(chainId);
-  const multicall = new ethers.Contract(Multicall, ABI, provider);
+/** Matches getConfig fallback in constants — used when no wallet chain is available. */
+const DEFAULT_TOKEN_LIST_CHAIN_ID = 42161;
 
-  const balanceOfAbi = [
-    "function balanceOf(address account) view returns (uint256)",
-  ];
-  const iface = new ethers.Interface(balanceOfAbi);
-
-  const tokens = myTokenList
+const resolveTokensForChain = (chainId) => {
+  if (!chainId) return [];
+  return myTokenList
     .filter((token) => {
       return (
         token.chainId === chainId || token.extensions?.bridgeInfo?.[chainId]
@@ -38,6 +34,18 @@ const fetchBalances = async (provider, chainId, userAddress) => {
         token.extensions?.bridgeInfo?.[chainId]?.tokenAddress || token.address;
       return { ...token, address: resolvedAddress };
     });
+};
+
+const fetchBalances = async (provider, chainId, userAddress) => {
+  const { Multicall } = getConfig(chainId);
+  const multicall = new ethers.Contract(Multicall, ABI, provider);
+
+  const balanceOfAbi = [
+    "function balanceOf(address account) view returns (uint256)",
+  ];
+  const iface = new ethers.Interface(balanceOfAbi);
+
+  const tokens = resolveTokensForChain(chainId);
 
   const nativeToken = tokens.find((token) => token.address === "");
   const erc20Tokens = tokens.filter((token) => token.address !== "");
@@ -79,11 +87,15 @@ const fetchBalances = async (provider, chainId, userAddress) => {
     return nativeBalance ? [nativeBalance, ...erc20Balances] : erc20Balances;
   } catch (error) {
     console.error("SearchToken - Error fetching balances:", error);
-    return [];
+    throw error;
   }
 };
 
 const formatBalance = (balance) => {
+  if (balance === "" || balance === null || balance === undefined) {
+    return "";
+  }
+
   const parsedBalance = parseFloat(balance);
 
   if (isNaN(parsedBalance)) {
@@ -111,60 +123,73 @@ const SearchToken = ({ openToken, tokens }) => {
   const [balances, setBalances] = useState([]);
   const { walletType, chain, wagmiAddress, thirdwebActiveAccount } =
     useWallet();
-  console.log("SearchToken - log1");
-  console.log("wagmiAddress:", wagmiAddress);
-  console.log("thirdwebActiveAccount:", thirdwebActiveAccount);
 
-  if (walletType == "thirdweb") {
-    const provider = ethers6Adapter.provider.toEthers({
-      client: client,
-      chain: chain,
-    });
-    useEffect(() => {
-      const fetchTokenBalances = async () => {
-        try {
-          console.log("SearchToken - log2");
-          if (thirdwebActiveAccount.address && chain?.id) {
-            const tokenBalances = await fetchBalances(
-              provider,
-              chain?.id,
-              thirdwebActiveAccount.address
-            );
-            console.log("SearchToken - log3");
-            setBalances(tokenBalances);
-            console.log("SearchToken - tokenBalances:", tokenBalances);
-          }
-        } catch (error) {
-          console.error("SearchToken - Error fetching token balances:", error);
+  const effectiveChainId = chain?.id ?? DEFAULT_TOKEN_LIST_CHAIN_ID;
+  const userAddress =
+    walletType === "thirdweb"
+      ? thirdwebActiveAccount?.address
+      : wagmiAddress;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const staticListForChain = () =>
+      resolveTokensForChain(effectiveChainId).map((t) => ({
+        ...t,
+        balance: "",
+      }));
+
+    const load = async () => {
+      if (!userAddress) {
+        setBalances(staticListForChain());
+        return;
+      }
+
+      try {
+        let provider;
+        if (walletType === "thirdweb") {
+          provider = ethers6Adapter.provider.toEthers({
+            client: client,
+            chain: chain,
+          });
+        } else if (
+          typeof window !== "undefined" &&
+          window.ethereum
+        ) {
+          provider = new ethers.BrowserProvider(window.ethereum);
+        } else {
+          setBalances(staticListForChain());
+          return;
         }
-      };
 
-      fetchTokenBalances();
-    }, [chain, thirdwebActiveAccount.address]);
-  } else {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    useEffect(() => {
-      const fetchTokenBalances = async () => {
-        try {
-          console.log("SearchToken - log2");
-          if (wagmiAddress && chain?.id) {
-            const tokenBalances = await fetchBalances(
-              provider,
-              chain?.id,
-              wagmiAddress
-            );
-            console.log("SearchToken - log3");
-            setBalances(tokenBalances);
-            console.log("SearchToken - tokenBalances:", tokenBalances);
-          }
-        } catch (error) {
-          console.error("SearchToken - Error fetching token balances:", error);
+        const tokenBalances = await fetchBalances(
+          provider,
+          effectiveChainId,
+          userAddress
+        );
+        if (!cancelled) {
+          setBalances(tokenBalances);
         }
-      };
+      } catch (error) {
+        console.error("SearchToken - Error fetching token balances:", error);
+        if (!cancelled) {
+          setBalances(staticListForChain());
+        }
+      }
+    };
 
-      fetchTokenBalances();
-    }, [chain, wagmiAddress]);
-  }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    effectiveChainId,
+    userAddress,
+    walletType,
+    chain,
+    thirdwebActiveAccount?.address,
+    wagmiAddress,
+  ]);
 
   // Filter tokens based on the search query
   const filteredTokens = balances.filter((el) => {
@@ -194,9 +219,8 @@ const SearchToken = ({ openToken, tokens }) => {
                 />
               </div>
               <input
-                style={{ color: "#1e1e1e" }}
                 type="text"
-                placeholder="Search token by name or symbol"
+                placeholder="Search by name or symbol"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -211,6 +235,7 @@ const SearchToken = ({ openToken, tokens }) => {
                   setActive={setActive}
                   tokens={tokens}
                   openToken={openToken}
+                  selectionChainId={effectiveChainId}
                 />
               ))}
             </div>
@@ -221,21 +246,27 @@ const SearchToken = ({ openToken, tokens }) => {
   );
 };
 
-const TokenItem = ({ el, active, setActive, tokens, openToken }) => {
-  const { chain } = useWallet();
+const TokenItem = ({
+  el,
+  active,
+  setActive,
+  tokens,
+  openToken,
+  selectionChainId,
+}) => {
   return (
     <span
       className={active === el.id ? `${Style.active}` : ""}
       onClick={() => {
         console.log("Rendering Token:", el);
-        console.log("Selected Token ChainId (overridden):", chain?.id);
+        console.log("Selected Token ChainId:", selectionChainId);
         setActive(el.id);
         const tokenData = {
           name: el.name,
           image: el.img,
           symbol: el.symbol,
           address: el.address,
-          chainId: chain?.id,
+          chainId: selectionChainId,
           decimals: el.decimals,
         };
         tokens(tokenData); // Pass the token data to tokens

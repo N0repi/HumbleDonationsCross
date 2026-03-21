@@ -23,6 +23,7 @@ import {
 import {
   getQuoteSonicUSD,
   getINtoUSD,
+  getINtoJPY,
 } from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
 import { arbitrum } from "thirdweb/chains";
 
@@ -271,18 +272,18 @@ const SwapFront = ({
   const balanceMax = conditionalBalance(TokenOne, chain);
 
   return (
-    <main>
+    <main className={Style.swapMain}>
       <a
         className={Style.lp}
         href={provideLiquidity}
         target="_blank"
         rel="noopener noreferrer"
       >
-        Provide Liquidity
+        Provide liquidity
       </a>
       {chainId === 116 ? (
         <div className={Style.unsupportedNetwork}>
-          <p>Swap is not yet supported on this network</p>
+          <p>Swap is not yet supported on this network.</p>
         </div>
       ) : (
         <div className={Style.SwapFrontWrapper}>
@@ -292,78 +293,94 @@ const SwapFront = ({
                 expand ? Style.Expanded : ""
               }`}
             >
-              <div className={Style.SwapFront_box_heading}>
-                <div></div>{" "}
-                <div className={Style.SwapFront_box_heading_img}>
+              <div className={Style.cardHeader}>
+                <h2 className={Style.cardTitle}>Swap</h2>
+                <button
+                  type="button"
+                  className={Style.settingsBtn}
+                  aria-label="Swap settings"
+                  onClick={() => setOpenSetting(true)}
+                >
                   <Image
                     src={images.filledGrad}
-                    alt="image"
-                    width={45}
-                    height={45}
-                    onClick={() => setOpenSetting(true)}
+                    alt=""
+                    width={36}
+                    height={36}
                   />
-                </div>
+                </button>
               </div>
 
+              <p className={Style.fieldLabel}>You pay</p>
               <div className={Style.SwapFront_box_input}>
                 <input
                   type="text"
+                  inputMode="decimal"
+                  autoComplete="off"
                   placeholder="0"
                   value={tokenQuantity}
                   onChange={handleQuantityChange}
                 />
 
-                <button onClick={() => setOpenToken(true)}>
+                <button
+                  type="button"
+                  className={Style.tokenPicker}
+                  onClick={() => setOpenToken(true)}
+                >
                   <Image
                     src={TokenOne.image || images.probablyBest}
-                    width={25}
-                    height={25}
-                    alt="HDTpurpleFullShaded"
+                    width={24}
+                    height={24}
+                    alt=""
                   />
-                  {TokenOne.symbol || "ETH"}
+                  <span>{TokenOne.symbol || "ETH"}</span>
                 </button>
               </div>
 
+              <div className={Style.swapDivider} aria-hidden>
+                <span className={Style.swapDividerIcon}>⇅</span>
+              </div>
+
+              <p className={Style.fieldLabel}>You receive</p>
               <div className={Style.SwapFront_box_input}>
                 <input
                   type="text"
+                  readOnly
                   placeholder="0"
                   value={quoteValue}
-                  onChange={handleQuantityChange}
+                  aria-label="Estimated output"
                 />
 
-                <button onClick={() => setOpenTokensTwo(true)}>
+                <button
+                  type="button"
+                  className={Style.tokenPicker}
+                  onClick={() => setOpenTokensTwo(true)}
+                >
                   <Image
                     src={TokenTwo.image || images.probablyBest}
-                    width={25}
-                    height={25}
-                    alt="HDTpurpleFullShaded"
+                    width={24}
+                    height={24}
+                    alt=""
                   />
-                  {TokenTwo.symbol || "HDT"}
+                  <span>{TokenTwo.symbol || "HDT"}</span>
                 </button>
               </div>
-              <div className={Style.balanceBar}>
-                <div className={Style.SwapFront_box_balance}>
-                  <div className={Style.nestedBalanceBar}>
-                    {selectedCurrency === "USD"
-                      ? usdValue !== null
-                        ? usdValue
-                        : "Fetching quote..."
-                      : jpyValue !== null
-                      ? jpyValue
-                      : "Fetching quote..."}{" "}
-                    {/* change to jpyValue for price in JPY */}
-                  </div>
-                </div>
-                <div className={Style.balanceBar}>
-                  <div className={Style.nestedBalanceBar}>
-                    Balance: {balance}
-                  </div>
-                </div>
+
+              <div className={Style.metaRow}>
+                <span className={Style.metaMuted}>
+                  {selectedCurrency === "USD"
+                    ? usdValue !== null
+                      ? usdValue
+                      : "Estimating…"
+                    : jpyValue !== null
+                    ? jpyValue
+                    : "Estimating…"}
+                </span>
+                <span className={Style.metaBalance}>Balance {balance}</span>
               </div>
 
               <div className={Style.buttonBar}>
                 <button
+                  type="button"
                   className={`${Style.SwapFront_box_btn} ${
                     expand ? Style.MoveBtn : ""
                   }`}

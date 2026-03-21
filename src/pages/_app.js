@@ -1,7 +1,5 @@
 // _app.js
 
-import Head from "next/head";
-import { useEffect, useState, useRef } from "react";
 // wagmi
 import { sepolia, arbitrum } from "wagmi/chains";
 import { sonicMainnet } from "../constants/wagmiChains/sonicMainnet";
@@ -20,7 +18,6 @@ import { Header } from "../Components/index";
 
 import styles from "../styles/Home.module.css";
 import "../styles/globals.css";
-import { explorer } from "../utils/constants.js";
 // import walletArray from "./rainbowkit-wallets"
 
 // Transaction Components
@@ -29,10 +26,6 @@ import PaymentResult from "../Components/DonateBox/PaymentResult";
 
 // Currency Context | USD or JPY
 import { CurrencyProvider } from "../Components/LanguageToggle/CurrencyContext.jsx";
-
-import images from "../../src/assets";
-import Image from "next/image";
-import Style from "./_app.module.css";
 
 // web2 auth
 import { ThirdwebProvider } from "thirdweb/react";
@@ -44,18 +37,14 @@ import { CacheProvider } from "../utils/Graph/NOC/CacheContext";
 // Analytics
 import { Analytics } from "@vercel/analytics/react";
 
-// text size prod fix
-import "../styles/globals.css";
-import { Roboto } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
-const roboto = Roboto({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"], // Include all the weights you are using
-  style: ["normal", "italic"], // Include styles if needed
-  display: "swap", // Mimic the display behavior of @import
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-hd-sans",
 });
-
-global.explorer = explorer;
 
 const { chains, webSocketPublicClient, publicClient } = configureChains(
   [arbitrum, sepolia, sonicMainnet],
@@ -130,7 +119,7 @@ export default function App({ Component, pageProps }) {
   // }, [])
 
   return (
-    <div className={roboto.className}>
+    <div className={`${plusJakarta.variable} ${plusJakarta.className}`}>
       <div className="backgroundContainer">
         {/* <meta
           name="viewport"
@@ -149,7 +138,7 @@ export default function App({ Component, pageProps }) {
             <ThirdwebProvider>
               <WalletProvider>
                 <CurrencyProvider>
-                  <div className={styles.App}>
+                  <div className={`${styles.App} mainContent`}>
                     <Header />
 
                     <PaymentResult />

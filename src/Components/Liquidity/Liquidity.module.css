@@ -19,7 +19,7 @@
 
 /* input amount of token, parent of maxButton, & pink border around input section */
 .DonateBox_box_input {
-  border: 1px solid #e44bca9a;
+  border: 1px solid var(--hd-accent-glow);
   padding: 0.25rem 1rem;
   border-radius: 2rem;
 }
@@ -29,7 +29,7 @@
   border: 0;
   outline: 0;
   background-color: transparent;
-  color: #e44bca;
+  color: var(--hd-accent);
   font-size: 1.2rem;
 }
 
@@ -41,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #1e1e1e;
+  background-color: var(--hd-surface-raised);
   border: 0.25px solid #444244;
   padding: 0.75rem;
   font-weight: 700;
@@ -50,7 +50,7 @@
 }
 
 .button:hover {
-  border: 0.5px solid #e44bca;
+  border: 0.5px solid var(--hd-accent);
 }
 
 .CenteredItem {
@@ -108,25 +108,27 @@
 }
 
 .unsupportedNetwork {
-  background: rgba(175, 173, 173, 0.2); /* White with 20% opacity */
-  border-radius: 10px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px); /* Apply the blur effect */
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 20px;
-  margin: 20px;
-  color: rgb(58, 58, 56);
-  font-size: 1.25rem;
-  font-weight: 750;
+  background: var(--hd-surface);
+  border-radius: var(--hd-radius-lg);
+  box-shadow: var(--hd-shadow-soft);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--hd-glass-border);
+  padding: 1.25rem 1.5rem;
+  margin: 1.25rem;
+  color: var(--hd-text-muted);
+  font-size: 1.05rem;
+  font-weight: 600;
   text-align: center;
 }
 
 .unsupportedNetwork p {
-  color: rgb(58, 58, 56);
-  width: 20rem;
-  font-size: 1.1rem;
-  font-weight: 550;
+  color: var(--hd-text-muted);
+  max-width: 20rem;
+  margin: 0 auto;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.5;
 }
 
 @media only screen and (max-width: 35em) {

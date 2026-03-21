@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 
-// INTERNAL
 import Style from "./index.module.css";
 import WrappedRecentDonations from "../Components/trending/RecentlyDonated";
 import images from "../assets";
@@ -11,94 +10,118 @@ import addArbitrum from "../Components/addTokenChain/addChainArbitrum";
 import addSonic from "../Components/addTokenChain/addChainSonic";
 import addTokenToMetaMask from "../Components/addTokenChain/addToken";
 
-export default function Home({ Component, pageProps }) {
+export default function Home() {
   return (
-    <>
-      <div className="pageWrapper">
-        <div className={Style.Parent}>
-          <div>
-            <p className={Style.description}>
-              <strong>Anyone</strong> can create a project and start receiving
-              donations in less than 2 minutes.
+    <div className={Style.pageWrapper}>
+      <section className={Style.hero} aria-labelledby="hero-heading">
+        <div className={Style.heroGrid}>
+          <div className={Style.heroCopy}>
+            <p className={Style.heroEyebrow}>Humble Donations</p>
+            <h1 id="hero-heading" className={Style.heroTitle}>
+              Donate and fundraise with on-chain transparency
+            </h1>
+            <p className={Style.heroLead}>
+              Launch a project in minutes. Supporters keep more of what they
+              give—built for startups, creators, and causes.
             </p>
-            <p className={Style.description}>
-              With the Humble Donations Token, 100% of your contribution
-              directly benefits <br />
-              your chosen start-ups, creators, and causes— no fees,
-              <strong> no revenue taken</strong>.
-            </p>
-            <p className={Style.description}>
-              Users can stake HDT-WETH to <strong>earn WETH</strong> and support
-              the protocol. <br />
-            </p>
-            <p className={Style.description}>
-              Donations made in other tokens are subject to a 1.5% tax which
-              funds <br />
-              the WETH rewards pool and reduces the supply of HDT.
-            </p>
-            <p className={Style.description}>
-              The first application to write webpages on-chain.
-            </p>
-            <br />
+
+            <div className={Style.heroPanel}>
+              <p className={Style.heroParagraph}>
+                <strong>Anyone</strong> can create a project and start receiving
+                donations in less than 2 minutes.
+              </p>
+              <p className={Style.heroParagraph}>
+                With the Humble Donations Token, <strong>100%</strong> of your
+                contribution directly benefits your chosen startups, creators,
+                and causes—no fees, <strong>no revenue taken</strong>.
+              </p>
+              <p className={Style.heroParagraph}>
+                Stake HDT–WETH to <strong>earn WETH</strong> and support the
+                protocol.
+              </p>
+              <p className={Style.heroParagraph}>
+                Donations in other tokens include a 1.5% tax that funds the WETH
+                rewards pool and reduces HDT supply.
+              </p>
+              <p className={Style.heroParagraph}>
+                The first application to write webpages on-chain.
+              </p>
+            </div>
+
             <a
-              className={Style.descriptionLink}
+              className={Style.heroCta}
               href="https://docs.humbledonations.com/Introduction"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Learn more
+              Read the docs
             </a>
           </div>
-          <div className={Style.imageContainer}>
-            <Image
-              src={images.rings4}
-              alt="Description of the image"
-              width={523} // Adjust the width according to your design
-              height={356} // Adjust the height according to your design
-            />
+
+          <div className={Style.heroVisual}>
+            <div className={Style.heroVisualFrame}>
+              <Image
+                src={images.rings4}
+                alt=""
+                width={523}
+                height={356}
+                priority
+                className={Style.heroImage}
+              />
+            </div>
           </div>
         </div>
-        <div className={Style.lowerHalfParent}>
-          <div className={Style.recentlyActive}>Recently Active</div>
+      </section>
+
+      <section className={Style.feedSection} aria-labelledby="recent-heading">
+        <h2 id="recent-heading" className={Style.sectionTitle}>
+          Recently active
+        </h2>
+        <div className={Style.feedLayout}>
           <div className={Style.scrollParent}>
             <WrappedRecentDonations />
           </div>
-
-          <div className={Style.lowerHalf}>
-            <div className={Style.connectButton}>
-              {/* <a
-                            href="https://chainlist.org/chain/42161"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        > */}
-              <button onClick={addArbitrum}>Add Arbitrum to your wallet</button>
-
-              {/* </a> */}
-            </div>
-            <div className={Style.connectButton}>
-              {" "}
-              <button onClick={addSonic}>Add Sonic to your wallet</button>
-            </div>
-            <button onClick={addTokenToMetaMask}>
-              <div className={Style.addToWallet}>
+          <aside className={Style.walletAside} aria-label="Network shortcuts">
+            <p className={Style.asideLabel}>Get started</p>
+            <button
+              type="button"
+              className={Style.walletAction}
+              onClick={addArbitrum}
+            >
+              Add Arbitrum
+            </button>
+            <button
+              type="button"
+              className={Style.walletAction}
+              onClick={addSonic}
+            >
+              Add Sonic
+            </button>
+            <button
+              type="button"
+              className={Style.walletActionGhost}
+              onClick={addTokenToMetaMask}
+            >
+              <span className={Style.walletActionIcons}>
                 <Image
                   src={images.probablyBest}
-                  alt="HDT"
-                  width={60}
-                  height={60}
+                  alt=""
+                  width={36}
+                  height={36}
                 />
-                +
+                <span aria-hidden>+</span>
                 <Image
                   src={images.MetaMask}
-                  alt="MetaMask"
-                  width={60}
-                  height={60}
+                  alt=""
+                  width={36}
+                  height={36}
                 />
-              </div>
+              </span>
+              <span>Add HDT to MetaMask</span>
             </button>
-          </div>
+          </aside>
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

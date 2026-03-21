@@ -14,9 +14,9 @@
   text-align: center;
   height: 4rem;
   width: 7rem;
-  background-color: #e44bca;
+  background-color: var(--hd-accent);
   border-radius: 0.5rem;
-  border: 1px solid #e44bca9a;
+  border: 1px solid var(--hd-accent)9a;
   padding: 10px;
   color: white;
   font-weight: bold;
@@ -31,7 +31,7 @@
 
 .wrapper {
   width: 50rem;
-  background-color: #302f2f;
+  background-color: var(--hd-surface);
   border-radius: 5px;
   padding: 25px 25px 30px;
   margin-bottom: 1.5rem;
@@ -55,7 +55,7 @@
   margin-top: 20px;
   border-radius: 5px;
   border-color: #bfbfbf;
-  background-color: #302f2f;
+  background-color: var(--hd-surface);
 }
 
 .wrapper input {
@@ -68,7 +68,7 @@
   margin-top: 20px;
   border-radius: 5px;
   border-color: #bfbfbf;
-  background-color: #302f2f;
+  background-color: var(--hd-surface);
   text-align: center;
 }
 
@@ -101,7 +101,7 @@
   font-size: 16px;
   border-radius: 5px;
   border-color: #bfbfbf;
-  background-color: #302f2f;
+  background-color: var(--hd-surface);
   text-align: center;
 }
 
@@ -117,11 +117,11 @@
 }
 
 .textarea::-webkit-scrollbar-track {
-  background-color: #1e1e1e;
+  background-color: var(--hd-surface-raised);
 }
 
 .textarea::-webkit-scrollbar-thumb {
-  background-color: #e44bca;
+  background-color: var(--hd-accent);
   border-radius: 4px;
 }
 
@@ -145,19 +145,19 @@
 .select {
   height: 100%;
   margin-bottom: 1.2rem;
-  scrollbar-color: #e44bca;
+  scrollbar-color: var(--hd-accent);
   overflow: auto;
 
   -webkit-mask-image: -webkit-radial-gradient(white, black);
   mask-image: radial-gradient(white, black);
-  scrollbar-color: #e44bca;
+  scrollbar-color: var(--hd-accent);
 
   &::-webkit-scrollbar {
     width: 8px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #e44bca;
+    background: var(--hd-accent);
     border-radius: 1rem;
   }
   /* Handle on hover */
@@ -178,7 +178,7 @@
   height: 10rem;
   width: 100%;
   padding: 0.5rem;
-  background-color: #302f2f;
+  background-color: var(--hd-surface);
   border-radius: 1rem;
 }
 
@@ -190,7 +190,7 @@
 }
 
 .selectedTag {
-  background-color: #1e1e1e;
+  background-color: var(--hd-surface-raised);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   margin-right: 0.5rem;
@@ -277,13 +277,13 @@
 }
 
 .imageUploadPreview:hover {
-  border-color: #e44bca; /* Highlight on hover */
+  border-color: var(--hd-accent); /* Highlight on hover */
 }
 
 .uploadButton {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #e44bca;
+  background-color: var(--hd-accent);
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -306,7 +306,7 @@
     text-align: center;
     height: 3rem;
     width: 7rem;
-    background-color: #e44bca;
+    background-color: var(--hd-accent);
     border-radius: 0.5rem;
     padding: 10px;
     color: white;
@@ -319,7 +319,7 @@
   }
   .wrapper {
     width: 20rem;
-    background-color: #302f2f;
+    background-color: var(--hd-surface);
     border-radius: 5px;
     padding: 25px 25px 30px;
     margin-bottom: 1.5rem;
@@ -343,7 +343,7 @@
     margin-top: 20px;
     border-radius: 5px;
     border-color: #bfbfbf;
-    background-color: #302f2f;
+    background-color: var(--hd-surface);
   }
 
   .wrapper input {
@@ -356,7 +356,7 @@
     margin-top: 20px;
     border-radius: 5px;
     border-color: #bfbfbf;
-    background-color: #302f2f;
+    background-color: var(--hd-surface);
     text-align: center;
   }
 
@@ -389,18 +389,18 @@
     font-size: 16px;
     border-radius: 5px;
     border-color: #bfbfbf;
-    background-color: #302f2f;
+    background-color: var(--hd-surface);
     text-align: center;
   }
   .select {
-    scrollbar-color: #e44bca;
+    scrollbar-color: var(--hd-accent);
 
     &::-webkit-scrollbar {
       width: 6px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #e44bca;
+      background: var(--hd-accent);
       border-radius: 22px;
     }
     /* Handle on hover */
@@ -411,7 +411,7 @@
     width: 100%;
     padding: 0.5rem;
     font-size: 20px;
-    background-color: #302f2f;
+    background-color: var(--hd-surface);
   }
   .mintRate {
     font-size: 20px;

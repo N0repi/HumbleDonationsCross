@@ -18,8 +18,8 @@
 /* ForTitle */
 .receivedBox {
   margin-top: 0.05rem; /* height of prop */
-  /* background-color: #1e1e1e; */
-  background-color: #1e1e1e;
+  /* background-color: var(--hd-surface-raised); */
+  background-color: var(--hd-surface-raised);
   padding: 1rem;
   /* border: 2px solid #313131; */
   border-radius: 1.25rem;

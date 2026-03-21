@@ -118,10 +118,13 @@ function SignInButton({ onSuccess, onError }) {
     }, [wagmiAddress, activeAccount?.address])
 
     return (
-        <div className={Style.connectButton}>
-            <button disabled={!state.nonce || state.loading} onClick={signIn}>
-                Connect
-            </button>
-        </div>
+        <button
+            type="button"
+            className={Style.connectButton}
+            disabled={!state.nonce || state.loading}
+            onClick={signIn}
+        >
+            Connect
+        </button>
     )
 }

@@ -2,8 +2,7 @@
 
 .scrollContainer {
   white-space: nowrap;
-  padding: 0.5rem;
-
+  padding: 0.75rem 0.25rem 1.25rem;
   animation: scroll 32s linear infinite;
 }
 .scrollContainer:hover {
@@ -11,10 +10,10 @@
 }
 
 .gridLayout {
-  display: inline-flex; /* Use inline-flex for horizontal layout */
-  gap: 1rem;
-  width: max-content; /* Ensure the width accommodates all items */
-  overflow-y: hidden; /* Disable vertical overflow */
+  display: inline-flex;
+  gap: 1.35rem;
+  width: max-content;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 
@@ -32,31 +31,42 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-right: 20px;
+  margin-right: 0;
   width: 100%;
   min-width: 250px;
   max-width: 30rem;
   white-space: wrap;
   position: relative;
-  padding: 1rem; /* p-4 */
-  /* border: 1px solid #ccc; */
-  /* border border-gray-300 */
-  border-radius: 0.25rem; /* rounded */
+  padding: 1rem;
+  border-radius: var(--hd-radius-md);
   padding-bottom: 2.5rem;
   height: 250px;
-  /* white-space: wrap; */
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
-  box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.1); /* Adjust the values based on your preference */
+  background: var(--hd-surface);
+  border: 1px solid var(--hd-glass-border);
+  box-shadow: var(--hd-shadow-soft);
+  backdrop-filter: blur(12px);
   margin-bottom: 1rem;
+  color: var(--hd-text);
 }
 
 .titleStyle {
-  font-size: 1.25rem /* 20px */;
-  line-height: 1.75rem /* 28px */;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
   font-weight: 700;
-  margin-bottom: 0.5rem /* 8px */;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  color: var(--hd-text);
+}
+
+.projectDescription {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--hd-text-muted);
+  text-align: left;
 }
 
 .tagContainer {

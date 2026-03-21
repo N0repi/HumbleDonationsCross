@@ -10,7 +10,7 @@
   font-size: 1.875rem /* 30px */;
   line-height: 2.25rem /* 36px */;
   margin-bottom: 1.5rem /* 24px */;
-  text-shadow: 2px 2px 5px #1e1e1e;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
 }
 
 .main {
@@ -34,8 +34,8 @@
 }
 
 .createButton {
-  background-color: #1e1e1e;
-  border: 1.25px solid #444244;
+  background-color: var(--hd-surface-raised);
+  border: 1.25px solid var(--hd-glass-border);
   border-radius: 0.5rem;
   padding: 0.625rem;
   padding-right: 1.25rem;
@@ -55,8 +55,8 @@
 
 .filter {
   display: flex;
-  border: 1.25px solid #444244;
-  background-color: #1e1e1e;
+  border: 1.25px solid var(--hd-glass-border);
+  background-color: var(--hd-surface-raised);
   border-radius: 0.5rem;
   padding: 0.43rem;
   padding-right: 1.25rem;
@@ -82,8 +82,8 @@
 }
 
 .searchBar {
-  border: 1.25px solid #444244;
-  background-color: #1e1e1e;
+  border: 1.25px solid var(--hd-glass-border);
+  background-color: var(--hd-surface-raised);
   border-radius: 0.5rem;
   padding: 0.625rem;
   padding-right: 1.25rem;
@@ -113,8 +113,8 @@
 /* filter tags */
 .sortLabel {
   display: flex;
-  border: 1.25px solid #444244;
-  background-color: #1e1e1e;
+  border: 1.25px solid var(--hd-glass-border);
+  background-color: var(--hd-surface-raised);
   border-radius: 0.5rem;
   padding: 0.43rem;
 
@@ -131,8 +131,8 @@
   margin-right: 0.5rem;
 }
 .dropdownButton {
-  background-color: #1e1e1e;
-  border: 1.25px solid #444244;
+  background-color: var(--hd-surface-raised);
+  border: 1.25px solid var(--hd-glass-border);
   border-radius: 0.5rem;
   padding: 0.625rem;
   padding-right: 1.25rem;
@@ -153,8 +153,8 @@
   position: absolute;
   top: 100%;
   right: 0; /* Align the dropdown menu to the right edge */
-  background-color: #1e1e1e;
-  border: 1.25px solid #444244;
+  background-color: var(--hd-surface-raised);
+  border: 1.25px solid var(--hd-glass-border);
   border-radius: 0.5rem;
   z-index: 1000;
   display: flex;
@@ -175,7 +175,7 @@
 }
 
 .dropdownItem:hover {
-  background-color: #444244;
+  background-color: var(--hd-glass-border);
 }
 
 .dropdownIcon {
@@ -189,7 +189,7 @@
 .select {
   width: 100%;
   padding: 0.5rem;
-  background-color: #302f2f;
+  background-color: var(--hd-surface);
 }
 
 .selectedTags {
@@ -203,7 +203,7 @@
   gap: 10px;
 }
 .selectedTag {
-  background-color: #1e1e1e;
+  background-color: var(--hd-surface-raised);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   margin-right: 0.5rem;
@@ -223,8 +223,8 @@
     line-height: 1.25rem /* 36px */;
     font-weight: 600;
     font-size: 1.675rem /* 30px */;
-    text-shadow: 2px 2px 4px #1e1e1e;
-    /* color: #1e1e1e; */
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+    /* color: var(--hd-surface-raised); */
   }
   .searchBar {
     width: 9rem;
@@ -259,8 +259,8 @@
 
   .sortLabel {
     display: flex;
-    border: 1.25px solid #444244;
-    background-color: #1e1e1e;
+    border: 1.25px solid var(--hd-glass-border);
+    background-color: var(--hd-surface-raised);
     border-radius: 0.5rem;
     padding: 0.33rem;
 
@@ -274,8 +274,8 @@
 
   .dropdownButton {
     display: flex;
-    border: 1.25px solid #444244;
-    background-color: #1e1e1e;
+    border: 1.25px solid var(--hd-glass-border);
+    background-color: var(--hd-surface-raised);
     border-radius: 0.5rem;
     padding: 0.43rem;
     padding-right: 1.25rem;
@@ -299,8 +299,8 @@
     position: relative;
     top: 100%;
     right: 0; /* Align the dropdown menu to the right edge */
-    background-color: #1e1e1e;
-    border: 1.25px solid #444244;
+    background-color: var(--hd-surface-raised);
+    border: 1.25px solid var(--hd-glass-border);
     border-radius: 0.5rem;
     z-index: 1000;
     display: flex;
@@ -321,11 +321,11 @@
   }
 
   .dropdownItem:hover {
-    background-color: #444244;
+    background-color: var(--hd-glass-border);
   }
 
   .createButton {
-    background-color: #1e1e1e;
+    background-color: var(--hd-surface-raised);
     border-radius: 0.5rem;
     padding: 0.625rem;
     padding-right: 1rem;

@@ -35,7 +35,7 @@
     height: 36px;
     padding: 0;
     line-height: 36px;
-    color: #fff;
+    color: var(--hd-text);
     font-weight: bold;
     box-sizing: border-box;
 }
@@ -43,15 +43,15 @@
 .Toggle_inner:before {
     content: "Yes";
     padding-left: 10px;
-    background-color: #e44bca;
-    color: #1e1e1e;
+    background-color: var(--hd-accent);
+    color: var(--hd-text-inverse);
 }
 
 .Toggle_inner:after {
     content: "No";
     padding-right: 10px;
-    background-color: #e44bca;
-    color: #1e1e1e;
+    background-color: var(--hd-accent);
+    color: var(--hd-text-inverse);
     text-align: right;
 }
 

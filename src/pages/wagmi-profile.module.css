@@ -4,11 +4,11 @@
 .connectButton {
     text-align: center;
     width: 7rem;
-    background-color: #1e1e1e;
-    border: 0.25px solid #444244;
+    background-color: var(--hd-surface-raised);
+    border: 0.25px solid var(--hd-glass-border);
     border-radius: 0.5rem;
     padding: 10px;
-    color: white;
+    color: var(--hd-text);
     font-weight: bold;
     transition: transform 1.2s ease;
 }
@@ -16,7 +16,7 @@
 .connectButton:hover {
     transform: scale(1.05);
     cursor: pointer;
-    color: white;
+    color: var(--hd-text);
 }
 
 .createButton {
@@ -31,7 +31,7 @@
 
 @media only screen and (max-width: 36rem) {
     .connectButton {
-        border: 0.1px solid #444244;
+        border: 0.1px solid var(--hd-glass-border);
         /* height: 1rem; */
         height: 80%;
         width: 4.5rem;

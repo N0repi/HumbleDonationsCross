@@ -240,8 +240,8 @@
 .expandContract {
   width: 60px;
   height: 60px;
-  background-color: #e44bca;
-  border: 0.25px solid #860771;
+  background-color: var(--hd-accent);
+  border: 0.25px solid var(--hd-accent);
   border-radius: 0.75rem;
 }
 .websiteWrapperMobile {
