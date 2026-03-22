@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 
+const path = require("path");
 const webpack = require("webpack");
 const nextConfig = {
   reactStrictMode: true,
@@ -19,6 +20,9 @@ const nextConfig = {
 };
 
 module.exports = {
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
   // webpack: {
   //   configure: (webpackConfig) => {
   //     webpackConfig.module.rules.forEach((rule) => {

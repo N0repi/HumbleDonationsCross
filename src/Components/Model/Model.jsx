@@ -15,7 +15,7 @@ import Web2 from "./Web2.jsx";
 
 // INTERNAL
 
-import Style from "src/Components/Model/Model.module.css";
+import Style from "./Model.module.css";
 import images from "../../assets";
 
 const Model = ({ setOpenModel }) => {
@@ -63,7 +63,9 @@ const Model = ({ setOpenModel }) => {
               <div className={Style.Model_box_item}>
                 <div className={Style.images}>
                   <Image
-                    src={require(`../../assets/wallets/${connector.options.name}.svg`)}
+                    src={require(
+                      `../../assets/wallets/${connector.options.name}.svg`,
+                    )}
                     alt={connector.id}
                     width={50}
                     height={50}

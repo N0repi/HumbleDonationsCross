@@ -5,7 +5,7 @@
   inset: 0;
   z-index: 1111111111;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   width: 100%;
   max-width: 100%;
@@ -28,17 +28,39 @@
   position: relative;
   width: 100%;
   max-width: 22rem;
-  margin: auto;
-  flex-shrink: 0;
-  max-height: none;
+  /* Horizontal center only — margin:auto on a flex item vertically centers and clips tall panels */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  flex-shrink: 1;
+  min-height: 0;
   min-width: 0;
+  /* Scroll inside the card when wallets + Thirdweb embed exceed the viewport */
+  max-height: min(
+    90vh,
+    calc(
+      100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) -
+        1.5rem
+    )
+  );
+  max-height: min(
+    90dvh,
+    calc(
+      100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) -
+        1.5rem
+    )
+  );
   background: var(--hd-surface-raised);
   padding: 1.5rem;
   border-radius: var(--hd-radius-lg);
   border: 1px solid var(--hd-glass-border);
-  box-shadow: var(--hd-shadow), 0 0 60px var(--hd-accent-dim);
+  box-shadow:
+    var(--hd-shadow),
+    0 0 60px var(--hd-accent-dim);
   overflow-x: hidden;
-  overflow-y: visible;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .Model_box_heading {
@@ -159,17 +181,10 @@
 }
 
 @media only screen and (max-width: 35em) {
-  .Model {
-    align-items: flex-start;
-    padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
-  }
-
   .Model_box {
     padding: 1.15rem;
     width: 100%;
     max-width: min(22rem, 100%);
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
   }
 
   .Model_box_item {

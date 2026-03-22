@@ -66,11 +66,10 @@ export default function Web2({ setOpenModel }) {
   });
 
   return (
-    <>
+    <div className={Style.embedRoot}>
       <ConnectEmbed
         client={client}
-        // the chain where your smart accounts will be or is deployed
-        chain={arbitrum} // *default chain*
+        chain={arbitrum}
         wallets={wallets}
         theme={darkTheme({
           colors: {
@@ -80,8 +79,8 @@ export default function Web2({ setOpenModel }) {
             separatorLine: "#000000",
           },
         })}
-        style={getEmbedStyles()} // Apply dynamic styles based on screen width
+        style={getEmbedStyles()}
       />
-    </>
+    </div>
   );
 }

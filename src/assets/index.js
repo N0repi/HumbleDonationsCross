@@ -16,7 +16,7 @@ import MetaMask from "./wallets/MetaMask.svg";
 import CoinBase from "./wallets/CoinBase.svg";
 import WalletConnect from "./wallets/WalletConnect.svg";
 import Other from "./wallets/Other.svg";
-import Google from "./wallets/Google.svg";
+import Google from "./wallets/Google.png";
 import noToken from "./noToken.png";
 
 // HDT logo
