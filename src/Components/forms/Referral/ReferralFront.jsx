@@ -5,9 +5,11 @@ import { useWallet } from "../../Wallet/WalletContext";
 import { getConfig } from "../../../utils/constants.js";
 import { useTransaction } from "../../Transaction/TransactionContext";
 import { checkReferral } from "./checkReferral";
+import { useThirdwebClient } from "../../Model/ThirdWebClientProvider";
 
 function ReferralFront({ chain, ReferralCode }) {
   const { getProvider, thirdwebActiveAccount } = useWallet();
+  const thirdwebClient = useThirdwebClient();
   const {
     ReferralProjectContractAddress,
     ReferralProjectSafe,
@@ -34,7 +36,8 @@ function ReferralFront({ chain, ReferralCode }) {
         ReferralProjectSafe,
         HDT,
         urqlClient,
-        thirdwebActiveAccount
+        thirdwebActiveAccount,
+        thirdwebClient,
       );
       setClaimHash(ReferralFrontCall);
       // console.log("ReferralFrontCall:", ReferralFrontCall);

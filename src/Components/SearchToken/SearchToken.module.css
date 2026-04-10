@@ -1,25 +1,74 @@
-/* Token picker modal */
+/* Token picker modal — portaled to body, centered in the viewport (not the document). */
+
+/* Match DonatePreflightModals: panelIn + preflightPanelOut */
+@keyframes searchTokenOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes searchTokenPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes preflightPanelOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+.modalBackdropEnter {
+  animation: searchTokenOverlayIn 0.22s ease-out;
+}
+
+.searchTokenPanelEnter {
+  animation: searchTokenPanelIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Use when implementing a delayed close (same motion as donate preflight exit) */
+.searchTokenPanelPreflightOut {
+  animation: preflightPanelOut 0.26s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
 
 .ModalContainer {
-  position: relative;
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  box-sizing: border-box;
 }
 
 .ModalClose {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 40;
+  z-index: 0;
   background: rgba(7, 5, 15, 0.72);
   backdrop-filter: blur(6px);
 }
 
 .SearchToken {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  z-index: 1;
   width: min(29rem, calc(100vw - 1.5rem));
   max-height: min(39rem, calc(100dvh - 2rem));
-  z-index: 50;
   display: flex;
   flex-direction: column;
   background: var(--hd-surface-raised);
@@ -160,12 +209,13 @@
 }
 
 @media only screen and (max-width: 35em) {
+  .ModalContainer {
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+  }
+
   .SearchToken {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    transform: none;
     width: 100%;
     max-height: 85dvh;
     border-radius: var(--hd-radius-lg) var(--hd-radius-lg) 0 0;

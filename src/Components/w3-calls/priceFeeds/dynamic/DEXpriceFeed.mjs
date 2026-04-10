@@ -31,11 +31,29 @@ import { getEthUsdPrice, getJPYtoETHPrice } from "../CLpriceFeed.mjs";
 import { computePoolAddress } from "@uniswap/v3-sdk";
 import { getConfig } from "../../../../utils/constants.js";
 
-// thirdweb
-import { useWallet } from "../../../Wallet/WalletContext";
-import { ethers6Adapter } from "thirdweb/adapters/ethers6";
+/**
+ * Uniswap V3 reads use provider.getCode / Contract static calls.
+ * Thirdweb `ethers6Adapter.signer.toEthers` is a Signer — use `.provider` or pass BrowserProvider.
+ */
+function resolveEthersReadProvider(signerOrProvider) {
+  if (!signerOrProvider) return null;
+  if (typeof signerOrProvider.getCode === "function") {
+    return signerOrProvider;
+  }
+  const p = signerOrProvider.provider;
+  if (p && typeof p.getCode === "function") {
+    return p;
+  }
+  return null;
+}
 
-export async function getQuote(tokenIn, amountIn, provider, chainId) {
+export async function getQuote(tokenIn, amountIn, signerOrProvider, chainId) {
+  const provider = resolveEthersReadProvider(signerOrProvider);
+  if (!provider) {
+    throw new Error(
+      "DEX getQuote: need an ethers Provider with getCode, or a Signer with signer.provider (Thirdweb signer alone is invalid here).",
+    );
+  }
   const { WRAPPED, uniQuoter, uniFactory } = getConfig(chainId);
   console.log("DEXpriceFeed chainId", chainId);
   const { WETH_TOKEN } = getTokensForChain(chainId);
@@ -75,14 +93,17 @@ export async function getQuote(tokenIn, amountIn, provider, chainId) {
         `Trying pool with fee: ${fee}, Address: ${currentPoolAddress}`
       );
 
+      // No contract at CREATE2 address → this fee tier has no pool (expected for many pairs)
+      const poolCode = await provider.getCode(currentPoolAddress);
+      if (!poolCode || poolCode === "0x") {
+        continue;
+      }
+
       const poolContract = new ethers.Contract(
         currentPoolAddress,
         IUniswapV3Pool.abi,
         provider
       );
-
-      // Ensure the pool exists by calling a basic function
-      await poolContract.token0();
 
       // Quoter Contract
       const quoterContract = new ethers.Contract(
@@ -123,8 +144,13 @@ export async function getQuote(tokenIn, amountIn, provider, chainId) {
         bestQuote = { fee, amountOut: quotedAmountV2format };
       }
     } catch (error) {
-      console.error(`Failed to fetch quote for fee ${fee}:`, error);
-      // Skip this fee if the pool doesn't exist or is inaccessible
+      // Empty `eth_call` result on a non-pool address (e.g. if getCode was wrong)
+      const isMissingPool =
+        error?.code === "BAD_DATA" ||
+        error?.shortMessage?.includes("could not decode result data");
+      if (!isMissingPool) {
+        console.error(`Failed to fetch quote for fee ${fee}:`, error);
+      }
     }
   }
 
@@ -343,7 +369,7 @@ export async function getINtoUSD(tokenIn, amountIn, provider, chainId) {
 
     return tokenInUsdSym;
   } catch (error) {
-    console.error("Error in getINtoUSD:", error);
+    console.warn("getINtoUSD:", error.message ?? error);
     return "Invalid liquidity";
     // throw error // You might want to handle errors appropriately
   }
@@ -366,7 +392,7 @@ export async function getUSDtoIN(tokenIn, fixedAmountIn, provider, chainId) {
     return usdInTokenIn;
   }
 
-  const tokenInWeth = await getQuote(tokenIn, 1, provider);
+  const tokenInWeth = await getQuote(tokenIn, 1, provider, chainId);
   console.log("getUSDtoIN log - tokenInWeth:", tokenInWeth);
 
   // Get the current ETH to USD price
@@ -398,7 +424,7 @@ export async function getJPYtoIN(tokenIn, fixedAmountIn, provider, chainId) {
     tokenIn.name === "Sonic" ||
     tokenIn.name === "Wrapped Sonic"
   ) {
-    const ethUsdPrice = await getJPYtoETHPrice();
+    const ethUsdPrice = await getJPYtoETHPrice(chainId);
 
     const initialUsdValue = fixedAmountIn;
     const usdInTokenIn = initialUsdValue / ethUsdPrice;
@@ -410,7 +436,7 @@ export async function getJPYtoIN(tokenIn, fixedAmountIn, provider, chainId) {
   console.log("getUSDtoIN log - tokenInWeth:", tokenInWeth);
 
   // Get the current ETH to USD price
-  const ethUsdPrice = await getJPYtoETHPrice();
+  const ethUsdPrice = await getJPYtoETHPrice(chainId);
   console.log("getUSDtoIN log - getEthUsdPrice:", ethUsdPrice);
 
   // ** Input your initial USD value here | 5 = $5 **
@@ -431,6 +457,7 @@ export async function getJPYtoIN(tokenIn, fixedAmountIn, provider, chainId) {
 
 export async function getINtoJPY(tokenIn, amountIn, provider, chainId) {
   console.log("getINtoJPY log - :", tokenIn, amountIn);
+  chainId = chainId ?? 42161;
   try {
     // Check if tokenIn is "Sonic" or "Wrapped Sonic"
     if (
@@ -440,7 +467,7 @@ export async function getINtoJPY(tokenIn, amountIn, provider, chainId) {
       tokenIn.name === "Wrapped Sonic"
     ) {
       // Get the current ETH to JPY price
-      const ethJpyPrice = await getJPYtoETHPrice();
+      const ethJpyPrice = await getJPYtoETHPrice(chainId);
 
       // Convert tokenIn to JPY directly
       const tokenInJpy = amountIn * ethJpyPrice;
@@ -461,7 +488,7 @@ export async function getINtoJPY(tokenIn, amountIn, provider, chainId) {
     console.log("getINtoJPY log - tokenInWeth:", tokenInWeth);
 
     // Get the current ETH to JPY price
-    const ethJpyPrice = await getJPYtoETHPrice();
+    const ethJpyPrice = await getJPYtoETHPrice(chainId);
     console.log("getINtoJPY log - getEthJpyPrice:", ethJpyPrice);
 
     // Convert tokenIn to JPY
@@ -481,7 +508,7 @@ export async function getINtoJPY(tokenIn, amountIn, provider, chainId) {
 
     return tokenInJpySym;
   } catch (error) {
-    console.error("Error in getINtoJPY:", error);
+    console.warn("getINtoJPY:", error.message ?? error);
     return "Invalid liquidity";
     // throw error // You might want to handle errors appropriately
   }

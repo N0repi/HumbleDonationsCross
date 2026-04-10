@@ -16,11 +16,7 @@ import { getEthUsdPrice, getJPYtoETHPrice } from "../CLpriceFeed.mjs";
 import { computePoolAddress } from "@uniswap/v3-sdk";
 import { getConfig } from "../../../../utils/constants.js";
 
-// thirdweb
-import { useWallet } from "../../../Wallet/WalletContext";
-import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-
-// Uniswap: Arbitrum, Sepolia
+// Uniswap: Arbitrum, Sepolia, Arbitrum Sepolia
 export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
   console.log("quoteSwap chainId", chainId);
   const { WRAPPED, NATIVE, uniQuoter, uniFactory } = getConfig(chainId);
@@ -31,12 +27,24 @@ export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
 
   console.log("chainId passed to getQuote:", chainId);
 
+  const amountInStr = String(amountIn ?? "").trim();
+  if (
+    !amountInStr ||
+    !Number.isFinite(Number(amountInStr)) ||
+    Number(amountInStr) <= 0
+  ) {
+    throw new Error("Swap amount must be a positive number.");
+  }
+
+  const wrappedAddr =
+    typeof WRAPPED === "string" ? WRAPPED : WRAPPED?.address ?? WRAPPED;
+
   // Replace native currency with WRAPPED
   if (tokenIn.name === NATIVE.name) {
     tokenIn = {
       ...tokenIn,
       name: "Wrapped Ether",
-      address: WRAPPED,
+      address: wrappedAddr,
       symbol: "W" + NATIVE.symbol,
     };
   }
@@ -44,7 +52,7 @@ export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
     tokenOut = {
       ...tokenOut,
       name: "Wrapped Ether",
-      address: WRAPPED,
+      address: wrappedAddr,
       symbol: "W" + NATIVE.symbol,
     };
   }
@@ -96,13 +104,17 @@ export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
         `Trying pool with fee: ${fee}, Address: ${currentPoolAddress}`
       );
 
+      const poolCode = await provider.getCode(currentPoolAddress);
+      if (!poolCode || poolCode === "0x") {
+        continue;
+      }
+
       const poolContract = new ethers.Contract(
         currentPoolAddress,
         IUniswapV3Pool.abi,
         provider
       );
 
-      // Ensure the pool exists by calling a basic function
       await poolContract.token0();
 
       // Quoter Contract
@@ -122,7 +134,7 @@ export async function getQuote(tokenIn, tokenOut, amountIn, provider, chainId) {
         tokenOut: isTokenInToken0 ? token1.address : token0.address,
         fee,
         amountIn: ethers
-          .parseUnits(amountIn.toString(), tokenPass.decimals)
+          .parseUnits(amountInStr, tokenPass.decimals)
           .toString(),
         sqrtPriceLimitX96: 0, // No price limit
       };

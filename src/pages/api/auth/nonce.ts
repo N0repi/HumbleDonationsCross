@@ -1,24 +1,25 @@
-// nonce.ts
+// nonce.ts — bind nonce to session for verify step
 
-// import { withIronSessionApiRoute } from "iron-session/next"
-import { generateNonce } from "siwe"
-// import ironOptions from "../../../utils/constants"
-import { NextApiRequest, NextApiResponse } from "next"
+import type { NextApiRequest, NextApiResponse } from "next";
+import { withIronSessionApiRoute } from "iron-session/next";
+import { generateNonce } from "siwe";
+import { ironOptions } from "../../../utils/constants";
 
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
-    const { method } = req
-    switch (method) {
-        case "GET":
-            res.setHeader("Content-Type", "text/plain")
-            res.send(generateNonce())
-            const nonce = generateNonce()
-            console.log(`Generated nonce: ${nonce}`)
-            res.send(nonce)
-            break
-        default:
-            res.setHeader("Allow", ["GET"])
-            res.status(405).end(`Method ${method} Not Allowed`)
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { method } = req;
+  switch (method) {
+    case "GET": {
+      const nonce = generateNonce();
+      req.session.nonce = nonce;
+      await req.session.save();
+      res.setHeader("Content-Type", "text/plain");
+      res.status(200).send(nonce);
+      break;
     }
-}
+    default:
+      res.setHeader("Allow", ["GET"]);
+      res.status(405).end(`Method ${method} Not Allowed`);
+  }
+};
 
-export default handler
+export default withIronSessionApiRoute(handler, ironOptions);

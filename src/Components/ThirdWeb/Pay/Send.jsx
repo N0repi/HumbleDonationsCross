@@ -8,7 +8,7 @@ import { useWallet } from "../../Wallet/WalletContext";
 import { getConfig } from "../../../utils/constants.js";
 
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-import { client } from "../../Model/thirdWebClient";
+import { useThirdwebClient } from "../../Model/ThirdWebClientProvider";
 // TransactionProvider
 import { useTransaction } from "../../Transaction/TransactionContext";
 
@@ -31,6 +31,7 @@ const Send = ({ isOpen, onClose }) => {
 
   // Wallet and chain context
   const { chain, provider, walletType, thirdwebActiveAccount } = useWallet();
+  const client = useThirdwebClient();
   const { NATIVE, HDT, chainId } = getConfig(chain?.id);
 
   const DEFAULT_TOKEN = {
@@ -136,30 +137,40 @@ const Send = ({ isOpen, onClose }) => {
         <h2 className={Style.title}>Send Box</h2>
         <form onSubmit={handleSend} className={Style.form}>
           <div className={Style.formGroup}>
-            <label>Recipient Address</label>
-            <input
-              type="text"
-              placeholder="0xRecipientAddress"
-              value={recipient}
-              onChange={(e) => setRecipient(e.target.value)}
-              required
-              className={Style.input}
-            />
+            <label className={Style.fieldLabel} htmlFor="send-recipient">
+              Recipient address
+            </label>
+            <div className={Style.inputRow}>
+              <input
+                id="send-recipient"
+                type="text"
+                placeholder="0xRecipientAddress"
+                value={recipient}
+                onChange={(e) => setRecipient(e.target.value)}
+                required
+                className={Style.input}
+              />
+            </div>
           </div>
           <div className={Style.formGroup}>
-            <label>Amount</label>
-            <input
-              type="number"
-              step="0.0001"
-              placeholder="0.1"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-              className={Style.input}
-            />
+            <label className={Style.fieldLabel} htmlFor="send-amount">
+              Amount
+            </label>
+            <div className={Style.inputRow}>
+              <input
+                id="send-amount"
+                type="number"
+                step="0.0001"
+                placeholder="0.1"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+                className={Style.input}
+              />
+            </div>
           </div>
           <div className={Style.token}>
-            <label>Token:</label>
+            <label className={Style.fieldLabel}>Token</label>
             <button
               type="button"
               className={Style.tokenButton}

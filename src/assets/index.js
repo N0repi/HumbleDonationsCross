@@ -63,6 +63,8 @@ import bgMoreAbstractBetter from "./indexBackground/bgMoreAbstractBetter.png";
 import bgEven from "./indexBackground/bgEven.png";
 import bgUneven from "./indexBackground/bgUneven.png";
 
+import dollarSign from "./dollarSign.png";
+
 export default {
   search,
   etherlogo,
@@ -107,4 +109,5 @@ export default {
   bgMoreAbstractBetter,
   bgEven,
   bgUneven,
+  dollarSign,
 };

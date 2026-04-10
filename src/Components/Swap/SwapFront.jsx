@@ -8,13 +8,14 @@ import { TokenSwapFront, SearchToken, LanguageToggle } from "../index";
 import { ethers } from "ethers";
 import { useWallet } from "../Wallet/WalletContext";
 import { getConfig } from "../../utils/constants.js";
+import { chainHttpRpcUrl } from "../../utils/chainHttpRpcUrl.js";
 import { useTransaction } from "../Transaction/TransactionContext";
 import CurrencyContext from "../LanguageToggle/CurrencyContext.jsx";
-import { client } from "../Model/thirdWebClient";
+import { useThirdwebClient } from "../Model/ThirdWebClientProvider";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import { approveToken, Payable, swapNativeToken } from "./SwapLogic";
 // Token Balance Logic
-import conditionalBalance from "../w3-calls/useBalanceBothNoCond";
+import useConditionalTokenBalance from "../w3-calls/useBalanceBothNoCond";
 import {
   getQuote,
   getQuoteSonic,
@@ -25,7 +26,10 @@ import {
   getINtoUSD,
   getINtoJPY,
 } from "../w3-calls/priceFeeds/dynamic/DEXpriceFeed.mjs";
-import { arbitrum } from "thirdweb/chains";
+import { arbitrumSepolia } from "thirdweb/chains";
+
+/** When `chain` is not yet available (e.g. wallet hydrating), Swap/DEX paths use this id. */
+const DEFAULT_SWAP_CHAIN_ID = arbitrumSepolia.id;
 
 const SwapFront = ({
   accounts,
@@ -39,7 +43,8 @@ const SwapFront = ({
   const [tokenQuantity, setTokenQuantity] = useState("");
   const { setApprovalHash, setDonationHash, setTransactionError } =
     useTransaction();
-  const { walletType, thirdwebActiveAccount, chain } = useWallet();
+  const { walletType, thirdwebActiveAccount, chain, provider } = useWallet();
+  const client = useThirdwebClient();
   const [usdValue, setUsdValue] = useState(null);
   const [jpyValue, setJpyValue] = useState(null);
   const [expand, setExpand] = useState(false);
@@ -48,8 +53,12 @@ const SwapFront = ({
   const [usdQuote, setUSDquote] = useState("");
   const [slippageQuantity, setSlippageQuantity] = useState("0.10");
 
-  const chainId = chain?.id;
-  console.log("chainId in SwapFront:", chainId);
+  const effectiveChainId =
+    chain?.id !== undefined && chain?.id !== null && chain?.id !== ""
+      ? Number(chain.id)
+      : DEFAULT_SWAP_CHAIN_ID;
+
+  console.log("effectiveChainId in SwapFront:", effectiveChainId, "wallet chain:", chain?.id);
   const {
     contractAddress,
     ABI,
@@ -58,7 +67,7 @@ const SwapFront = ({
     explorer,
     WRAPPED,
     provideLiquidity,
-  } = getConfig(chainId);
+  } = getConfig(effectiveChainId);
 
   console.log("SwapFront top - ", parseFloat(slippageQuantity));
 
@@ -68,7 +77,7 @@ const SwapFront = ({
     symbol: NATIVE.symbol,
     address: "0x0000000000000000000000000000000000000000",
     decimals: 18,
-    chainId: chainId || chain?.id,
+    chainId: effectiveChainId,
   });
   // -> WORKS
   // const [TokenOne, setTokenOne] = useState({
@@ -87,8 +96,10 @@ const SwapFront = ({
     symbol: "HDT",
     address: HDT,
     decimals: 18,
-    chainId: chainId || chain?.id,
+    chainId: effectiveChainId,
   });
+
+  const tokenBal = useConditionalTokenBalance(TokenOne, chain ?? arbitrumSepolia);
 
   // const toggleSwapClick = () => {
   //   toggleSwap();
@@ -96,6 +107,17 @@ const SwapFront = ({
 
   const handleQuantityChange = (e) => {
     setTokenQuantity(e.target.value);
+  };
+
+  const handleSwapTokens = () => {
+    const a = TokenOne;
+    const b = TokenTwo;
+    setTokenOne(b);
+    setTokenTwo(a);
+    setTokenQuantity("");
+    setQuoteValue("");
+    setUsdValue(null);
+    setJpyValue(null);
   };
 
   async function getConnectedSigner() {
@@ -118,6 +140,34 @@ const SwapFront = ({
     }
   }
 
+  async function resolveReadProviderForDex() {
+    const chainForRpc = chain ?? arbitrumSepolia;
+
+    const pickReadProvider = (p) => {
+      if (!p) return null;
+      if (typeof p.getCode === "function") return p;
+      if (typeof p.provider?.getCode === "function") return p.provider;
+      return null;
+    };
+
+    const fromContext = pickReadProvider(provider);
+    if (fromContext) return fromContext;
+
+    try {
+      const signer = await getConnectedSigner();
+      const fromSigner = pickReadProvider(signer?.provider ?? signer);
+      if (fromSigner) return fromSigner;
+    } catch (e) {
+      console.warn("SwapFront resolveReadProviderForDex:", e);
+    }
+
+    const rpc = chainHttpRpcUrl(chainForRpc);
+    if (rpc) {
+      return new ethers.JsonRpcProvider(rpc);
+    }
+    return null;
+  }
+
   const handleSwapClick = async () => {
     try {
       const connectedSigner = await getConnectedSigner();
@@ -138,7 +188,7 @@ const SwapFront = ({
           connectedSigner,
           recipientAddress,
           slippageValue,
-          chainId
+          effectiveChainId
         );
 
         if (swapResult.transactionHash) {
@@ -153,7 +203,7 @@ const SwapFront = ({
           tokenQuantity,
           TokenOne,
           connectedSigner,
-          chainId
+          effectiveChainId
         );
 
         const { transactionHashApproval } = approvalResult;
@@ -173,7 +223,7 @@ const SwapFront = ({
           connectedSigner,
           recipientAddress,
           slippageValue,
-          chainId
+          effectiveChainId
         );
 
         const { transactionHashConfirmation } = swapResult;
@@ -193,15 +243,20 @@ const SwapFront = ({
 
   useEffect(() => {
     const fetchQuote = async () => {
+      const qty = String(tokenQuantity ?? "").trim();
+      if (!qty || !Number.isFinite(parseFloat(qty)) || parseFloat(qty) <= 0) {
+        setQuoteValue("");
+        return;
+      }
       try {
-        const connectedSigner = await getConnectedSigner();
-        if (chainId == 146) {
+        if (effectiveChainId === 146) {
+          const connectedSigner = await getConnectedSigner();
           const sonicQuote = await getQuoteSonic(
             TokenOne,
             TokenTwo,
             tokenQuantity,
             connectedSigner,
-            chain?.id
+            effectiveChainId
           );
           const parsedSonicQuote = ethers.formatUnits(
             sonicQuote,
@@ -209,12 +264,17 @@ const SwapFront = ({
           );
           setQuoteValue(parsedSonicQuote);
         } else {
+          const readProvider = await resolveReadProviderForDex();
+          if (!readProvider) {
+            console.warn("fetchQuote: no read provider");
+            return;
+          }
           const quote = await getQuote(
             TokenOne,
             TokenTwo,
             tokenQuantity,
-            connectedSigner,
-            chain?.id
+            readProvider,
+            effectiveChainId
           );
           setQuoteValue(quote);
         }
@@ -224,38 +284,50 @@ const SwapFront = ({
     };
 
     fetchQuote();
-  }, [tokenQuantity, TokenOne, TokenTwo]);
+  }, [tokenQuantity, TokenOne, TokenTwo, effectiveChainId, chain, provider]);
   const { selectedCurrency } = useContext(CurrencyContext);
   useEffect(() => {
     const fetchValue = async () => {
       let value = 0;
       try {
-        const chainId = chain?.id ?? 42161;
-        const provider = await getConnectedSigner(thirdwebActiveAccount);
+        const readProvider = await resolveReadProviderForDex();
+        if (!readProvider) {
+          console.warn("SwapFront fetchValue: no read provider");
+          return;
+        }
         if (selectedCurrency === "USD") {
-          if (chainId == 146) {
+          if (effectiveChainId === 146) {
             value = await getQuoteSonicUSD(
               TokenOne,
               tokenQuantity,
-              provider,
-              chainId,
+              readProvider,
+              effectiveChainId,
               WRAPPED,
               NATIVE
             );
             console.log("value:", value);
           } else {
-            console.log("DonateBox getIntoUSD chainId:", chain?.id, chainId);
+            console.log(
+              "SwapFront getINtoUSD chain:",
+              chain?.id,
+              effectiveChainId
+            );
             value = await getINtoUSD(
               TokenOne,
               tokenQuantity,
-              provider,
-              chainId
+              readProvider,
+              effectiveChainId
             );
           }
           const concatValue = "$" + value;
           setUsdValue(concatValue);
         } else if (selectedCurrency === "JPY") {
-          value = await getINtoJPY(TokenOne, tokenQuantity, provider, chainId);
+          value = await getINtoJPY(
+            TokenOne,
+            tokenQuantity,
+            readProvider,
+            effectiveChainId
+          );
           setJpyValue(value);
         }
       } catch (error) {
@@ -263,13 +335,28 @@ const SwapFront = ({
       }
     };
 
-    if (TokenOne && tokenQuantity) {
+    const qty = String(tokenQuantity ?? "").trim();
+    if (TokenOne && qty) {
       fetchValue();
     }
-  }, [TokenOne, tokenQuantity, selectedCurrency, thirdwebActiveAccount]);
+  }, [
+    TokenOne,
+    tokenQuantity,
+    selectedCurrency,
+    thirdwebActiveAccount,
+    chain,
+    provider,
+    effectiveChainId,
+    WRAPPED,
+    NATIVE,
+  ]);
 
-  const balance = parseFloat(conditionalBalance(TokenOne, chain)).toFixed(3);
-  const balanceMax = conditionalBalance(TokenOne, chain);
+  const balance = tokenBal.isLoading
+    ? "…"
+    : tokenBal.isError
+      ? "—"
+      : parseFloat(tokenBal.displayValue || "0").toFixed(3);
+  const balanceMax = tokenBal.isLoading ? "" : tokenBal.maxAmount || "";
 
   return (
     <main className={Style.swapMain}>
@@ -281,7 +368,7 @@ const SwapFront = ({
       >
         Provide liquidity
       </a>
-      {chainId === 116 ? (
+      {effectiveChainId === 116 ? (
         <div className={Style.unsupportedNetwork}>
           <p>Swap is not yet supported on this network.</p>
         </div>
@@ -336,9 +423,14 @@ const SwapFront = ({
                 </button>
               </div>
 
-              <div className={Style.swapDivider} aria-hidden>
-                <span className={Style.swapDividerIcon}>⇅</span>
-              </div>
+              <button
+                type="button"
+                className={Style.swapDividerBtn}
+                onClick={handleSwapTokens}
+                aria-label="Swap input and output tokens"
+              >
+                ⇅
+              </button>
 
               <p className={Style.fieldLabel}>You receive</p>
               <div className={Style.SwapFront_box_input}>

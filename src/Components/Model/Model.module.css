@@ -27,7 +27,7 @@
 .Model_box {
   position: relative;
   width: 100%;
-  max-width: 22rem;
+  max-width: 28rem;
   /* Horizontal center only — margin:auto on a flex item vertically centers and clips tall panels */
   margin-left: auto;
   margin-right: auto;
@@ -47,8 +47,8 @@
   max-height: min(
     90dvh,
     calc(
-      100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) -
-        1.5rem
+      100dvh - env(safe-area-inset-top, 0px) -
+        env(safe-area-inset-bottom, 0px) - 1.5rem
     )
   );
   background: var(--hd-surface-raised);
@@ -68,6 +68,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  margin-bottom: 0.35rem;
 }
 
 .Model_box_heading p {

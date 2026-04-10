@@ -3,20 +3,69 @@
 .Model {
   position: fixed;
   inset: 0;
-  display: grid;
+  background-color: rgba(17, 17, 17, 0.85);
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100dvh;
-  width: 100vw;
-  z-index: 1111111111;
-  background: rgba(7, 5, 15, 0.72);
-  backdrop-filter: blur(8px);
+  z-index: 999999;
+  backdrop-filter: blur(6px);
   padding: 1rem;
-  box-sizing: border-box;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Open / close — same rhythm as DonatePreflightModals preflightPanelOut */
+.modelOverlayEnter {
+  animation: walletOverlayIn 0.22s ease-out;
+}
+
+.modelOverlayExiting {
+  animation: walletOverlayOut 0.26s ease-in forwards;
+}
+
+@keyframes walletOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes walletOverlayOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes walletPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes walletPanelOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
 }
 
 .Model_box {
-  width: min(26rem, 100%);
+  width: min(29rem, 100%);
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
   background: var(--hd-surface-raised);
@@ -29,9 +78,24 @@
   box-sizing: border-box;
 }
 
+.modelBoxEnter {
+  animation: walletPanelIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.modelBoxExiting {
+  animation: walletPanelOut 0.26s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
 .horizontalAlignContainer {
   display: flex;
   align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.addressContainer {
+  flex: 1;
+  min-width: 0;
 }
 
 .radial {
@@ -40,8 +104,8 @@
   border-radius: 12px;
   flex-shrink: 0;
   background-image: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.35),
+    at left bottom,
+    rgba(236, 218, 236, 1) 15%,
     var(--hd-accent) 55%,
     #a03890 100%
   );
@@ -53,7 +117,31 @@
   font-size: 0.8rem;
   text-align: left;
   color: var(--hd-text-muted);
-  word-break: break-all;
+}
+
+/* Keep copy control visible: long address must shrink, not the icon button */
+.address > div > button {
+  flex-shrink: 0;
+}
+
+/* Desktop: one line for address text; ellipsis if modal is narrow */
+@media (min-width: 769px) {
+  .address {
+    white-space: nowrap;
+  }
+
+  .address > div {
+    flex-wrap: nowrap;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .address > div > span {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .SRBparent {
@@ -77,9 +165,17 @@
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   transition:
     background 0.2s ease,
     border-color 0.2s ease;
+}
+
+button.SRBbutton {
+  font: inherit;
 }
 
 .SRBbutton:hover {
@@ -149,5 +245,126 @@
   .address {
     font-size: 0.85rem;
     text-align: center;
+    word-break: break-all;
+    white-space: normal;
   }
+}
+
+/* Stripe buy HDT overlay (StripeBuyHdt.jsx) */
+.stripeBuyOverlay {
+  position: fixed;
+  inset: 0;
+  /* Portaled: above WalletModal (999999) and DonateBox preflight modals */
+  z-index: 1000000;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: auto;
+}
+
+.stripeBuyPanel {
+  background: #1a1a22;
+  color: #f0f0f5;
+  border-radius: 12px;
+  max-width: 420px;
+  width: 100%;
+  padding: 1.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.stripeBuyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.stripeBuyClose {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.25rem;
+}
+
+.stripeBuyHint {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin-bottom: 1rem;
+  line-height: 1.45;
+}
+
+.stripeBuyWaiting {
+  font-size: 0.9rem;
+  color: #8fd4a8;
+  margin-bottom: 0.75rem;
+}
+
+.stripeBuyLoadingRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+
+  border: 1px solid var(--hd-accent-glow);
+}
+
+/* Visual: global .hdGradientSpinner (globals.css) */
+.stripeBuySpinner {
+  margin-top: 0.12rem;
+}
+
+.stripeBuyLoadingCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.stripeBuyLoadingTitle {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--hd-text);
+}
+
+.stripeBuyLoadingSub {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  opacity: 0.82;
+}
+
+.stripeBuyTiers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.stripeBuyTierBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.stripeBuyTierBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.stripeBuyTierBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

@@ -8,9 +8,6 @@ import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import fetchAndVerifyReferralCodes from "../../../lib/referral/checkCodes";
 import ReferralProjectBatchPausable from "../../../../artifacts/contracts/referral/ReferralProjectBatchPausable.sol/ReferralProjectBatchPausable.json";
 import erc20ABI from "../../../Components/w3-calls/erc20.json";
-// thirdweb
-import { client } from "../../Model/thirdWebClient";
-
 const ABI = ReferralProjectBatchPausable.abi;
 
 async function matches(
@@ -41,7 +38,8 @@ export async function checkReferral(
   ReferralProjectSafe,
   HDT,
   urqlClient,
-  thirdwebActiveAccount
+  thirdwebActiveAccount,
+  thirdwebClient,
 ) {
   const checkMatches = await matches(
     provider,
@@ -62,7 +60,8 @@ export async function checkReferral(
       ReferralProjectSafe,
       HDT,
       chain,
-      thirdwebActiveAccount
+      thirdwebActiveAccount,
+      thirdwebClient,
     );
     const claimCallWait = await claimCall;
     console.log("claimCallWait:", claimCallWait);
@@ -92,11 +91,11 @@ async function callRoute(provider, checkMatches) {
   }
 }
 
-async function findSigner(chain, thirdwebActiveAccount, provider) {
+async function findSigner(chain, thirdwebActiveAccount, provider, twClient) {
   if (thirdwebActiveAccount && thirdwebActiveAccount.address) {
     // thirdweb
     const signer = ethers6Adapter.signer.toEthers({
-      client: client,
+      client: twClient,
       chain: chain,
       account: thirdwebActiveAccount,
     });
@@ -115,9 +114,15 @@ async function claimReward(
   ReferralProjectSafe,
   HDT,
   chain,
-  thirdwebActiveAccount
+  thirdwebActiveAccount,
+  thirdwebClient,
 ) {
-  const signer = await findSigner(chain, thirdwebActiveAccount, provider);
+  const signer = await findSigner(
+    chain,
+    thirdwebActiveAccount,
+    provider,
+    thirdwebClient,
+  );
 
   const ReferralProjectContractInstance = new ethers.Contract(
     ReferralProjectContractAddress,

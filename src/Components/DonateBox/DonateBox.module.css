@@ -27,37 +27,40 @@
   border-top-left-radius: 0.375rem;
 }
 
+.donateMain {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem 1rem;
+  box-sizing: border-box;
+}
+
 .DonateBox {
-  width: 90%;
-  margin: 2rem auto;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative; /* Change to absolute */
-  margin-left: 0%;
-  margin-bottom: 10;
+  position: relative;
+  margin: 0;
 }
 
-/* EDITED, altered, changed */
-/* entire component -> black box behind buttons  */
+/* Glass card — aligned with SwapFront */
 .DonateBox_box {
-  margin-top: -1rem; /* height of prop */
-  background: rgba(175, 173, 173, 0.2); /* White with 20% opacity */
-
-  padding: 1rem;
-  /* border: 2px solid #313131; */
-  border-radius: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  width: 30rem;
-  height: 18rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px); /* Apply the blur effect */
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  width: 100%;
+  margin-top: 0;
+  background: var(--hd-surface);
+  border-radius: var(--hd-radius-lg);
+  border: 1px solid var(--hd-glass-border);
+  box-shadow: var(--hd-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1.25rem 1.35rem 1.5rem;
+  box-sizing: border-box;
+  min-height: 16rem;
 }
 
 .Expanded {
-  height: 20rem; /* Set your desired height here */
-  /* You can customize other styles for the expanded state */
+  min-height: 20rem;
 }
 
 .ShowOnExpand {
@@ -68,117 +71,238 @@
   display: inline-block; /* Display the buttons when the height is expanded */
 }
 
-.DonateBox_box_heading {
-  margin-top: -1rem;
-  display: flex;
+.cardHeader {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
 }
 
-/* input amount of token, parent of maxButton, & pink border around input section */
+.cardTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--hd-text);
+  text-align: center;
+}
+
+.iconHeaderBtn,
+.settingsBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border: none;
+  background: var(--hd-glass-highlight);
+  border-radius: var(--hd-radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--hd-glass-border);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.iconHeaderBtn:hover,
+.settingsBtn:hover {
+  background: var(--hd-accent-dim);
+  border-color: var(--hd-accent-glow);
+}
+
+.iconHeaderBtn:active,
+.settingsBtn:active {
+  transform: scale(0.96);
+}
+
+.fieldLabel {
+  margin: 0.85rem 0 0.35rem 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--hd-text-muted);
+}
+
 .DonateBox_box_input {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
+  gap: 0.65rem;
   border: 1px solid var(--hd-accent-glow);
-  padding-left: 2rem;
-  border-radius: 2rem;
-  margin-top: 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--hd-radius-md);
+  background: rgba(0, 0, 0, 0.2);
+  margin-top: 0;
 }
 
-/* textbox for user to enter token */
+.DonateBox_box_input:focus-within {
+  border-color: var(--hd-accent);
+  box-shadow: 0 0 0 3px var(--hd-accent-dim);
+}
+
 .DonateBox_box_input input {
+  flex: 1;
+  min-width: 0;
   border: 0;
   outline: 0;
-  background-color: transparent;
-  color: var(--hd-accent);
-  font-size: 1.2rem;
-}
-
-/* right-hand button that displays the chosen token, default ETH */
-.DonateBox_box_input button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.1rem;
-  line-height: 0;
-  width: 6.5rem;
-  background-color: var(--hd-surface-raised);
-  padding: 1rem;
-  font-weight: 700;
-  font-size: 1.2rem;
-  /* border: 1.25px solid var(--hd-accent); */ /*border around token */
-  border-radius: 2rem;
-}
-
-/* Parent of .DonateBox_box_balance */
-.balanceBar {
-  margin-top: 0.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-right: 1.5rem;
-}
-
-/* Parent of .maxButton */
-.buttonBar {
-  margin-top: 0.1rem;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Four equal-width columns */
-  grid-template-rows: repeat(2, auto); /* Two rows with automatic height */
-  margin-right: 1.5rem;
-  /* gap between rows */
-  /* row-gap: 0.6rem;  */
-  align-items: center;
-  justify-content: center;
-}
-
-/* input max balance button */
-.maxButton {
-  margin-top: 0.2rem;
-  margin-left: 2rem;
-  outline: 0;
-  background-color: rgba(0,0,0,0.35);
-  border: 1.25px solid var(--hd-accent);
+  background: transparent;
   color: var(--hd-text);
-  font-size: 1rem;
-  border-radius: 2rem;
-  padding: 0.25rem;
-  width: 4rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.DonateBox_box_input input::placeholder {
+  color: var(--hd-text-muted);
+}
+
+.tokenPicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
+  min-width: 6.5rem;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--hd-surface-raised);
+  border: 1px solid var(--hd-glass-border);
+  border-radius: var(--hd-radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--hd-text);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tokenPicker:hover {
+  background: var(--hd-accent-dim);
+  border-color: var(--hd-accent-glow);
+}
+
+.balanceBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0 0.15rem;
+  font-size: 0.8rem;
+}
+
+.metaMuted {
+  color: var(--hd-text-muted);
+  font-weight: 500;
+}
+
+.metaBalance {
+  color: var(--hd-accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.buttonBar {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 0.4rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.maxButton {
+  margin: 0;
+  outline: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.maxButton button {
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--hd-text);
+  background: var(--hd-surface-raised);
+  border: 1px solid var(--hd-glass-border);
+  border-radius: var(--hd-radius-pill);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.maxButton button:hover:not(:disabled) {
+  background: var(--hd-accent-dim);
+  border-color: var(--hd-accent-glow);
+}
+
+.maxButton button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .ellipses {
   font-size: 1rem;
 }
 
-/* token balance */
 .DonateBox_box_balance {
-  margin-top: 0.5rem;
-  margin-left: 2rem;
-  border: 0;
-  outline: 0;
-  background-color: transparent;
-  color: var(--hd-accent);
-  font-size: 1rem;
+  /* legacy — replaced by .metaMuted / .metaBalance in balanceBar */
+  display: none;
 }
 
-/* Donate button */
 .DonateBox_box_btn {
   width: 100%;
-  flex-wrap: nowrap;
-  align-items: center;
   display: flex;
+  align-items: center;
   justify-content: center;
-  background-color: rgba(0,0,0,0.35);
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1.5px solid var(--hd-accent);
-  border-radius: 2rem;
-  font-size: 1.2rem;
-  bottom: 0;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding: 0.95rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    var(--hd-accent) 0%,
+    #c94bb8 50%,
+    var(--hd-accent-hover) 100%
+  );
+  color: var(--hd-text-inverse);
+  border: none;
+  border-radius: var(--hd-radius-pill);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow:
+    0 4px 20px var(--hd-accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.DonateBox_box_btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow:
+    0 8px 28px var(--hd-accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.DonateBox_box_btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.DonateBox_box_btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.15);
 }
 
 .MoveBtn {
@@ -189,36 +313,135 @@
   cursor: pointer;
 }
 
+/* header controls moved to .cardHeader; keep class if referenced elsewhere */
+
 .hideOnMobile {
   display: none;
 }
 
 .buttonContainer {
   display: inline-flex;
-  align-items: center; /* Align items vertically in the center */
-  justify-content: space-between; /* Align items horizontally to the end */
-  width: 100%; /* Take up full width */
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   font-weight: 700;
 }
 
 .expandContract {
-  width: 50px;
-  height: 50px;
+  width: auto;
+  height: auto;
+}
+
+/* Insufficient HDT → Buy HDT (Stripe) */
+.insufficientOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  background: rgba(7, 5, 15, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(6px);
+}
+
+.insufficientPanel {
+  max-width: 22rem;
+  width: 100%;
+  padding: 1.35rem 1.25rem;
+  border-radius: var(--hd-radius-md);
+  background: var(--hd-surface-raised);
+  border: 1px solid var(--hd-glass-border);
+  box-shadow: var(--hd-shadow);
+  color: var(--hd-text);
+}
+
+.insufficientTitle {
+  margin: 0 0 0.65rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--hd-text);
+}
+
+.insufficientBody {
+  margin: 0 0 1.15rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--hd-text-muted);
+}
+
+.insufficientActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.insufficientPrimary {
+  flex: 1;
+  min-width: 6rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--hd-text-inverse);
+  border: none;
+  border-radius: var(--hd-radius-pill);
+  cursor: pointer;
+  background: linear-gradient(
+    135deg,
+    var(--hd-accent) 0%,
+    var(--hd-cta-gradient-end) 100%
+  );
+}
+
+.insufficientSecondary {
+  flex: 1;
+  min-width: 6rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--hd-text);
+  border: 1px solid var(--hd-glass-border);
+  border-radius: var(--hd-radius-pill);
+  cursor: pointer;
+  background: transparent;
+}
+
+/* Stronger frost on small screens — card often floats over page copy */
+@media only screen and (max-width: 650px) {
+  .DonateBox_box {
+    background: linear-gradient(
+      165deg,
+      rgba(36, 28, 58, 0.96) 0%,
+      rgba(14, 10, 28, 0.98) 100%
+    );
+    backdrop-filter: blur(40px) saturate(1.18);
+    -webkit-backdrop-filter: blur(40px) saturate(1.18);
+    box-shadow:
+      var(--hd-shadow),
+      0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  }
 }
 
 @media only screen and (max-width: 35em) {
-  .DonateBox {
-    width: 95%;
+  .donateMain {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.35rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.85rem
+      max(0.75rem, env(safe-area-inset-right, 0px));
   }
-  .DonateBox_box {
-    width: 95%;
-  }
+
   .DonateBox_box_input input {
-    width: 50%;
+    font-size: 1.15rem;
   }
+
+  .tokenPicker {
+    min-width: 5.75rem;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.6rem;
+  }
+
   .buttonBar {
-    margin-right: 1.5rem;
-    align-items: center;
-    justify-content: center;
+    gap: 0.35rem;
   }
 }

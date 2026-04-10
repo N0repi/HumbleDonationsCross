@@ -17,7 +17,7 @@ import { ethers } from "ethers";
 import { getContract, prepareContractCall } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { useWallet } from "../../Components/Wallet/WalletContext";
-import { client } from "../../Components/Model/thirdWebClient";
+import { useThirdwebClient } from "../../Components/Model/ThirdWebClientProvider";
 
 // Referral Code
 import ReferralFront from "../../Components/forms/Referral/ReferralFront.jsx";
@@ -43,6 +43,7 @@ const URIrender = () => {
     chain,
     getProvider,
   } = useWallet();
+  const client = useThirdwebClient();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {

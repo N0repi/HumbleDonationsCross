@@ -1,39 +1,130 @@
-/* Header wallet chip */
+/* Header wallet chip — inherits --hd-header-action-size from Header `.right` */
 
-.Parent {
+.walletParent {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  text-align: center;
+  min-height: var(--hd-header-action-size, 2.75rem);
+  border-radius: var(--hd-radius-pill);
+  outline: none;
+}
+
+.walletParent:focus-visible {
+  outline: 2px solid var(--hd-accent);
+  outline-offset: 3px;
 }
 
 .glassBackground {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.45rem;
-  background: var(--hd-surface);
-  border-radius: var(--hd-radius-pill);
+  justify-content: flex-start;
+  flex: 1;
+  min-height: var(--hd-header-action-size, 2.75rem);
+  border-radius: var(
+    --hd-radius-pill
+  ); /*   border-radius: var(--hd-radius-sm); */
   border: 1px solid var(--hd-glass-border);
-  box-shadow: var(--hd-shadow-soft);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 0.4rem 0.85rem 0.4rem 0.5rem;
   margin-left: 0.35rem;
+  box-sizing: border-box;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.22s ease,
+    transform 0.18s ease;
+}
+
+.walletParent:hover .glassBackground {
+  border-color: var(--hd-accent-glow);
+  box-shadow:
+    0 0 0 1px rgba(228, 100, 190, 0.1),
+    var(--hd-shadow-soft);
+}
+
+.walletParent:active .glassBackground {
+  transform: scale(0.98);
+}
+
+/* Logged out: same glass language as docs; small radial as accent only */
+.glassLogin {
+  gap: 0.48rem;
+  padding: 0 0.8rem 0 0.72rem;
+  background: var(--hd-glass-highlight);
+  box-shadow: var(--hd-shadow-soft);
+}
+
+.walletParent:hover .glassLogin {
+  background: var(--hd-accent-dim);
+}
+
+/* Compact gradient jewel — not a full-height rail */
+.radial {
+  width: 1.32rem;
+  height: 1.32rem;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background-image: radial-gradient(
+    at left bottom,
+
+    rgba(236, 218, 236, 1) 15%,
+    rgba(228, 75, 202, 1) 69%
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+    0 1px 6px rgba(200, 70, 155, 0.28);
+}
+
+.loginLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--hd-text);
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Connected: neutral chip + smaller accent */
+.glassConnected {
+  gap: 0.45rem;
+  padding: 0.35rem 0.7rem 0.35rem 0.6rem;
+  background: var(--hd-surface);
+  box-shadow: var(--hd-shadow-soft);
+}
+
+.radialCompact {
+  width: 1.32rem;
+  height: 1.32rem;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background-image: radial-gradient(
+    at left bottom,
+
+    rgba(236, 218, 236, 1) 15%,
+    rgba(228, 75, 202, 1) 69%
+  );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 1px 4px rgba(180, 60, 130, 0.22);
 }
 
 .radial {
-  width: 1.65rem;
-  height: 1.65rem;
-  border-radius: 8px;
+  width: 1.32rem;
+  height: 1.32rem;
   flex-shrink: 0;
+  border-radius: 7px;
   background-image: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.4),
-    var(--hd-accent) 60%
+    at left bottom,
+
+    rgba(236, 218, 236, 1) 15%,
+    rgba(228, 75, 202, 1) 69%
   );
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+    0 1px 6px rgba(200, 70, 155, 0.28);
 }
 
 .right {
@@ -41,14 +132,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  gap: 0.2rem;
+  gap: 0.12rem;
   min-width: 0;
-}
-
-/* Connect only: one button from Wallet/ConnectButton */
-.right:has(> button:only-child) {
-  flex-direction: row;
-  align-items: center;
+  flex: 1;
 }
 
 .address {
@@ -66,4 +152,17 @@
   font-size: 0.72rem;
   color: var(--hd-accent);
   font-weight: 600;
+}
+
+@media only screen and (max-width: 650px) {
+  .glassLogin {
+    padding-left: 0.65rem;
+    padding-right: 0.72rem;
+    gap: 0.42rem;
+  }
+
+  .radial {
+    width: 1.22rem;
+    height: 1.22rem;
+  }
 }

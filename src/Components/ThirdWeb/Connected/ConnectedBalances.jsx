@@ -2,7 +2,7 @@
 
 import { useBalance, useAccount } from "wagmi";
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
-import { client } from "../../Model/thirdWebClient";
+import { useThirdwebClient } from "../../Model/ThirdWebClientProvider";
 
 const formatBalance = (balance) => {
   const parsedBalance = parseFloat(balance);
@@ -30,6 +30,7 @@ const formatBalance = (balance) => {
 };
 
 export default function HumbleDonationsBalance({ tokens, chain }) {
+  const client = useThirdwebClient();
   const { address: wagmiAddress } = useAccount();
   const activeAccount = useActiveAccount();
 

@@ -1,17 +1,24 @@
-/* CreateForm.module.css */
+/* Create project — glass fields + gradient CTA (aligned with SwapFront) */
+
+.formMain {
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem 1.5rem;
+  box-sizing: border-box;
+}
 
 .Parent {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
   max-width: 50rem;
   margin: 0 auto;
   box-sizing: border-box;
 }
 
-/* Block-level labels so fields span the same width as the form */
 .Parent > label {
   display: block;
   width: 100%;
@@ -20,78 +27,138 @@
   box-sizing: border-box;
 }
 
-.addProjectContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.fieldLabel {
+  display: block;
+  margin: 0 0 0.35rem 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--hd-text-muted);
+}
+
+.fieldBlock {
   width: 100%;
   max-width: 50rem;
-  margin: 0 auto;
-}
-
-.AddProject {
-  text-align: center;
-  height: 4rem;
-  width: 7rem;
-  background-color: var(--hd-accent);
-  border-radius: 0.5rem;
-  border: 1px solid var(--hd-accent-glow);
-  padding: 10px;
-  color: var(--hd-text-inverse);
-  font-weight: bold;
-  transition: transform 1.2s ease;
-}
-
-.AddProject:hover {
-  transform: scale(1.05);
-  cursor: pointer;
-  color: var(--hd-text-inverse);
-}
-
-.wrapper {
-  width: 100%;
-  max-width: 50rem;
-  margin: 0 auto 1.5rem;
-  background-color: var(--hd-surface);
-  border-radius: var(--hd-radius-md);
+  margin: 0 auto 1.1rem;
+  background: var(--hd-surface);
+  border-radius: var(--hd-radius-lg);
   border: 1px solid var(--hd-glass-border);
-  padding: 1.35rem 1.5rem 1.5rem;
+  box-shadow: var(--hd-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1.15rem 1.35rem 1.25rem;
   box-sizing: border-box;
 }
 
-.wrapper span {
-  /* color: #4671ea; */
-  color: #fff;
-  font-size: 28px;
-  font-weight: bold;
-  text-align: center;
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid var(--hd-accent-glow);
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--hd-radius-md);
+  background: rgba(0, 0, 0, 0.2);
+  margin-top: 0;
+  box-sizing: border-box;
 }
 
-.wrapper textarea {
-  width: 100%;
-  height: 59px;
-  padding: 15px;
-  outline: none;
-  resize: none;
-  font-size: 16px;
-  margin-top: 20px;
-  border-radius: 5px;
-  border-color: #bfbfbf;
-  background-color: var(--hd-surface);
+.inputRow:focus-within {
+  border-color: var(--hd-accent);
+  box-shadow: 0 0 0 3px var(--hd-accent-dim);
 }
 
-.wrapper input {
+.inputRow input,
+.inputRow textarea {
+  flex: 1;
+  min-width: 0;
   width: 100%;
-  height: 19.5px;
-  padding: 5px;
-  outline: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--hd-text);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  margin: 0;
+  padding: 0;
   resize: none;
-  font-size: 16px;
-  margin-top: 20px;
-  border-radius: 5px;
-  border-color: #bfbfbf;
-  background-color: var(--hd-surface);
-  text-align: center;
+}
+
+.inputRow textarea {
+  min-height: 4.5rem;
+  line-height: 1.45;
+}
+
+.inputRow input::placeholder,
+.inputRow textarea::placeholder {
+  color: var(--hd-text-muted);
+}
+
+.inputRowTextarea {
+  align-items: stretch;
+}
+
+.addProjectContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0.5rem auto 0;
+}
+
+.primaryButtonBar {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.AddProject {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    var(--hd-accent) 0%,
+    #c94bb8 50%,
+    var(--hd-accent-hover) 100%
+  );
+  color: var(--hd-text-inverse);
+  border: none;
+  border-radius: var(--hd-radius-pill);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow:
+    0 4px 20px var(--hd-accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.AddProject:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow:
+    0 8px 28px var(--hd-accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.AddProject:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.AddProject:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
 }
 
 .optionalMediaContainer {
@@ -100,7 +167,7 @@
   gap: 1.25rem;
   width: 100%;
   max-width: 50rem;
-  margin: 0 auto;
+  margin: 0 auto 1rem;
   box-sizing: border-box;
 }
 
@@ -108,15 +175,23 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.35rem;
+  gap: 0.5rem;
   width: 100%;
   min-width: 0;
+  background: var(--hd-surface);
+  border-radius: var(--hd-radius-lg);
+  border: 1px solid var(--hd-glass-border);
+  box-shadow: var(--hd-shadow-soft);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 1.1rem 1.25rem 1.2rem;
+  box-sizing: border-box;
 }
 
 .optionalMediaContainer > label {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
   min-width: 0;
 }
@@ -127,58 +202,31 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  margin-top: 0.75rem;
+  margin-top: 0.35rem;
   box-sizing: border-box;
 }
 
-.websiteWrapper span {
-  color: #fff;
-  font-size: 28px;
-  font-weight: bold;
-  margin-right: 1rem; /* Add margin to separate the label */
+.linkIcon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
 }
-
-.websiteWrapper input {
-  flex: 1; /* Allow the input to grow to fill available space */
-  height: 19.5px;
-  padding: 5px;
-  outline: none;
-  resize: none;
-  font-size: 16px;
-  border-radius: 5px;
-  border-color: #bfbfbf;
-  background-color: var(--hd-surface);
-  text-align: center;
-}
-
-/* not working past this point */
-.textarea:is(:focus, :valid) {
-  border-width: 2px;
-  padding: 14px;
-  border-color: #4671ea;
-}
-
-.textarea::-webkit-scrollbar {
-  width: 0px;
-}
-
-.textarea::-webkit-scrollbar-track {
-  background-color: var(--hd-surface-raised);
-}
-
-.textarea::-webkit-scrollbar-thumb {
-  background-color: var(--hd-accent);
-  border-radius: 4px;
-}
-
-/* ... previous styles ... */
 
 .dropdownWrapper {
   flex-grow: 1;
   width: 100%;
-  max-width: 24rem;
-  margin: 0 auto;
+  max-width: 50rem;
+  margin: 0 auto 1rem;
   box-sizing: border-box;
+  background: var(--hd-surface);
+  border-radius: var(--hd-radius-lg);
+  border: 1px solid var(--hd-glass-border);
+  box-shadow: var(--hd-shadow-soft);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 1rem 1.15rem 1.15rem;
 }
 
 .dropdownIcon {
@@ -190,109 +238,129 @@
 }
 
 .select {
-  height: 100%;
-  margin-bottom: 1.2rem;
-  scrollbar-color: var(--hd-accent);
-  overflow: auto;
-
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
-  mask-image: radial-gradient(white, black);
-  scrollbar-color: var(--hd-accent);
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--hd-accent);
-    border-radius: 1rem;
-  }
-  /* Handle on hover */
-  &::-webkit-scrollbar-thumb:hover {
-    background: #c741b1;
-  }
-  /* Apply styles to the selected option in the dropdown */
-  option:checked {
-    background-color: #c741b1; /* Change the background color */
-    color: white; /* Change the text color */
-  }
-
-  /* Apply styles to the highlight color */
-  option:checked::selection {
-    background-color: #c741b1; /* Change the highlight color */
-    color: white; /* Change the text color */
-  }
   height: 10rem;
   width: 100%;
+  margin-bottom: 0;
+  margin-top: 0.5rem;
   padding: 0.5rem;
-  background-color: var(--hd-surface);
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--hd-accent-glow);
+  border-radius: var(--hd-radius-md);
+  color: var(--hd-text);
+  font-size: 0.95rem;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  scrollbar-color: var(--hd-accent) transparent;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--hd-accent);
+  box-shadow: 0 0 0 3px var(--hd-accent-dim);
+}
+
+.select::-webkit-scrollbar {
+  width: 8px;
+}
+
+.select::-webkit-scrollbar-thumb {
+  background: var(--hd-accent);
   border-radius: 1rem;
+}
+
+.select::-webkit-scrollbar-thumb:hover {
+  background: #c741b1;
+}
+
+.select option:checked {
+  background-color: #c741b1;
+  color: white;
 }
 
 .selectedTags {
   display: flex;
   flex-wrap: wrap;
-  margin: 1rem;
+  margin: 0.35rem 0 0.65rem;
   gap: 0.5rem;
 }
 
 .selectedTag {
-  background-color: var(--hd-surface-raised);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  margin-right: 0.5rem;
+  background: var(--hd-surface-raised);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--hd-radius-pill);
+  border: 1px solid var(--hd-glass-border);
+  margin-right: 0;
   display: flex;
   align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--hd-text);
 }
 
 .removeTag {
   cursor: pointer;
-  margin-left: 0.25rem;
+  margin-left: 0.35rem;
+  opacity: 0.85;
 }
 
-.AddProject {
-  margin-top: 20px; /* Add margin to push them below .mediaWrapper */
+.removeTag:hover {
+  opacity: 1;
+  color: var(--hd-accent);
 }
 
 .mintRate {
-  margin-top: 1.25rem;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  background: rgba(80, 78, 78, 0.2); /* White with 20% opacity */
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--hd-radius-md);
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--hd-glass-border);
+  margin-bottom: 1rem;
+  color: var(--hd-text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
 
-  border: 1px solid;
-  border-color: rgba(80, 78, 78, 0.15);
-  margin-bottom: 3rem;
+.mintRate span {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--hd-text-muted);
 }
 
 .mintRateContainer {
   position: relative;
   display: inline-block;
   cursor: pointer;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
 }
 
-/* Tooltip text hidden by default */
 .tooltipText {
   visibility: hidden;
   width: 12.5rem;
-  background: rgba(80, 78, 78, 0.8);
-
-  border: 1px solid;
-  border-color: rgba(105, 104, 104, 0.7);
-
+  background: var(--hd-surface-raised);
+  border: 1px solid var(--hd-glass-border);
+  color: var(--hd-text);
   text-align: center;
-  padding: 0.3rem;
-  border-radius: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--hd-radius-md);
   position: absolute;
   z-index: 1;
-  bottom: 125%; /* Position above the mint rate text */
+  bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;
   transition: opacity 0.3s;
+  font-size: 0.8rem;
+  box-shadow: var(--hd-shadow-soft);
+  backdrop-filter: blur(12px);
 }
 
-/* Show tooltip text on hover */
 .mintRateContainer:hover .tooltipText {
   visibility: visible;
   opacity: 1;
@@ -303,6 +371,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 0.5rem;
 }
 
 .fileLabel {
@@ -310,172 +379,111 @@
 }
 
 .hiddenFileInput {
-  display: none; /* Hide the file input completely */
+  display: none;
 }
 
 .imageUploadPreview {
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 2px solid #ccc;
+  border-radius: var(--hd-radius-md);
+  border: 1px solid var(--hd-glass-border);
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--hd-shadow-soft);
 }
 
 .imageUploadPreview:hover {
-  border-color: var(--hd-accent); /* Highlight on hover */
+  border-color: var(--hd-accent-glow);
+  box-shadow: 0 0 0 3px var(--hd-accent-dim);
 }
 
 .uploadButton {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: var(--hd-accent);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
+  margin-top: 0.85rem;
+  padding: 0.55rem 1.15rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--hd-text);
+  background: var(--hd-glass-highlight);
+  border: 1px solid var(--hd-glass-border);
+  border-radius: var(--hd-radius-pill);
   cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.uploadButton:hover:not(:disabled) {
+  background: var(--hd-accent-dim);
+  border-color: var(--hd-accent-glow);
 }
 
 .uploadButton:disabled {
-  background-color: #aaa;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .enterReferralCode {
-  border-radius: 0.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--hd-radius-md);
   text-align: center;
+  border: 1px solid var(--hd-glass-border);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--hd-text);
+  font-size: 0.95rem;
+}
+
+.enterReferralCode:focus {
+  outline: none;
+  border-color: var(--hd-accent);
+  box-shadow: 0 0 0 3px var(--hd-accent-dim);
+}
+
+.textarea:is(:focus, :valid) {
+  border-width: 0;
+}
+
+.textarea::-webkit-scrollbar {
+  width: 0;
 }
 
 @media only screen and (max-width: 36rem) {
-  .AddProject {
-    font-size: 15px;
-    text-align: center;
-    height: 3rem;
-    width: 7rem;
-    background-color: var(--hd-accent);
-    border-radius: 0.5rem;
-    padding: 10px;
-    color: white;
-    font-weight: bold;
-    transition: transform 1.2s ease;
-    /* Center the button horizontally */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .wrapper {
-    width: 100%;
-    max-width: 50rem;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: var(--hd-surface);
-    border-radius: 5px;
-    padding: 1.15rem 1.15rem 1.25rem;
-    margin-bottom: 1.5rem;
+  .formMain {
+    padding: 0.35rem 0.75rem 1.25rem;
   }
 
-  .wrapper span {
-    /* color: #4671ea; */
-    color: #fff;
-    font-size: 26px;
-    font-weight: bold;
-    text-align: center;
+  .fieldBlock {
+    padding: 1rem 1.1rem 1.1rem;
+    margin-bottom: 0.95rem;
   }
 
-  .wrapper textarea {
-    width: 100%;
-    height: 59px;
-    padding: 15px;
-    outline: none;
-    resize: none;
-    font-size: 16px;
-    margin-top: 20px;
-    border-radius: 5px;
-    border-color: #bfbfbf;
-    background-color: var(--hd-surface);
+  .inputRow input,
+  .inputRow textarea {
+    font-size: 0.95rem;
   }
 
-  .wrapper input {
-    width: 100%;
-    height: 19.5px;
-    padding: 5px;
-    outline: none;
-    resize: none;
-    font-size: 16px;
-    margin-top: 20px;
-    border-radius: 5px;
-    border-color: #bfbfbf;
-    background-color: var(--hd-surface);
-    text-align: center;
-  }
-
-.optionalMediaContainer {
+  .optionalMediaContainer {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    width: 100%;
-    max-width: 50rem;
-    margin: 0 auto;
-  }
-
-  .websiteWrapper {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    align-items: center;
-    margin-top: 0.75rem;
-  }
-
-  .websiteWrapper span {
-    color: #fff;
-    font-size: 28px;
-    font-weight: bold;
-    margin-right: 1rem; /* Add margin to separate the label */
-  }
-
-  .websiteWrapper input {
-    flex: 1; /* Allow the input to grow to fill available space */
-    height: 19.5px;
-    padding: 5px;
-    outline: none;
-    resize: none;
-    font-size: 16px;
-    border-radius: 5px;
-    border-color: #bfbfbf;
-    background-color: var(--hd-surface);
-    text-align: center;
-  }
-  .select {
-    scrollbar-color: var(--hd-accent);
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--hd-accent);
-      border-radius: 22px;
-    }
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-      background: #c741b1;
-    }
-    height: 100%;
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 20px;
-    background-color: var(--hd-surface);
-  }
-  .mintRate {
-    font-size: 20px;
+    gap: 1rem;
   }
 
   .dropdownWrapper {
-    flex-grow: 1;
-    width: 100%;
-    max-width: 18rem;
-    margin: 0 auto 1.75rem;
-    height: 15rem;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .select {
+    font-size: 0.9rem;
+  }
+
+  .select::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .select::-webkit-scrollbar-thumb {
+    border-radius: 22px;
   }
 }

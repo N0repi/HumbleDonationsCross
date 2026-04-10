@@ -153,7 +153,7 @@ export default function Head() {
         </div>
       </div>
       <div className={`${Style.right}`}>
-        <div>
+        <div className={Style.headerIconSlot}>
           <a
             className={Style.docLink}
             href="https://docs.humbledonations.com/Introduction"
@@ -174,15 +174,16 @@ export default function Head() {
         )}
         <div>{/* Profile-related actions */}</div>
         {openModel && <Model setOpenModel={setOpenModel} connect="Connect" />}
-        <div className={Style.WalletModal}>
+        <div className={Style.headerWalletSlot}>
           <InAppWallet
             setOpenModel={setOpenModel}
             handleInAppWalletClick={handleInAppWalletClick}
           />
         </div>
-        {openWalletModal && (
-          <WalletModal setOpenWalletModal={setOpenWalletModal} />
-        )}
+        <WalletModal
+          isOpen={openWalletModal}
+          onClose={() => setOpenWalletModal(false)}
+        />
       </div>
     </nav>
   );

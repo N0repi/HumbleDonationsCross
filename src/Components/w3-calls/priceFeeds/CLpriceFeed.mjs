@@ -4,34 +4,41 @@ import { ethers } from "ethers";
 import aggregatorV3InterfaceABI from "./abis/aggregatorV3InterfaceABI.json" assert { type: "json" };
 import { getConfig } from "../../../utils/constants.js";
 
-// Function to dynamically choose the provider based on the chainId
-function getProvider(chainId) {
+// Read-only RPCs for Chainlink calls. Wallet / AA providers often fail eth_call to oracles
+// (missing revert data) while public nodes return round data reliably.
+function getOracleReadProvider(chainId) {
   if (chainId === 146) {
-    // Use Fantom Opera's public RPC for Sonic
     return new ethers.JsonRpcProvider("https://fantom-rpc.publicnode.com");
-  } else {
-    // Default to using the connected wallet's provider for Sepolia
+  }
+  if (chainId === 42161) {
+    return new ethers.JsonRpcProvider("https://arbitrum-one.publicnode.com");
+  }
+  if (chainId === 11155111) {
+    const alchemyKey = process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA_API_KEY;
+    if (alchemyKey) {
+      return new ethers.JsonRpcProvider(
+        `https://eth-sepolia.g.alchemy.com/v2/${alchemyKey}`
+      );
+    }
+    return new ethers.JsonRpcProvider("https://ethereum-sepolia.publicnode.com");
+  }
+  if (typeof window !== "undefined" && window.ethereum) {
     return new ethers.BrowserProvider(window.ethereum);
   }
+  return new ethers.JsonRpcProvider("https://arbitrum-one.publicnode.com");
 }
 
 // Dynamically fetch price data based on chainId and selected provider
 async function fetchPriceData(feedAddress, chainId) {
-  const provider = getProvider(chainId);
+  const provider = getOracleReadProvider(chainId);
   const priceFeed = new ethers.Contract(
     feedAddress,
     aggregatorV3InterfaceABI,
     provider
   );
 
-  try {
-    const roundData = await priceFeed.latestRoundData();
-    const price = roundData.answer;
-    return price;
-  } catch (error) {
-    console.error(`Error fetching price from ${feedAddress}:`, error.message);
-    throw error;
-  }
+  const roundData = await priceFeed.latestRoundData();
+  return roundData.answer;
 }
 
 // Fetch ETH to USD price based on chainId
@@ -61,7 +68,7 @@ export async function getJPYtoETHPrice(chainId) {
     console.log(`JPY to ETH price: ${jpyToEthPrice}`);
     return jpyToEthPrice;
   } catch (error) {
-    console.error("Error calculating JPY/ETH price:", error.message);
+    console.warn("JPY/ETH oracle price unavailable:", error.message);
     throw error;
   }
 }

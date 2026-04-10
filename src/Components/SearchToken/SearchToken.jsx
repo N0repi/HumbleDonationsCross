@@ -1,13 +1,14 @@
 // SearchToken.jsx
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { ethers } from "ethers";
 import Image from "next/image";
 import Style from "./SearchToken.module.css";
 import images from "../../assets";
 import { myTokenList } from "./tokenListNoDupes.json";
 import TokenListMulticall from "../../../artifacts/contracts/TokenListMulticall.sol/TokenListMulticall.json";
-import { client } from "../Model/thirdWebClient";
+import { useThirdwebClient } from "../Model/ThirdWebClientProvider";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import { useWallet } from "../../Components/Wallet/WalletContext";
 import { getConfig } from "../../utils/constants.js";
@@ -117,12 +118,13 @@ const formatBalance = (balance) => {
   return parsedBalance.toFixed(3);
 };
 
-const SearchToken = ({ openToken, tokens }) => {
+const SearchToken = ({ openToken, tokens, prependTokens = [] }) => {
   const [active, setActive] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [balances, setBalances] = useState([]);
   const { walletType, chain, wagmiAddress, thirdwebActiveAccount } =
     useWallet();
+  const client = useThirdwebClient();
 
   const effectiveChainId = chain?.id ?? DEFAULT_TOKEN_LIST_CHAIN_ID;
   const userAddress =
@@ -133,11 +135,23 @@ const SearchToken = ({ openToken, tokens }) => {
   useEffect(() => {
     let cancelled = false;
 
-    const staticListForChain = () =>
-      resolveTokensForChain(effectiveChainId).map((t) => ({
+    const withPrepended = (list) => {
+      const injected = prependTokens.map((t, idx) => ({
         ...t,
         balance: "",
+        id: `prepend-${idx}-${t.symbol}`,
       }));
+      return [...injected, ...list];
+    };
+
+    const staticListForChain = () =>
+      withPrepended(
+        resolveTokensForChain(effectiveChainId).map((t, i) => ({
+          ...t,
+          balance: "",
+          id: t.id ?? `list-${effectiveChainId}-${i}-${t.address}`,
+        }))
+      );
 
     const load = async () => {
       if (!userAddress) {
@@ -168,7 +182,11 @@ const SearchToken = ({ openToken, tokens }) => {
           userAddress
         );
         if (!cancelled) {
-          setBalances(tokenBalances);
+          const withIds = tokenBalances.map((t, i) => ({
+            ...t,
+            id: t.id ?? `bal-${effectiveChainId}-${i}-${t.address}`,
+          }));
+          setBalances(withPrepended(withIds));
         }
       } catch (error) {
         console.error("SearchToken - Error fetching token balances:", error);
@@ -189,6 +207,7 @@ const SearchToken = ({ openToken, tokens }) => {
     chain,
     thirdwebActiveAccount?.address,
     wagmiAddress,
+    prependTokens,
   ]);
 
   // Filter tokens based on the search query
@@ -199,15 +218,24 @@ const SearchToken = ({ openToken, tokens }) => {
     );
   });
 
-  return (
+  const modal = (
     <div className={Style.ModalContainer}>
-      <div className={Style.ModalClose} onClick={() => openToken(false)}></div>
+      <div
+        className={`${Style.ModalClose} ${Style.modalBackdropEnter}`}
+        onClick={() => openToken(false)}
+        aria-hidden="true"
+      />
 
-      <div className={Style.SearchToken}>
+      <div
+        className={`${Style.SearchToken} ${Style.searchTokenPanelEnter}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="search-token-heading"
+      >
         <div className={Style.SearchToken_box_tokens_container}>
           <div className={Style.SearchToken_box}>
             <div className={Style.SearchToken_box_heading}>
-              <h4>Select a token</h4>
+              <h4 id="search-token-heading">Select a token</h4>
             </div>
             <div className={Style.SearchToken_box_search}>
               <div className={Style.SearchToken_box_search_img}>
@@ -229,7 +257,7 @@ const SearchToken = ({ openToken, tokens }) => {
             <div className={Style.SearchToken_box_tokens}>
               {filteredTokens.map((el, i) => (
                 <TokenItem
-                  key={i + 1}
+                  key={el.id ?? `${el.address}-${el.symbol}-${i}`}
                   el={el}
                   active={active}
                   setActive={setActive}
@@ -244,6 +272,12 @@ const SearchToken = ({ openToken, tokens }) => {
       </div>
     </div>
   );
+
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(modal, document.body);
 };
 
 const TokenItem = ({
@@ -268,6 +302,7 @@ const TokenItem = ({
           address: el.address,
           chainId: selectionChainId,
           decimals: el.decimals,
+          ...(el.isStripeUsd ? { isStripeUsd: true } : {}),
         };
         tokens(tokenData); // Pass the token data to tokens
         console.log("Rendering Token After:", tokenData);

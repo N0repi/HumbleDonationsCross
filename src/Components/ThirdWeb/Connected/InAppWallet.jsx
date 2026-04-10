@@ -5,14 +5,12 @@ import Style from "./InAppWallet.module.css";
 
 import ConnectedWallet from "./ConnectedWallet.jsx";
 import HumbleDonationsBalance from "./ConnectedBalances.jsx";
-import ConnectButton from "../../Wallet/ConnectButton.jsx";
 import { useWallet } from "../../Wallet/WalletContext";
 import { getConfig } from "../../../utils/constants.js";
 
 export default function InAppWallet({ setOpenModel, handleInAppWalletClick }) {
   const {
     walletType,
-    wagmiAddress,
     thirdWebConnectionStatus,
     wagmiIsConnected,
     chain,
@@ -24,11 +22,12 @@ export default function InAppWallet({ setOpenModel, handleInAppWalletClick }) {
 
   const handleClick = () => {
     if (isWalletConnected) {
-      handleInAppWalletClick(); // Open wallet modal if wallet is connected
+      handleInAppWalletClick();
     } else {
-      setOpenModel(true); // Open connect modal if wallet is not connected
+      setOpenModel(true);
     }
   };
+
   const { HDT } = getConfig(chain?.id);
   const HumbleDonationsToken = {
     name: "Humble Donations Token",
@@ -40,16 +39,35 @@ export default function InAppWallet({ setOpenModel, handleInAppWalletClick }) {
     chainId: chain?.id,
   };
 
-  console.log("InAppWallet chain  -  ", chain);
-
   return (
-    <div className={Style.Parent} onClick={handleClick}>
-      <div className={Style.glassBackground}>
-        <div className={Style.radial}></div>
-        <div className={Style.right}>
-          <ConnectButton />
-          {isWalletConnected && (
-            <>
+    <div
+      className={Style.walletParent}
+      data-tour="walletParent"
+      role="button"
+      tabIndex={0}
+      aria-label={isWalletConnected ? "Open wallet" : "Log in"}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+    >
+      <div
+        className={`${Style.glassBackground} ${
+          isWalletConnected ? Style.glassConnected : Style.glassLogin
+        }`}
+      >
+        {!isWalletConnected ? (
+          <>
+            <span className={Style.radial} aria-hidden />
+            <span className={Style.loginLabel}>Log in</span>
+          </>
+        ) : (
+          <>
+            <span className={Style.radialCompact} aria-hidden />
+            <div className={Style.right}>
               <div className={Style.address}>
                 <ConnectedWallet />
               </div>
@@ -59,9 +77,9 @@ export default function InAppWallet({ setOpenModel, handleInAppWalletClick }) {
                   chain={chain}
                 />
               </div>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

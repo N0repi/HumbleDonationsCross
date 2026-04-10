@@ -1,86 +1,75 @@
-// Web2.jsx
+// Web2.jsx — ConnectEmbed; client from ThirdwebClientProvider (wispi workflow).
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
-import {
-  ConnectEmbed,
-  darkTheme,
-  useActiveAccount,
-  useActiveWallet,
-  useActiveWalletChain,
-} from "thirdweb/react";
+import { ConnectEmbed, darkTheme, useActiveWallet } from "thirdweb/react";
 import { inAppWallet } from "thirdweb/wallets";
-import { arbitrum } from "thirdweb/chains";
-import { sonicMainnet } from "../../constants/thirdwebChains/sonicMainnet.ts";
+import { arbitrum, sepolia } from "thirdweb/chains";
 
-import { client } from "./thirdWebClient";
-import Style from "./Web2.module.css";
+import { useThirdwebClient } from "./ThirdWebClientProvider";
+import { sonicMainnet } from "../../constants/thirdwebChains/sonicMainnet";
 
-const wallets = [
-  inAppWallet({
-    auth: {
-      options: ["google", "discord", "apple", "telegram", "phone"],
-    },
-    // ** when Bundler & Paymaster are added to Thirdweb - uncomment **
-    // accountAbstraction: {
-    //   chain: sonicMainnet, // the chain where your smart accounts will be or is deployed
-    //   sponsorGas: true, // enable or disable sponsored transactions
-    // },
-    // ** when Bundler & Paymaster are added to Thirdweb - uncomment **
-  }),
-];
+/** Default + smart-account home chain (sponsored gas is per-chain). */
+const smartAccountChain = arbitrum;
+
+const supportedChains = [sepolia, arbitrum, sonicMainnet];
 
 export default function Web2({ setOpenModel }) {
-  const [siweActive, setSiweActive] = useState(false);
-  const activeAccount = useActiveAccount();
+  const client = useThirdwebClient();
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024,
+  );
   const wallet = useActiveWallet();
-  const activeChain = useActiveWalletChain();
 
-  useEffect(() => {
-    if (activeAccount?.address) {
-      // Additional logic if needed
-    }
-  }, [activeAccount]);
+  const wallets = useMemo(
+    () => [
+      inAppWallet({
+        auth: {
+          options: ["google", "discord", "apple", "telegram", "phone"],
+        },
+        smartAccount: {
+          chain: smartAccountChain,
+          sponsorGas: true,
+        },
+      }),
+    ],
+    [],
+  );
 
-  console.log("thirdweb address", activeAccount?.address);
-  console.log("thirdweb active chain", activeChain);
-
-  // console.log("wagmi Connected address:", account?.address)
-
-  // Handle the connection event from ConnectEmbed
   useEffect(() => {
     if (wallet) {
-      // Trigger SIWE authentication when a thirdweb wallet is connected
-
-      setSiweActive(true);
-      if (setOpenModel) setOpenModel(false); // Close modal if setOpenModel is provided
+      if (setOpenModel) setOpenModel(false);
     }
   }, [wallet, setOpenModel]);
 
-  const getEmbedStyles = () => ({
-    width: "100%",
-    maxWidth: "100%",
-    minWidth: 0,
-    height: "auto",
-    boxSizing: "border-box",
-  });
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getEmbedStyles = () => {
+    if (windowWidth <= 400) return { width: "20rem", height: "auto" };
+    if (windowWidth <= 600) return { width: "20rem", height: "auto" };
+    return { width: "100%", height: "auto" };
+  };
 
   return (
-    <div className={Style.embedRoot}>
-      <ConnectEmbed
-        client={client}
-        chain={arbitrum}
-        wallets={wallets}
-        theme={darkTheme({
-          colors: {
-            modalBg: "#1e1e1e",
-            accentText: "#e44bca",
-            borderColor: "#b078a8",
-            separatorLine: "#000000",
-          },
-        })}
-        style={getEmbedStyles()}
-      />
-    </div>
+    <ConnectEmbed
+      client={client}
+      chain={smartAccountChain}
+      chains={supportedChains}
+      autoConnect={false}
+      wallets={wallets}
+      theme={darkTheme({
+        colors: {
+          modalBg: "#1e1e1e",
+          accentText: "#e44bca",
+          borderColor: "#b078a8",
+          separatorLine: "#000000",
+        },
+      })}
+      style={getEmbedStyles()}
+    />
   );
 }

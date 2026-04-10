@@ -11,7 +11,7 @@ import { computeMerkleProof } from "./whiteList/merkle";
 import { approve } from "thirdweb/extensions/erc20";
 import { getContract, prepareContractCall, waitForReceipt } from "thirdweb";
 import { useSendTransaction, useReadContract } from "thirdweb/react";
-import { client } from "../../Components/Model/thirdWebClient";
+import { useThirdwebClient } from "../Model/ThirdWebClientProvider";
 import erc20ABI from "./erc20.json" assert { type: "json" };
 import { getConfig } from "../../utils/constants.js";
 
@@ -26,9 +26,9 @@ async function getNetworkConfig(chainId) {
   return { contractAddress, ABI, NATIVE, HDT, explorer };
 }
 
-async function ethersGetPercentage(chain, contractAddress, ABI) {
+async function ethersGetPercentage(chain, contractAddress, ABI, twClient) {
   const provider = ethers6Adapter.provider.toEthers({
-    client: client,
+    client: twClient,
     chain: chain,
   });
   const HumbleDonations = new ethers.Contract(contractAddress, ABI, provider);
@@ -41,9 +41,9 @@ async function ethersGetPercentage(chain, contractAddress, ABI) {
   }
 }
 
-async function getContractERC20(tokenInput, chain) {
+async function getContractERC20(tokenInput, chain, twClient) {
   return getContract({
-    client: client,
+    client: twClient,
     chain: chain,
     address: tokenInput.address,
     abi: erc20ABI,
@@ -75,7 +75,8 @@ async function calculateSlippage(
   tokenQuantity,
   tokenInput,
   taxPercentage,
-  chain
+  chain,
+  twClient,
 ) {
   console.log("chain:", chain);
   const chainId = chain.id;
@@ -89,7 +90,7 @@ async function calculateSlippage(
   };
 
   const provider = ethers6Adapter.provider.toEthers({
-    client: client,
+    client: twClient,
     chain: chain,
   });
 
@@ -220,6 +221,7 @@ async function calculateSlippage(
 }
 
 export function useApproveTokenAbstracted() {
+  const twClient = useThirdwebClient();
   const { mutate: sendTransaction } = useSendTransaction();
   const donateTokenAbstracted = useDonateTokenAbstracted();
 
@@ -240,7 +242,7 @@ export function useApproveTokenAbstracted() {
         tokenInput.decimals
       );
 
-      const ERC20instance = await getContractERC20(tokenInput, chain);
+      const ERC20instance = await getContractERC20(tokenInput, chain, twClient);
 
       const approvalTx = await approve({
         contract: ERC20instance,
@@ -255,7 +257,7 @@ export function useApproveTokenAbstracted() {
           setApprovalHash(transactionHash);
 
           const receipt = await waitForReceipt({
-            client: client,
+            client: twClient,
             chain: chain,
             transactionHash: transactionHash,
           });
@@ -287,6 +289,7 @@ export function useApproveTokenAbstracted() {
 }
 
 export function useDonateTokenAbstracted() {
+  const twClient = useThirdwebClient();
   const { mutate: sendTransaction } = useSendTransaction();
 
   const donateTokenAbstracted = async (
@@ -301,9 +304,10 @@ export function useDonateTokenAbstracted() {
     const { contractAddress, ABI } = getConfig(chainId);
     try {
       const taxPercentage = await ethersGetPercentage(
-        chainId,
+        chain,
         contractAddress,
-        ABI
+        ABI,
+        twClient,
       );
 
       console.log("tokenQuantity:", tokenQuantity);
@@ -317,7 +321,8 @@ export function useDonateTokenAbstracted() {
         tokenQuantity,
         tokenInput,
         taxPercentage,
-        chain
+        chain,
+        twClient,
       );
 
       const tokenQuantityInEthFormat = ethers.parseUnits(
@@ -329,7 +334,7 @@ export function useDonateTokenAbstracted() {
 
       const sendAbstractedTx = prepareContractCall({
         contract: getContract({
-          client,
+          client: twClient,
           chain,
           address: contractAddress,
           abi: ABI,

@@ -46,3 +46,8 @@
     padding: 0.3rem 0.45rem;
   }
 }
+
+/* Placeholder when wallet + SIWE session are both active (wispi workflow) */
+.disconnectButton {
+  min-width: 0;
+}

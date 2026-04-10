@@ -9,6 +9,8 @@
   --hd-accent-hover: #f080e0;
   --hd-accent-dim: rgba(233, 99, 212, 0.22);
   --hd-accent-glow: rgba(233, 99, 212, 0.35);
+  /* Hero CTA / gradient spinners — same as index.module.css .heroCta */
+  --hd-cta-gradient-end: #c94bb8;
   --hd-bg-deep: #07050f;
   --hd-bg-mid: #120c1f;
   --hd-surface: rgba(20, 16, 36, 0.82);
@@ -51,9 +53,21 @@
       rgba(7, 5, 15, 0.82) 45%,
       rgba(7, 5, 15, 0.9) 100%
     ),
-    radial-gradient(ellipse 120% 80% at 50% -30%, rgba(233, 99, 212, 0.14), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 100% 50%, rgba(99, 102, 241, 0.08), transparent 50%),
-    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(16, 185, 129, 0.06), transparent 45%),
+    radial-gradient(
+      ellipse 120% 80% at 50% -30%,
+      rgba(233, 99, 212, 0.14),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 100% 50%,
+      rgba(99, 102, 241, 0.08),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 0% 80%,
+      rgba(16, 185, 129, 0.06),
+      transparent 45%
+    ),
     url("../assets/indexBackground/bgUneven.png");
   background-size: auto, auto, auto, auto, cover;
   background-repeat: no-repeat;
@@ -61,6 +75,14 @@
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+}
+
+/* In-app portal mount: inside _app font wrapper; stacks above WalletModal (999999) */
+#hd-portal-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1100000;
 }
 
 body {
@@ -119,7 +141,7 @@ body::-webkit-scrollbar-thumb:hover {
   @apply border-2 border-red-500 bg-red-950/80 text-red-200 py-2 px-3 rounded-lg block max-w-fit my-4 mx-auto;
 }
 
-@media only screen and (max-width: 65rem) {
+/* @media only screen and (max-width: 65rem) {
   .backgroundContainer {
     width: 100%;
     background-image:
@@ -137,5 +159,76 @@ body::-webkit-scrollbar-thumb:hover {
       radial-gradient(ellipse 100% 50% at 50% 0%, rgba(233, 99, 212, 0.1), transparent 50%),
       url("../assets/indexBackground/mobileSizes/a00147.jpg");
     background-size: auto, auto, cover;
+  }
+} */
+
+/* Thirdweb client bootstrap (shown before /api/thirdweb/config resolves) */
+.hdThirdwebBoot {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: min(50vh, 24rem);
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.hdThirdwebBootText {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--hd-text-muted);
+  text-align: center;
+}
+
+/**
+ * Loading ring — matches home hero CTA gradient
+ * (linear-gradient 135deg, var(--hd-accent), var(--hd-cta-gradient-end))).
+ */
+.hdGradientSpinner {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--hd-accent),
+    var(--hd-cta-gradient-end),
+    var(--hd-accent)
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 3px),
+    #000 calc(100% - 2px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 3px),
+    #000 calc(100% - 2px)
+  );
+  animation: hdGradientSpinnerRotate 0.85s linear infinite;
+}
+
+.hdGradientSpinner--lg {
+  width: 1.6rem;
+  height: 1.6rem;
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 3.5px),
+    #000 calc(100% - 2.5px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 3.5px),
+    #000 calc(100% - 2.5px)
+  );
+}
+
+@keyframes hdGradientSpinnerRotate {
+  to {
+    transform: rotate(360deg);
   }
 }

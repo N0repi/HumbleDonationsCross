@@ -6,7 +6,6 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta charset="UTF-8" />
           <meta
             name="description"
             content="Humble Donations is a decentralized crowdfunding and donation platform where you can support creators, startups, and causes with zero fees utilizing crypto using blockchain technology."

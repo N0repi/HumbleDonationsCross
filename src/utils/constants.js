@@ -14,6 +14,8 @@ export const ironOptions = {
 export const myTokenList = "../Components/SearchToken/tokenListNoDupes.json";
 
 export const ArbitrumOneExplorer = `https://arbiscan.io/`;
+/** Arbitrum Sepolia testnet */
+export const ArbitrumSepoliaExplorer = `https://sepolia.arbiscan.io/`;
 export const SonicExplorer = `https://sonicscan.org/`;
 export const SepoliaExplorer = `https://sepolia.etherscan.io/`;
 
@@ -79,6 +81,15 @@ const WRAPPED_ARBITRUM = {
   name: "Wrapped Ether",
 };
 
+/** Uniswap docs: https://docs.uniswap.org/contracts/v3/reference/deployments/arbitrum-deployments */
+const WRAPPED_ARBITRUM_SEPOLIA = {
+  chainId: 421614,
+  address: "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73",
+  decimals: 18,
+  symbol: "WETH",
+  name: "Wrapped Ether",
+};
+
 const WRAPPED_SEPOLIA = {
   chainId: 11155111,
   address: "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
@@ -121,6 +132,29 @@ const addresses = {
       "https://app.uniswap.org/explore/tokens/arbitrum/0xBabe35F94fE6076474F65771Df60d99cb097323A", // only works when wallet has already provided liquidity "https://app.uniswap.org/add/ETH/0xBabe35F94fE6076474F65771Df60d99cb097323A/3000?minPrice=19998.702000&maxPrice=79994.808000",
     urqlClient: urqlClients.arbitrum,
   },
+  // Arbitrum Sepolia — Uniswap V3 uses same core/periphery addresses as Arbitrum One; update HDT when deployed.
+  421614: {
+    contractAddress: "0xEcD2932aA582b4b669845c96B64c3e95156ec425",
+    ABI: ArbitrumABI,
+    NATIVE: NATIVE_ETH,
+    WRAPPED: WRAPPED_ARBITRUM_SEPOLIA,
+    HDT: "0xBabe35F94fE6076474F65771Df60d99cb097323A",
+    explorer: ArbitrumSepoliaExplorer,
+    ETHUSD: "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612",
+    JPYUSD: "0x3dD6e51CB9caE717d5a8778CF79A04029f9cFDF8",
+    uniQuoter: "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+    uniFactory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    uniSwapRouter: "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45",
+    roterABI: uniswapSwapRouter02,
+    Multicall: "0xFade011AaDCC05b373C2A679E73980d12095A1fc",
+    abstractedTokenList: abstractedTokenListArbitrum.abstractedTokenList,
+    ReferralProjectContractAddress:
+      "0x464e9D273dFaD273F491Abc8F7E934c61f858dC8",
+    ReferralProjectSafe: "0x851F079ADB5A3961A789Eb8fDC98A8c328AC4651",
+    provideLiquidity:
+      "https://app.uniswap.org/explore/pools/arbitrum_sepolia/0xBabe35F94fE6076474F65771Df60d99cb097323A",
+    urqlClient: urqlClients.arbitrum,
+  },
   // Sonic
   146: {
     contractAddress: "0xEcD2932aA582b4b669845c96B64c3e95156ec425",
@@ -151,7 +185,7 @@ const addresses = {
     ABI: SepoliaABI,
     NATIVE: NATIVE_ETH,
     WRAPPED: WRAPPED_SEPOLIA,
-    HDT: "0xA420137668CffeA94d5d09E8C90a3E281c711828", // -> still need to 0x9707Be4129F68B767aF550fe1c631BF1779623Cb in some files
+    HDT: "0x9707Be4129F68B767aF550fe1c631BF1779623Cb", // -> still need to 0x9707Be4129F68B767aF550fe1c631BF1779623Cb in some files  |  0xA420137668CffeA94d5d09E8C90a3E281c711828
     explorer: SepoliaExplorer,
     ETHUSD: "0x694AA1769357215DE4FAC081bf1f309aDC325306",
     JPYUSD: "0x8A6af2B75F23831ADc973ce6288e5329F63D86c6",

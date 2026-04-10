@@ -19,7 +19,7 @@ import { useTransaction } from "../Transaction/TransactionContext";
 // thirdweb
 import { useSendTransaction, useReadContract } from "thirdweb/react";
 import { getContract, prepareContractCall } from "thirdweb";
-import { client } from "../Model/thirdWebClient";
+import { useThirdwebClient } from "../Model/ThirdWebClientProvider";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import { arbitrum, sepolia } from "thirdweb/chains";
 
@@ -36,6 +36,7 @@ function getByteSize(str) {
 }
 
 export default function CreateForm() {
+  const client = useThirdwebClient();
   const router = useRouter();
   const { setConfirmationHash, setTransactionError } = useTransaction();
   const [title, setTitle] = useState("");
@@ -475,37 +476,42 @@ export default function CreateForm() {
 
   console.log("Rendering with Tags:", tag);
   return (
-    <form onSubmit={handleSubmit} className={Style.Parent}>
+    <form onSubmit={handleSubmit} className={`${Style.formMain} ${Style.Parent}`}>
       {/* Title input */}
       <label>
-        <div className={Style.wrapper}>
-          <span>Title</span>
-          <input
-            required
-            type="text"
-            onChange={handleTitleChange}
-            value={title}
-          />
+        <div className={Style.fieldBlock}>
+          <span className={Style.fieldLabel}>Title</span>
+          <div className={Style.inputRow}>
+            <input
+              required
+              type="text"
+              onChange={handleTitleChange}
+              value={title}
+            />
+          </div>
         </div>
       </label>
 
       {/* Description textarea */}
       <label>
-        <div className={Style.wrapper}>
-          <span>Description</span>
-          <textarea
-            required
-            onChange={handleTextareaChange}
-            value={body}
-            style={{ height: scHeight }}
-          />
+        <div className={Style.fieldBlock}>
+          <span className={Style.fieldLabel}>Description</span>
+          <div className={`${Style.inputRow} ${Style.inputRowTextarea}`}>
+            <textarea
+              required
+              onChange={handleTextareaChange}
+              value={body}
+              style={{ height: scHeight }}
+            />
+          </div>
         </div>
       </label>
       <div className={Style.optionalMediaContainer}>
         <div className={Style.mediaWrapper}>
+          <span className={Style.fieldLabel}>Links (optional)</span>
           {/* Optional Media input */}
           <div className={Style.websiteWrapper}>
-            <span>
+            <span className={Style.linkIcon}>
               <Image
                 src={images.website}
                 alt="website"
@@ -513,26 +519,30 @@ export default function CreateForm() {
                 height={30}
               />
             </span>
-            <input
-              placeholder="Link to website"
-              type="text"
-              onChange={(e) => setWebsite(e.target.value)}
-              value={website}
-            />
+            <div className={Style.inputRow}>
+              <input
+                placeholder="Link to website"
+                type="text"
+                onChange={(e) => setWebsite(e.target.value)}
+                value={website}
+              />
+            </div>
           </div>
           <div className={Style.websiteWrapper}>
-            <span>
+            <span className={Style.linkIcon}>
               <Image src={images.x2} alt="x2" width={30} height={30} />
             </span>
-            <input
-              placeholder="Twitter username"
-              type="text"
-              onChange={(e) => setTwitter(e.target.value)}
-              value={twitter}
-            />
+            <div className={Style.inputRow}>
+              <input
+                placeholder="Twitter username"
+                type="text"
+                onChange={(e) => setTwitter(e.target.value)}
+                value={twitter}
+              />
+            </div>
           </div>
           <div className={Style.websiteWrapper}>
-            <span>
+            <span className={Style.linkIcon}>
               <Image
                 src={images.discord}
                 alt="discord"
@@ -540,15 +550,17 @@ export default function CreateForm() {
                 height={30}
               />
             </span>
-            <input
-              placeholder="Link to Discord channel"
-              type="text"
-              onChange={(e) => setDiscord(e.target.value)}
-              value={discord}
-            />
+            <div className={Style.inputRow}>
+              <input
+                placeholder="Link to Discord channel"
+                type="text"
+                onChange={(e) => setDiscord(e.target.value)}
+                value={discord}
+              />
+            </div>
           </div>
           <div className={Style.websiteWrapper}>
-            <span>
+            <span className={Style.linkIcon}>
               <Image
                 src={images.youtube}
                 alt="youtube"
@@ -556,26 +568,30 @@ export default function CreateForm() {
                 height={30}
               />
             </span>
-            <input
-              placeholder="YouTube channel name"
-              type="text"
-              onChange={(e) => setYoutube(e.target.value)}
-              value={youtube}
-            />
+            <div className={Style.inputRow}>
+              <input
+                placeholder="YouTube channel name"
+                type="text"
+                onChange={(e) => setYoutube(e.target.value)}
+                value={youtube}
+              />
+            </div>
           </div>
           <div className={Style.websiteWrapper}>
-            <span>
+            <span className={Style.linkIcon}>
               <Image src={images.twitch} alt="twitch" width={30} height={30} />
             </span>
-            <input
-              placeholder="Twitch username"
-              type="text"
-              onChange={(e) => setTwitch(e.target.value)}
-              value={twitch}
-            />
+            <div className={Style.inputRow}>
+              <input
+                placeholder="Twitch username"
+                type="text"
+                onChange={(e) => setTwitch(e.target.value)}
+                value={twitch}
+              />
+            </div>
           </div>
           <div className={Style.websiteWrapper}>
-            <span>
+            <span className={Style.linkIcon}>
               <Image
                 src={images.portfolio}
                 alt="portfolio"
@@ -583,29 +599,34 @@ export default function CreateForm() {
                 height={30}
               />
             </span>
-            <input
-              placeholder="Link to art portfolio"
-              type="text"
-              onChange={(e) => setReel(e.target.value)}
-              value={reel}
-            />
+            <div className={Style.inputRow}>
+              <input
+                placeholder="Link to art portfolio"
+                type="text"
+                onChange={(e) => setReel(e.target.value)}
+                value={reel}
+              />
+            </div>
           </div>
           <div className={Style.websiteWrapper}>
-            <span>
+            <span className={Style.linkIcon}>
               <Image src={images.github} alt="github" width={30} height={30} />
             </span>
-            <input
-              placeholder="Profile or profile/repo"
-              type="text"
-              onChange={(e) => setGithub(e.target.value)}
-              value={github}
-            />
+            <div className={Style.inputRow}>
+              <input
+                placeholder="Profile or profile/repo"
+                type="text"
+                onChange={(e) => setGithub(e.target.value)}
+                value={github}
+              />
+            </div>
           </div>
           {/* Optional Media input */}
         </div>
 
         <label>
           <div className={Style.dropdownWrapper}>
+            <span className={Style.fieldLabel}>Tags</span>
             <div className={Style.selectedTags}>
               {tag.map((selectedTag, index) => (
                 <div key={index} className={Style.selectedTag}>
@@ -693,9 +714,15 @@ export default function CreateForm() {
           </div>
         </label>
         <div className={Style.addProjectContainer}>
-          <button className={Style.AddProject} disabled={isButtonDisabled}>
-            {buttonText}
-          </button>
+          <div className={Style.primaryButtonBar}>
+            <button
+              type="submit"
+              className={Style.AddProject}
+              disabled={isButtonDisabled}
+            >
+              {buttonText}
+            </button>
+          </div>
           <div className={Style.mintRateContainer}>
             {mintRate !== null ? (
               <>
@@ -721,7 +748,6 @@ export default function CreateForm() {
                 placeholder="Enter referral code"
                 value={EnteredReferralCode}
                 onChange={(e) => setEnteredReferralCode(e.target.value)}
-                style={{ backgroundColor: "#302f2f" }}
               />
             </div>
           </label>

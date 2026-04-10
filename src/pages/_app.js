@@ -23,12 +23,14 @@ import "../styles/globals.css";
 // Transaction Components
 import { TransactionProvider } from "../Components/Transaction/TransactionContext.js";
 import PaymentResult from "../Components/DonateBox/PaymentResult";
+import StripeCheckoutReturn from "../Components/ThirdWeb/Pay/StripeCheckoutReturn.jsx";
 
 // Currency Context | USD or JPY
 import { CurrencyProvider } from "../Components/LanguageToggle/CurrencyContext.jsx";
 
 // web2 auth
 import { ThirdwebProvider } from "thirdweb/react";
+import { ThirdwebClientProvider } from "../Components/Model/ThirdWebClientProvider";
 import { WalletProvider } from "../Components/Wallet/WalletContext";
 
 // Sloppy cahce solution because Sonic is on a hosted subgraph and not Subgraph Studio
@@ -136,23 +138,28 @@ export default function App({ Component, pageProps }) {
         <TransactionProvider>
           <WagmiConfig config={config}>
             <ThirdwebProvider>
-              <WalletProvider>
-                <CurrencyProvider>
-                  <div className={`${styles.App} mainContent`}>
-                    <Header />
+              <ThirdwebClientProvider>
+                <WalletProvider>
+                  <CurrencyProvider>
+                    <div className={`${styles.App} mainContent`}>
+                      <Header />
 
-                    <PaymentResult />
-                    <CacheProvider>
-                      <Component {...pageProps} />
-                      <Analytics />
-                    </CacheProvider>
-                  </div>
-                </CurrencyProvider>
-              </WalletProvider>
+                      <PaymentResult />
+                      <StripeCheckoutReturn />
+                      <CacheProvider>
+                        <Component {...pageProps} />
+                        <Analytics />
+                      </CacheProvider>
+                    </div>
+                  </CurrencyProvider>
+                </WalletProvider>
+              </ThirdwebClientProvider>
             </ThirdwebProvider>
           </WagmiConfig>
         </TransactionProvider>
       </div>
+      {/* Modals portal here so they inherit Plus Jakarta (see #hd-portal-root in globals.css). */}
+      <div id="hd-portal-root" />
     </div>
   );
 }

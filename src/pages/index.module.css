@@ -98,7 +98,7 @@
   background: linear-gradient(
     135deg,
     var(--hd-accent) 0%,
-    #c94bb8 100%
+    var(--hd-cta-gradient-end) 100%
   );
   box-shadow: 0 6px 24px var(--hd-accent-dim);
   transition:
