@@ -29,6 +29,7 @@ import { sepolia, arbitrum } from "thirdweb/chains";
 import { ethers6Adapter } from "thirdweb/adapters/ethers6";
 import { useThirdwebClient } from "../Model/ThirdWebClientProvider";
 import { getConfig } from "../../utils/constants.js";
+import SiweSessionSync from "./SiweSessionSync.jsx";
 
 // Create the context (exported so balance hooks can optionally read refresh nonce)
 export const WalletContext = createContext();
@@ -166,6 +167,7 @@ export const WalletProvider = ({ children }) => {
         requestBalanceRefresh,
       }}
     >
+      <SiweSessionSync />
       {children}
     </WalletContext.Provider>
   );

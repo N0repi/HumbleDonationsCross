@@ -1,7 +1,7 @@
 // verify.ts — SIWE + session nonce. Smart accounts use ERC-6492 signatures; use thirdweb/auth
 // verifySignature (same stack as thirdweb signMessage), not siwe.verify + raw EIP-1271 alone.
 
-import { withIronSessionApiRoute } from "iron-session/next";
+import { withIronSessionApiRoute } from "../../../lib/server/withIronSessionApiRoute";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { SiweMessage } from "siwe";
 import { createThirdwebClient } from "thirdweb";
@@ -52,6 +52,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const prepared = siweMessage.prepareMessage();
 
+        const isDev = process.env.NODE_ENV !== "production";
+        if (isDev) {
+          console.log("[SIWE verify] incoming", {
+            address: siweMessage.address,
+            chainId,
+            preparedCharLength: prepared.length,
+            signatureLength:
+              typeof signature === "string" ? signature.length : 0,
+          });
+        }
+        if (process.env.SIWE_DEBUG === "1") {
+          console.log(
+            "[SIWE verify] prepared prefix:",
+            prepared.slice(0, 200).replace(/\n/g, "\\n"),
+          );
+        }
+
         const isValid = await verifySignature({
           message: prepared,
           signature,
@@ -61,6 +78,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         if (!isValid) {
+          if (isDev) {
+            console.warn("[SIWE verify] verifySignature failed", {
+              address: siweMessage.address,
+              chainId,
+            });
+          }
           res.status(401).json({ ok: false });
           return;
         }
@@ -82,7 +105,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         } as import("siwe").SiweMessage;
 
         await req.session.save();
-        console.log(`Verified SIWE message for address: ${siweMessage.address}`);
+        if (isDev) {
+          console.log("[SIWE verify] ok", {
+            address: siweMessage.address,
+            chainId,
+          });
+        } else {
+          console.log(
+            `Verified SIWE message for address: ${siweMessage.address}`,
+          );
+        }
         res.json({ ok: true });
       } catch (error) {
         console.error("SIWE verification error:", error);

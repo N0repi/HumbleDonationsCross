@@ -14,6 +14,15 @@ async function initializeSafeClient({ rpcUrl, signerPrivateKey, safeAddress }) {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_PROD);
 
+function verifyPaymentDebug(...args) {
+  if (
+    process.env.NODE_ENV !== "production" ||
+    process.env.VERIFY_PAYMENT_DEBUG === "1"
+  ) {
+    console.log(...args);
+  }
+}
+
 function getNetworkConfig(network) {
   const configs = {
     sepolia: {
@@ -73,7 +82,9 @@ export default async function handler(req, res) {
     const envSuffix = networkConfig.envSuffix;
 
     const SAFE_ADDRESS =
-      process.env[`SAFE_ADDRESS${envSuffix}`] || process.env.SAFE_ADDRESS_ARB;
+      process.env[`SAFE_ADDRESS${envSuffix}`] ||
+      process.env.SAFE_ADDRESS ||
+      process.env.SAFE_ADDRESS_ARB;
     const contractAddress =
       process.env[`STRIPE_PAYMENT_VERIFIER_ADDRESS3${envSuffix}`] ||
       process.env.STRIPE_PAYMENT_VERIFIER_ADDRESS3_ARB;
@@ -100,7 +111,9 @@ export default async function handler(req, res) {
     /* Per-network only — never fall back to Sepolia secrets on Arbitrum (would break DON). */
     const encryptedSecretsUrls =
       process.env[`ENCRYPTED_SECRET${envSuffix}`] ||
-      (network === "sepolia" ? process.env.ENCRYPTED_SECRET_ARB : undefined);
+      (network === "sepolia"
+        ? process.env.ENCRYPTED_SECRET_SEPOLIA
+        : undefined);
 
     if (!encryptedSecretsUrls) {
       throw new Error(
@@ -125,7 +138,12 @@ export default async function handler(req, res) {
     let recipient = walletAddress;
     let tokenAmountHuman;
 
-    if (network === "sepolia" && checkoutSessionId) {
+    if (network === "sepolia") {
+      if (!checkoutSessionId) {
+        throw new Error(
+          "checkoutSessionId is required for Sepolia (use Stripe Checkout session metadata).",
+        );
+      }
       const session = await stripe.checkout.sessions.retrieve(
         String(checkoutSessionId),
       );
@@ -164,27 +182,6 @@ export default async function handler(req, res) {
         throw new Error("Checkout session missing token amount");
       }
       tokenAmountHuman = String(metaHdt);
-    } else if (network === "sepolia") {
-      if (!walletAddress) {
-        throw new Error("Missing walletAddress");
-      }
-      recipient = walletAddress;
-      const netFrac = (() => {
-        const raw = process.env.STRIPE_HDT_NET_USD_FRACTION;
-        if (raw == null || raw === "") return 0.94;
-        const n = Number(raw);
-        if (!Number.isFinite(n) || n <= 0 || n > 1) return 0.94;
-        return n;
-      })();
-      const { getCheckoutHdtAmount } =
-        await import("../../../lib/server/hdtImpliedUsdArbitrum.mjs");
-      const chargedUsd = paymentIntent.amount / 100;
-      const { hdtHuman } = await getCheckoutHdtAmount({
-        chargedUsd,
-        netUsdFraction: netFrac,
-        rpcUrl: RPC_URL,
-      });
-      tokenAmountHuman = hdtHuman;
     } else {
       if (!walletAddress || tokenAmount == null) {
         throw new Error("Missing walletAddress or tokenAmount");
@@ -213,15 +210,15 @@ export default async function handler(req, res) {
       throw new Error("CHAINLINK_SUBSCRIPTION_ID not configured");
     }
 
-    console.log("-----------------------------------");
-    console.log("network:", network);
-    console.log("subscriptionId:", subscriptionId);
-    console.log("paymentIntentId:", paymentIntentId);
-    console.log("donID:", donID);
-    console.log("recipient:", recipient);
-    console.log("tokenAmountWei:", tokenAmountWei);
-    console.log("encryptedSecretsUrls:", encryptedSecretsUrls);
-    console.log("-----------------------------------");
+    verifyPaymentDebug("-----------------------------------");
+    verifyPaymentDebug("network:", network);
+    verifyPaymentDebug("subscriptionId:", subscriptionId);
+    verifyPaymentDebug("paymentIntentId:", paymentIntentId);
+    verifyPaymentDebug("donID:", donID);
+    verifyPaymentDebug("recipient:", recipient);
+    verifyPaymentDebug("tokenAmountWei:", tokenAmountWei);
+    verifyPaymentDebug("encryptedSecretsUrls:", encryptedSecretsUrls);
+    verifyPaymentDebug("-----------------------------------");
 
     const StripeVerifierFactory = new ethers.Interface(
       StripePaymentVerifierABI.abi,
@@ -253,10 +250,10 @@ export default async function handler(req, res) {
 
     const safeTxHash = txResult.transactions.safeTxHash;
     const currentStatus = txResult.status;
-    console.log("-----------------------------------");
-    console.log("safeTxHash:", safeTxHash);
-    console.log("currentStatus:", currentStatus);
-    console.log("-----------------------------------");
+    verifyPaymentDebug("-----------------------------------");
+    verifyPaymentDebug("safeTxHash:", safeTxHash);
+    verifyPaymentDebug("currentStatus:", currentStatus);
+    verifyPaymentDebug("-----------------------------------");
     if (
       currentStatus === "EXECUTED" ||
       currentStatus === "DEPLOYED_AND_EXECUTED"

@@ -1,6 +1,6 @@
 // logout.ts
 
-import { withIronSessionApiRoute } from "iron-session/next"
+import { withIronSessionApiRoute } from "../../../lib/server/withIronSessionApiRoute"
 import { ironOptions } from "../../../utils/constants"
 
 import { NextApiRequest, NextApiResponse } from "next"

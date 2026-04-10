@@ -1,7 +1,7 @@
 // nonce.ts — bind nonce to session for verify step
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { withIronSessionApiRoute } from "iron-session/next";
+import { withIronSessionApiRoute } from "../../../lib/server/withIronSessionApiRoute";
 import { generateNonce } from "siwe";
 import { ironOptions } from "../../../utils/constants";
 
