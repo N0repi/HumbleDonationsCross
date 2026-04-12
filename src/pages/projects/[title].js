@@ -15,6 +15,7 @@ import { ethers } from "ethers";
 
 // thirdweb
 import { getContract, prepareContractCall } from "thirdweb";
+import { arbitrum } from "thirdweb/chains";
 import { useSendTransaction } from "thirdweb/react";
 import { useWallet } from "../../Components/Wallet/WalletContext";
 import { useThirdwebClient } from "../../Components/Model/ThirdWebClientProvider";
@@ -69,12 +70,13 @@ const URIrender = () => {
 
   const { contractAddress, ABI, NATIVE } = getConfig(chain?.id);
 
-  console.log("useWallet chainId:", chain);
-  console.log("thirdweb useWallet chainId:", chain?.id);
+  // getContract requires a concrete chain; when no wallet is connected, `chain`
+  // is null. Align with getConfig(undefined) → Arbitrum One (42161).
+  const contractChain = chain ?? arbitrum;
 
   const contract = getContract({
     client: client,
-    chain: chain,
+    chain: contractChain,
     address: contractAddress,
   });
   const { mutate: sendTransaction } = useSendTransaction();
