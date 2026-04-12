@@ -35,6 +35,11 @@ function getByteSize(str) {
   return new TextEncoder().encode(str).length;
 }
 
+function isZeroMintRate(rateStr) {
+  if (rateStr == null || rateStr === "") return false;
+  return parseFloat(String(rateStr)) === 0;
+}
+
 export default function CreateForm() {
   const client = useThirdwebClient();
   const router = useRouter();
@@ -182,12 +187,14 @@ export default function CreateForm() {
     client: client,
     chain: chain || arbitrum,
     address: contractAddress,
+    abi: ABI,
   });
 
+  // get_mintRate() has no parameters; wrong params (e.g. [1n]) breaks the calldata and the read fails for thirdweb.
   const { data: dataRead, isLoading } = useReadContract({
     contract: contract,
     method: "function get_mintRate() external view returns (uint256)",
-    params: [1n],
+    params: [],
   });
 
   // Function to create the project
@@ -427,7 +434,11 @@ export default function CreateForm() {
     try {
       // Set mint rate based on wallet type
       if (walletType === "thirdweb") {
-        setMintRate(dataRead ? ethers.formatEther(dataRead) : null);
+        setMintRate(
+          dataRead !== undefined && dataRead !== null
+            ? ethers.formatEther(dataRead)
+            : null,
+        );
       } else if (walletType === "wagmi") {
         const provider = await getProvider();
         const contractNFTOnChainPayable = new ethers.Contract(
@@ -475,6 +486,8 @@ export default function CreateForm() {
   }, [walletType, dataRead, mintRate, balance]);
 
   console.log("Rendering with Tags:", tag);
+  const mintRateIsFree = mintRate !== null && isZeroMintRate(mintRate);
+
   return (
     <form onSubmit={handleSubmit} className={`${Style.formMain} ${Style.Parent}`}>
       {/* Title input */}
@@ -727,10 +740,23 @@ export default function CreateForm() {
             {mintRate !== null ? (
               <>
                 <p className={Style.mintRate}>
-                  Mint Rate: {mintRate} {NATIVE.symbol}
+                  Mint Rate:{" "}
+                  {mintRateIsFree ? (
+                    <strong className={Style.mintRateFreeWord}>Free</strong>
+                  ) : (
+                    <>
+                      {mintRate} {NATIVE.symbol}
+                    </>
+                  )}
                 </p>
                 <span className={Style.tooltipText}>
-                  {mintRate} {NATIVE.name} is required to add a project.
+                  {mintRateIsFree ? (
+                    <>No {NATIVE.name} is required to add a project.</>
+                  ) : (
+                    <>
+                      {mintRate} {NATIVE.name} is required to add a project.
+                    </>
+                  )}
                 </span>
               </>
             ) : (

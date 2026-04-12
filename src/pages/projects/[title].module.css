@@ -274,6 +274,76 @@
   z-index: 1000; /* Ensure the button is above other elements */
 }
 
+.deleteModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.deleteModal {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: rgba(48, 47, 47, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.deleteModalTitle {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.deleteModalBody {
+  margin: 0 0 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.deleteModalActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.deleteModalCancelButton,
+.deleteModalConfirmButton {
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+}
+
+.deleteModalCancelButton {
+  background: rgb(46, 44, 44);
+  color: #fff;
+}
+
+.deleteModalCancelButton:hover {
+  filter: brightness(1.08);
+}
+
+.deleteModalConfirmButton {
+  background: #c62828;
+  color: #fff;
+}
+
+.deleteModalConfirmButton:hover {
+  filter: brightness(1.08);
+}
+
 .metricsButton {
   position: fixed;
   bottom: 20px; /* Adjust as needed */

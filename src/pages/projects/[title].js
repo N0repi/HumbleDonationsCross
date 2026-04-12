@@ -29,6 +29,7 @@ const URIrender = () => {
   const { title } = router.query;
   const [project, setProject] = useState(null);
   const [showDonateBox, setShowDonateBox] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [tokenId, setTokenId] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const [provider, setProvider] = useState(null); // State to store the provider for MetricsForTitle to get fiat value
@@ -497,7 +498,11 @@ const URIrender = () => {
           </div>
           {/* {console.log("isOwner before rendering: ", isOwner)} */}
           {isOwner && (
-            <button onClick={handleDelete} className={Style.deleteButton}>
+            <button
+              type="button"
+              onClick={() => setShowDeleteConfirm(true)}
+              className={Style.deleteButton}
+            >
               Delete project
             </button>
           )}
@@ -693,6 +698,50 @@ const URIrender = () => {
           </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div
+          className={Style.deleteModalOverlay}
+          onClick={() => setShowDeleteConfirm(false)}
+          role="presentation"
+        >
+          <div
+            className={Style.deleteModal}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-project-modal-title"
+          >
+            <h2 id="delete-project-modal-title" className={Style.deleteModalTitle}>
+              Delete this project?
+            </h2>
+            <p className={Style.deleteModalBody}>
+              This removes your project listing from Humble Donations. Any funds
+              you have already received or that remain in the contract for this
+              project are not affected—you will not lose any funds.
+            </p>
+            <div className={Style.deleteModalActions}>
+              <button
+                type="button"
+                className={Style.deleteModalCancelButton}
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={Style.deleteModalConfirmButton}
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  void handleDelete();
+                }}
+              >
+                Yes, delete project
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 };

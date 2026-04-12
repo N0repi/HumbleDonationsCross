@@ -4,9 +4,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import WrappedProjectsList from "./projects/ProjectList4";
-import TagFilter from "./projects/TagFilter";
-import SortDropdown from "./projects/SortDropdown";
+import WrappedProjectsList from "../Components/projects/ProjectList4";
+import TagFilter from "../Components/projects/TagFilter";
+import SortDropdown from "../Components/projects/SortDropdown";
 import Style from "./donate.module.css";
 import images from "../assets";
 

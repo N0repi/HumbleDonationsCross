@@ -321,6 +321,11 @@
   font-weight: 500;
 }
 
+/* Bold only the "Free" value; label keeps .mintRate color/weight */
+.mintRateFreeWord {
+  font-weight: 700;
+}
+
 .mintRate span {
   display: block;
   margin-bottom: 0.35rem;
